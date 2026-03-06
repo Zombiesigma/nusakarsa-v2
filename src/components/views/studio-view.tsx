@@ -50,9 +50,10 @@ export function StudioView() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: userProfile, loading: profileLoading } = useDoc<AppUser>(
+  const userProfileRef = useMemo(() => (
     (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null
-  );
+  ), [firestore, currentUser]);
+  const { data: userProfile, loading: profileLoading } = useDoc<AppUser>(userProfileRef);
 
   // Queries - My own books
   const booksQuery = useMemo(() => (
