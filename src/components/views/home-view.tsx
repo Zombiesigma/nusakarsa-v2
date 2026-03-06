@@ -10,6 +10,16 @@ import { Book, Library } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { BookCard } from '../common/book-card';
 
+const findImage = (id: string) => {
+    const img = PlaceHolderImages.find(p => p.id === id);
+    if (!img) return { src: 'https://picsum.photos/seed/error/64/96', width: 64, height: 96, hint: 'placeholder' };
+    const url = new URL(img.imageUrl);
+    const pathParts = url.pathname.split('/');
+    const width = parseInt(pathParts[pathParts.length - 2]);
+    const height = parseInt(pathParts[pathParts.length - 1]);
+    return { src: img.imageUrl, width, height, hint: img.imageHint };
+};
+
 const ParallaxHeroBooks = () => {
     const heroMainImg = PlaceHolderImages.find(p => p.id === 'hero-main')!;
     const heroSide1Img = PlaceHolderImages.find(p => p.id === 'hero-side1')!;
@@ -70,7 +80,7 @@ const RevealWrapper = ({ children, delay }: { children: React.ReactNode, delay?:
 export function HomeView() {
     const { setActivePage, books } = useAppContext();
     const trendingBooks = books.filter(b => b.trending).slice(0, 4);
-    const currentlyReadingImg = PlaceHolderImages.find(p => p.id === 'currently-reading-cover')!;
+    const currentlyReadingImg = findImage('currently-reading-cover');
 
     return (
         <section id="page-home" className="page-section">
