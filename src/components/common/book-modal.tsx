@@ -20,8 +20,8 @@ export function BookModal() {
   return (
     <Dialog open={modalBookId !== null} onOpenChange={(isOpen) => !isOpen && setModalBookId(null)}>
       <DialogContent className="p-0 max-w-lg w-[90vw] border-none bg-transparent shadow-2xl">
+        <DialogTitle className="sr-only">{`Detail untuk buku ${book.title}`}</DialogTitle>
         <div className="bg-card rounded-3xl overflow-hidden">
-          <DialogTitle className="sr-only">{`Detail untuk buku ${book.title}`}</DialogTitle>
           <div className="aspect-[4/3] md:aspect-[2/1] relative">
             <Image 
               src={book.coverImage.src} 
@@ -50,13 +50,15 @@ export function BookModal() {
                 <span className="text-2xl font-bold text-accent">{book.readers}</span>
                 <span className="text-muted-foreground text-sm block">pembaca</span>
               </div>
-              <Button 
-                asChild
-                className="btn-primary px-6 py-3 rounded-xl font-semibold"
-                disabled={!isLoggedIn}
-              >
-                {isLoggedIn ? <button>Mulai Membaca</button> : <Link href="/login">Login untuk Membaca</Link>}
-              </Button>
+              {isLoggedIn ? (
+                  <Button asChild className="btn-primary px-6 py-3 rounded-xl font-semibold">
+                      <Link href={`/read/${book.id}`}>Mulai Membaca</Link>
+                  </Button>
+              ) : (
+                  <Button asChild className="btn-primary px-6 py-3 rounded-xl font-semibold">
+                      <Link href="/login">Login untuk Membaca</Link>
+                  </Button>
+              )}
             </div>
             <div className="flex gap-3">
               <button
