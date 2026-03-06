@@ -20,8 +20,8 @@ export function BookModal() {
   return (
     <Dialog open={modalBookId !== null} onOpenChange={(isOpen) => !isOpen && setModalBookId(null)}>
       <DialogContent className="p-0 max-w-lg w-[90vw] border-none bg-transparent shadow-2xl">
-        <DialogTitle className="sr-only">{book.title}</DialogTitle>
         <div className="bg-card rounded-3xl overflow-hidden">
+          <DialogTitle className="sr-only">{`Detail untuk buku ${book.title}`}</DialogTitle>
           <div className="aspect-[4/3] md:aspect-[2/1] relative">
             <Image 
               src={book.coverImage.src} 
@@ -53,7 +53,7 @@ export function BookModal() {
               <Button 
                 asChild
                 className="btn-primary px-6 py-3 rounded-xl font-semibold"
-                disabled={isLoggedIn}
+                disabled={!isLoggedIn}
               >
                 {isLoggedIn ? <button>Mulai Membaca</button> : <Link href="/login">Login untuk Membaca</Link>}
               </Button>
@@ -63,12 +63,12 @@ export function BookModal() {
                 onClick={() => toggleBookmark(book.id)}
                 className={cn(
                   "btn-secondary flex-1 px-4 py-3 rounded-xl flex items-center justify-center gap-2",
-                  isBookmarked && isLoggedIn && 'border-gold text-gold'
+                  isBookmarked && 'border-gold text-gold'
                 )}
                 disabled={!isLoggedIn}
               >
-                <Bookmark className={cn("w-5 h-5", isBookmarked && isLoggedIn && "fill-current")} />
-                {isBookmarked && isLoggedIn ? 'Tersimpan' : 'Simpan'}
+                <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
+                {isBookmarked ? 'Tersimpan' : 'Simpan'}
               </button>
               <button className="btn-secondary flex-1 px-4 py-3 rounded-xl flex items-center justify-center gap-2">
                 <Share2 className="w-5 h-5" />

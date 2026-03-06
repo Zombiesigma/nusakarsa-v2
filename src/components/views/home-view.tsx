@@ -1,16 +1,19 @@
 
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from "@/context/app-context";
 import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Book, Library } from 'lucide-react';
+import { Book, Library, Wand2 } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { BookCard } from '../common/book-card';
+import type { Book as BookType } from '@/lib/data';
+import { personalizeBookRecommendations, PersonalizeBookRecommendationsOutput } from '@/ai/flows/personalized-book-recommendations';
+import { Skeleton } from '../ui/skeleton';
 
 const findImage = (id: string) => {
     const img = PlaceHolderImages.find(p => p.id === id);
@@ -22,6 +25,7 @@ const findImage = (id: string) => {
     return { src: img.imageUrl, width, height, hint: img.imageHint };
 };
 
+// Logged-out view
 const ParallaxHeroBooks = () => {
     useEffect(() => {
         const hero = document.getElementById('heroSection');
@@ -75,13 +79,13 @@ const RevealWrapper = ({ children, delay }: { children: React.ReactNode, delay?:
     );
 };
 
-export function HomeView() {
+
+const LoggedOutHomeView = () => {
     const { books } = useAppContext();
     const trendingBooks = books.filter(b => b.trending).slice(0, 4);
-    const currentlyReadingImg = findImage('currently-reading-cover');
 
     return (
-        <section id="page-home" className="page-section">
+        <>
             <div className="hero-bg relative pt-32 md:pt-40 pb-20 md:pb-32" id="heroSection">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -101,81 +105,15 @@ export function HomeView() {
                             
                             <div className="opacity-0 animate-fade-up [animation-delay:0.3s] flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                                 <Button asChild className="btn-primary px-8 py-4">
-                                    <Link href="/explore">Mulai Membaca</Link>
+                                    <Link href="/register">Mulai Sekarang, Gratis!</Link>
                                 </Button>
-                                <Button asChild className="btn-secondary px-8 py-4 flex items-center justify-center gap-2">
-                                    <Link href="/library">
-                                        <Library className="w-5 h-5" />
-                                        Pustaka Saya
-                                    </Link>
+                                <Button asChild variant="link" className="text-foreground">
+                                    <Link href="/login">Sudah punya akun? Masuk</Link>
                                 </Button>
                             </div>
                         </div>
                         <ParallaxHeroBooks />
                     </div>
-                </div>
-            </div>
-
-            <div className="py-12 bg-bg-alt">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <RevealWrapper>
-                        <div className="grid md:grid-cols-3 gap-6">
-                            <div className="rounded-3xl p-6 text-white relative overflow-hidden group" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
-                                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors duration-300"></div>
-                                <div className="relative z-10">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-white/70 text-sm font-medium">Reading Streak</span>
-                                    </div>
-                                    <div className="flex items-end gap-3">
-                                        <span className="text-5xl font-bold transition-transform group-hover:scale-110 inline-block">14</span>
-                                        <span className="text-white/70 mb-2">hari berturut</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card border border-border rounded-3xl p-6 hover:border-accent/50 transition-colors">
-                                <div className="flex items-center justify-between mb-4">
-                                    <span className="text-muted-foreground text-sm font-medium">Sedang Dibaca</span>
-                                    <span className="text-accent text-sm font-semibold">3 buku</span>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    <Image data-ai-hint={currentlyReadingImg.hint} src={currentlyReadingImg.src} alt="Currently reading book cover" width={currentlyReadingImg.width} height={currentlyReadingImg.height} className="w-16 h-24 rounded-lg flex-shrink-0 object-cover shadow-md" />
-                                    <div className="flex-1 min-w-0">
-                                        <h4 className="font-headline font-bold truncate">Laskar Pelangi</h4>
-                                        <p className="text-muted-foreground text-sm">Andrea Hirata</p>
-                                        <div className="mt-2">
-                                            <div className="h-1.5 bg-border rounded-full overflow-hidden">
-                                                <div className="h-full bg-accent rounded-full" style={{ width: "44%" }}></div>
-                                            </div>
-                                            <span className="text-xs text-muted-foreground mt-1">44% selesai</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card border border-border rounded-3xl p-6 hover:border-gold/50 transition-colors">
-                                <div className="flex items-center justify-between mb-4">
-                                    <span className="text-muted-foreground text-sm font-medium">Target 2025</span>
-                                    <span className="text-gold text-sm font-semibold">24 buku</span>
-                                </div>
-                                <div className="flex items-center gap-6">
-                                    <div className="relative w-20 h-20">
-                                        <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-                                            <circle cx="40" cy="40" r="35" fill="none" stroke="hsl(var(--border))" strokeWidth="6"/>
-                                            <circle cx="40" cy="40" r="35" fill="none" stroke="hsl(var(--gold))" strokeWidth="6" strokeDasharray="220" strokeDashoffset="77" strokeLinecap="round" />
-                                        </svg>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <span className="text-xl font-bold">65%</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p className="font-medium">16 dari 24 buku</p>
-                                        <p className="text-muted-foreground text-sm">8 buku lagi!</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </RevealWrapper>
                 </div>
             </div>
 
@@ -202,6 +140,139 @@ export function HomeView() {
                     </div>
                 </div>
             </div>
+        </>
+    );
+};
+
+
+// Logged-in view
+const ContinueReading = ({ books }: { books: BookType[] }) => {
+    const booksWithProgress = books.filter(b => b.progress > 0 && b.progress < 100).slice(0, 3);
+
+    if (booksWithProgress.length === 0) return null;
+
+    return (
+        <div>
+            <h2 className="font-headline text-3xl font-bold mb-6">Lanjutkan Membaca</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+                {booksWithProgress.map(book => {
+                    const img = findImage(book.coverImage.src.split('/').slice(-1)[0].split('?')[0]); // hacky way to get id
+                    return (
+                        <div key={book.id} className="bg-card border border-border rounded-3xl p-6 hover:border-accent/50 transition-colors cursor-pointer">
+                            <div className="flex items-center gap-4">
+                                <Image data-ai-hint={img.hint} src={img.src} alt={book.title} width={img.width} height={img.height} className="w-16 h-24 rounded-lg flex-shrink-0 object-cover shadow-md" />
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="font-headline font-bold truncate">{book.title}</h4>
+                                    <p className="text-muted-foreground text-sm">{book.author}</p>
+                                    <div className="mt-2">
+                                        <div className="h-1.5 bg-border rounded-full overflow-hidden">
+                                            <div className="h-full bg-accent rounded-full" style={{ width: `${book.progress}%` }}></div>
+                                        </div>
+                                        <span className="text-xs text-muted-foreground mt-1">{book.progress}% selesai</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    );
+};
+
+const RecommendedForYou = ({ readingHistory }: { readingHistory: BookType[] }) => {
+    const { books: allBooks, setModalBookId } = useAppContext();
+    const [recommendations, setRecommendations] = useState<PersonalizeBookRecommendationsOutput | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            setIsLoading(true);
+            try {
+                const history = readingHistory.map(b => ({ title: b.title, author: b.author, category: b.category }));
+                const result = await personalizeBookRecommendations({ readingHistory: history });
+                setRecommendations(result);
+            } catch (error) {
+                console.error("Failed to get AI recommendations:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchRecommendations();
+    }, [readingHistory]);
+
+    const recommendedBooks = recommendations?.recommendations.map(rec => {
+        const book = allBooks.find(b => b.title === rec.title);
+        return { ...rec, book };
+    }).filter(item => item.book);
+
+    return (
+        <div>
+            <div className="flex items-center gap-4 mb-6">
+                <Wand2 className="w-8 h-8 text-primary" />
+                <h2 className="font-headline text-3xl font-bold">Rekomendasi Untukmu</h2>
+            </div>
+            {isLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="bg-card border border-border rounded-2xl p-4">
+                            <div className="flex gap-4">
+                                <Skeleton className="w-20 h-28 rounded-md"/>
+                                <div className="flex-1 space-y-2">
+                                    <Skeleton className="h-5 w-3/4"/>
+                                    <Skeleton className="h-4 w-1/2"/>
+                                    <Skeleton className="h-10 w-full mt-2"/>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : recommendedBooks && recommendedBooks.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recommendedBooks.map((rec, i) => (
+                        <div key={i} className="bg-card border border-border rounded-2xl p-4 flex gap-4 items-start cursor-pointer hover:border-accent transition-colors" onClick={() => setModalBookId(rec.book!.id)}>
+                            <div className="flex-shrink-0">
+                                <Image 
+                                    src={rec.book!.coverImage.src} 
+                                    alt={rec.book!.title}
+                                    width={80}
+                                    height={112}
+                                    data-ai-hint={rec.book!.coverImage.hint}
+                                    className="w-20 h-28 object-cover rounded-md shadow-lg"
+                                />
+                            </div>
+                            <div>
+                                <h3 className="font-headline font-bold text-lg leading-tight">{rec.title}</h3>
+                                <p className="text-sm text-muted-foreground">{rec.author}</p>
+                                <p className="text-xs text-muted-foreground mt-2 italic">"{rec.reason}"</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : <p className="text-muted-foreground">Tidak dapat memuat rekomendasi saat ini.</p>}
+        </div>
+    );
+}
+
+const LoggedInHomeView = () => {
+    const { books, bookmarkedBooks } = useAppContext();
+    const readingHistory = books.filter(b => bookmarkedBooks.has(b.id) || b.progress > 5);
+
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-36 space-y-16">
+            <h1 className="font-headline text-5xl font-bold">Selamat Datang, Pengguna!</h1>
+            <ContinueReading books={books} />
+            <RecommendedForYou readingHistory={readingHistory} />
+        </div>
+    );
+};
+
+export function HomeView() {
+    const { isLoggedIn } = useAppContext();
+    
+    return (
+        <section id="page-home" className="page-section">
+            {isLoggedIn ? <LoggedInHomeView /> : <LoggedOutHomeView />}
         </section>
     );
 }
