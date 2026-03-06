@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Loader2, Trash2, ImagePlus } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Trash2, ImagePlus, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
@@ -146,12 +146,19 @@ export function EditorView({ bookId }: { bookId: string }) {
         router.push('/studio');
     };
     
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!currentBook) return;
         setIsDeleting(true);
-        deleteBook(currentBook.id);
-        toast({ title: "Buku Dihapus", description: `'${currentBook.title}' telah dihapus.` });
-        router.push('/studio');
+        try {
+            await deleteBook(currentBook.id);
+            toast({ title: "Buku Dihapus", description: `'${currentBook.title}' telah dihapus.` });
+            router.push('/studio');
+        } catch (e) {
+            console.error(e)
+            toast({ title: "Gagal Menghapus", variant: 'destructive' });
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     if (loading || !user || !userData || userData.role !== 'penulis') {
@@ -177,22 +184,23 @@ export function EditorView({ bookId }: { bookId: string }) {
                          {!isNew && (
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" size="icon" disabled={isDeleting}>
+                                    <Button variant="outline" className="rounded-full text-rose-500 border-rose-500/50 hover:bg-rose-50 hover:text-rose-600" size="icon" disabled={isDeleting}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </AlertDialogTrigger>
-                                <AlertDialogContent>
+                                <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
                                     <AlertDialogHeader>
-                                        <AlertDialogTitle>Anda yakin?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Tindakan ini tidak dapat diurungkan. Ini akan menghapus buku Anda secara permanen.
+                                        <div className="mx-auto bg-rose-50 p-4 rounded-2xl w-fit mb-4"><AlertTriangle className="h-8 w-8 text-rose-500" /></div>
+                                        <AlertDialogTitle className="font-headline text-2xl font-black text-center">Hapus Karya?</AlertDialogTitle>
+                                        <AlertDialogDescription className="text-center font-medium leading-relaxed">
+                                            Tindakan ini permanen. Seluruh data dan konten dari karya ini akan hilang selamanya dari semesta Nusakarsa.
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                                        <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                                    <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-3">
+                                        <AlertDialogCancel className="rounded-full h-12 flex-1 border-2 font-bold">Batal</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleDelete} className="rounded-full h-12 flex-1 bg-rose-500 font-black shadow-lg shadow-rose-500/20" disabled={isDeleting}>
                                             {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
-                                            Hapus
+                                            Ya, Hapus
                                         </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
