@@ -1,16 +1,30 @@
+
 "use client";
 
 import { useAppContext } from "@/context/app-context";
 import { Button } from "@/components/ui/button";
-import { LogIn } from "lucide-react";
+import { LogIn, LogOut, Star, BookOpen, BarChart3 } from "lucide-react";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Star, BookOpen, BarChart3, LogOut } from "lucide-react";
-
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function ProfileView() {
-    const { isLoggedIn, setIsLoggedIn, setActivePage } = useAppContext();
+    const { isLoggedIn, setIsLoggedIn } = useAppContext();
     const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar')!;
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+    }, [isLoggedIn, router]);
+    
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        router.push('/');
+    }
 
     if (!isLoggedIn) {
         return (
@@ -20,20 +34,15 @@ export function ProfileView() {
                         <LogIn className="w-16 h-16 mx-auto text-muted-foreground/50 mb-6" strokeWidth={1}/>
                         <h1 className="font-headline text-3xl font-bold mb-4">Akses Terbatas</h1>
                         <p className="text-muted-foreground mb-8">
-                            Silakan masuk atau daftar untuk melihat profil Anda, mengelola pustaka, dan menikmati semua fitur.
+                           Anda harus masuk untuk melihat profil Anda.
                         </p>
-                        <Button className="btn-primary w-full max-w-xs mx-auto py-3 rounded-xl font-semibold" onClick={() => setIsLoggedIn(true)}>
-                            Masuk / Daftar
+                        <Button asChild className="btn-primary w-full max-w-xs mx-auto py-3 rounded-xl font-semibold">
+                           <Link href="/login">Masuk / Daftar</Link>
                         </Button>
                     </div>
                 </div>
             </section>
         );
-    }
-    
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        setActivePage('home');
     }
 
     return (

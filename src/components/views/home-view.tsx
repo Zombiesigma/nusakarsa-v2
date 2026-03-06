@@ -1,7 +1,9 @@
+
 "use client";
 
 import React, { useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useAppContext } from "@/context/app-context";
 import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
@@ -21,10 +23,6 @@ const findImage = (id: string) => {
 };
 
 const ParallaxHeroBooks = () => {
-    const heroMainImg = PlaceHolderImages.find(p => p.id === 'hero-main')!;
-    const heroSide1Img = PlaceHolderImages.find(p => p.id === 'hero-side1')!;
-    const heroSide2Img = PlaceHolderImages.find(p => p.id === 'hero-side2')!;
-
     useEffect(() => {
         const hero = document.getElementById('heroSection');
         if (!hero) return;
@@ -78,7 +76,7 @@ const RevealWrapper = ({ children, delay }: { children: React.ReactNode, delay?:
 };
 
 export function HomeView() {
-    const { setActivePage, books } = useAppContext();
+    const { books } = useAppContext();
     const trendingBooks = books.filter(b => b.trending).slice(0, 4);
     const currentlyReadingImg = findImage('currently-reading-cover');
 
@@ -102,13 +100,15 @@ export function HomeView() {
                             </p>
                             
                             <div className="opacity-0 animate-fade-up [animation-delay:0.3s] flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <button className="btn-primary px-8 py-4" onClick={() => setActivePage('explore')}>
-                                    Mulai Membaca
-                                </button>
-                                <button className="btn-secondary px-8 py-4 flex items-center justify-center gap-2" onClick={() => setActivePage('library')}>
-                                    <Library className="w-5 h-5" />
-                                    Pustaka Saya
-                                </button>
+                                <Button asChild className="btn-primary px-8 py-4">
+                                    <Link href="/explore">Mulai Membaca</Link>
+                                </Button>
+                                <Button asChild className="btn-secondary px-8 py-4 flex items-center justify-center gap-2">
+                                    <Link href="/library">
+                                        <Library className="w-5 h-5" />
+                                        Pustaka Saya
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
                         <ParallaxHeroBooks />
@@ -187,8 +187,8 @@ export function HomeView() {
                                 <span className="text-primary font-semibold tracking-widest uppercase text-sm">Paling Diminati</span>
                                 <h2 className="font-headline text-3xl md:text-5xl font-bold mt-2">Trending Minggu Ini</h2>
                             </div>
-                            <Button variant="outline" className="hidden md:flex rounded-full text-sm font-semibold" onClick={() => setActivePage('explore')}>
-                                Lihat Semua
+                            <Button asChild variant="outline" className="hidden md:flex rounded-full text-sm font-semibold">
+                                <Link href="/explore">Lihat Semua</Link>
                             </Button>
                         </div>
                     </RevealWrapper>

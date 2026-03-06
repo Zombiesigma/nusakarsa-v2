@@ -1,5 +1,7 @@
+
 "use client";
 
+import Link from 'next/link';
 import { useAppContext } from "@/context/app-context";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Image from 'next/image';
@@ -8,7 +10,7 @@ import { Star, Share2, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function BookModal() {
-  const { modalBookId, setModalBookId, books, bookmarkedBooks, toggleBookmark, isLoggedIn, setIsLoggedIn } = useAppContext();
+  const { modalBookId, setModalBookId, books, bookmarkedBooks, toggleBookmark, isLoggedIn } = useAppContext();
   const book = books.find(b => b.id === modalBookId);
 
   if (!book) return null;
@@ -49,11 +51,11 @@ export function BookModal() {
                 <span className="text-muted-foreground text-sm block">pembaca</span>
               </div>
               <Button 
-                className="btn-primary px-6 py-3 rounded-xl font-semibold" 
-                onClick={() => { if (!isLoggedIn) setIsLoggedIn(true) }}
+                asChild
+                className="btn-primary px-6 py-3 rounded-xl font-semibold"
                 disabled={isLoggedIn}
               >
-                {isLoggedIn ? 'Mulai Membaca' : 'Login untuk Membaca'}
+                {isLoggedIn ? <button>Mulai Membaca</button> : <Link href="/login">Login untuk Membaca</Link>}
               </Button>
             </div>
             <div className="flex gap-3">

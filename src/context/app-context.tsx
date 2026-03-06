@@ -1,15 +1,13 @@
+
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { Book, Category } from '@/lib/data';
 import { books as allBooks, categories as allCategories } from '@/lib/data';
 
-type Page = 'home' | 'explore' | 'library' | 'profile';
 type Theme = 'light' | 'dark';
 
 interface AppContextType {
-  activePage: Page;
-  setActivePage: (page: Page) => void;
   theme: Theme;
   toggleTheme: () => void;
   isMenuOpen: boolean;
@@ -28,7 +26,6 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [activePage, setActivePage] = useState<Page>('home');
   const [theme, setTheme] = useState<Theme>('light');
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<number | null>(null);
@@ -42,6 +39,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setTheme(savedTheme);
     } else if (prefersDark) {
       setTheme('dark');
+    }
+
+    const loggedInStatus = localStorage.getItem('nusakarsa-isLoggedIn') === 'true';
+    if (loggedInStatus) {
+      setIsLoggedIn(true);
     }
   }, []);
 
@@ -65,12 +67,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   }, []);
-  
-  const handleSetPage = useCallback((page: Page) => {
-    setActivePage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setMenuOpen(false);
-  }, []);
 
   const toggleBookmark = (id: number) => {
     setBookmarkedBooks(prev => {
@@ -83,10 +79,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       return newSet;
     });
   };
+  
+  const handleLogin = (status: boolean) => {
+    setIsLoggedIn(status);
+    localStorage.setItem('nusakarsa-isLoggedIn', status.toString());
+  };
 
   const value = {
-    activePage,
-    setActivePage: handleSetPage,
     theme,
     toggleTheme,
     isMenuOpen,
@@ -98,7 +97,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     bookmarkedBooks,
     toggleBookmark,
     isLoggedIn,
-    setIsLoggedIn,
+    setIsLoggedIn: handleLogin,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

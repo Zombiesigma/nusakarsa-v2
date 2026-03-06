@@ -1,6 +1,8 @@
+
 import type { Metadata } from 'next';
 import { AppProvider } from '@/context/app-context';
 import { Toaster } from '@/components/ui/toaster';
+import { ConditionalLayout } from '@/components/conditional-layout';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -22,7 +24,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased grain">
         <AppProvider>
-          {children}
+          <ConditionalLayout>{children}</ConditionalLayout>
           <Toaster />
         </AppProvider>
       </body>

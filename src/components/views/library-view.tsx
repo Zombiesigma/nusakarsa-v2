@@ -1,12 +1,23 @@
+
 "use client";
 
+import Link from "next/link";
 import { useAppContext } from "@/context/app-context";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
 import { BookCard } from "../common/book-card";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function LibraryView() {
-    const { isLoggedIn, setIsLoggedIn, bookmarkedBooks, books } = useAppContext();
+    const { isLoggedIn, bookmarkedBooks, books } = useAppContext();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            router.push('/login');
+        }
+    }, [isLoggedIn, router]);
 
     if (!isLoggedIn) {
         return (
@@ -16,10 +27,12 @@ export function LibraryView() {
                         <LogIn className="w-16 h-16 mx-auto text-muted-foreground/50 mb-6" strokeWidth={1}/>
                         <h1 className="font-headline text-3xl font-bold mb-4">Pustaka Pribadi Anda</h1>
                         <p className="text-muted-foreground mb-8">
-                            Masuk untuk melihat buku yang sedang Anda baca, yang tersimpan, dan yang telah selesai dibaca.
+                            Anda harus masuk untuk melihat pustaka pribadi Anda.
                         </p>
-                        <Button className="btn-primary w-full max-w-xs mx-auto py-3 rounded-xl font-semibold" onClick={() => setIsLoggedIn(true)}>
-                            Masuk / Daftar
+                        <Button asChild className="btn-primary w-full max-w-xs mx-auto py-3 rounded-xl font-semibold">
+                            <Link href="/login">
+                                Masuk / Daftar
+                            </Link>
                         </Button>
                     </div>
                 </div>
