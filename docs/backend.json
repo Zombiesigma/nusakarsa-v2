@@ -23,7 +23,8 @@
           "items": { "type": "string" }
         },
         "phoneNumber": { "type": "string" },
-        "domicile": { "type": "string" }
+        "domicile": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "displayName", "role"]
     },

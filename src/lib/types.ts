@@ -12,6 +12,7 @@ export type User = {
   following: string[];
   phoneNumber?: string;
   domicile?: string;
+  createdAt?: Timestamp;
 };
 
 export type ScreenplayBlock = {

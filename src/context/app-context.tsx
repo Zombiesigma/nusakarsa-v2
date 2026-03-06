@@ -59,7 +59,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const booksCollectionRef = useMemo(() => firestore ? collection(firestore, 'books') : null, [firestore]);
   const { data: books, loading: booksLoading } = useCollection(booksCollectionRef);
   
-  const userDocRef = useMemo(() => user ? doc(firestore, `users/${user.uid}`) : null, [firestore, user]);
+  const userDocRef = useMemo(() => (firestore && user) ? doc(firestore, `users/${user.uid}`) : null, [firestore, user]);
   const { data: userData, loading: userDataLoading } = useDoc(userDocRef);
   
   const bookmarkedBooks = useMemo(() => userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>(), [userData]);
@@ -98,11 +98,29 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   // Create user document for new users
   useEffect(() => {
-      if (user && !userDataLoading && userData === null && firestore) {
-          const newUserDocRef = doc(firestore, `users/${user.uid}`);
-          setDoc(newUserDocRef, { bookmarks: [], role: 'pembaca' }).catch(console.error);
-      }
-  }, [user, userData, userDataLoading, firestore]);
+    // Condition to ensure this only runs once for a new user after all loading is complete
+    if (user && !userLoading && !userDataLoading && userData === null && firestore) {
+      const newUserDocRef = doc(firestore, `users/${user.uid}`);
+      
+      const newUserProfile = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || user.email?.split('@')[0] || 'Pengguna Baru',
+        photoURL: user.photoURL || `https://picsum.photos/seed/${user.uid}/128/128`,
+        role: 'pembaca', // Default role for any new user document
+        username: user.displayName?.replace(/\s+/g, '').toLowerCase() || user.email?.split('@')[0] || `user${Date.now()}`,
+        bio: '',
+        followers: [],
+        following: [],
+        bookmarks: [],
+        createdAt: serverTimestamp(),
+      };
+
+      setDoc(newUserDocRef, newUserProfile).catch(err => {
+        console.error("Failed to create user document:", err);
+      });
+    }
+  }, [user, userLoading, userData, userDataLoading, firestore]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nusakarsa-theme') as Theme | null;
