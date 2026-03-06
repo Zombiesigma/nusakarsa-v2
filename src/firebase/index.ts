@@ -6,12 +6,13 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAtukuOZj0GWrEdE33ZQGp23d9NiV5tdgw",
-  authDomain: "nusakarsa-6e8b1.firebaseapp.com",
-  projectId: "nusakarsa-6e8b1",
-  storageBucket: "nusakarsa-6e8b1.appspot.com",
-  messagingSenderId: "222645707676",
-  appId: "1:222645707676:web:29851cacfb6873e8131e59"
+  apiKey: "AIzaSyA6YyVbCnw225VOGvPDhbz-LsefOKNgV3U",
+  authDomain: "moreink-b3529.firebaseapp.com",
+  projectId: "moreink-b3529",
+  storageBucket: "moreink-b3529.appspot.com",
+  messagingSenderId: "428110811227",
+  appId: "1:428110811227:web:9593b77e8f198a4d1def7e",
+  measurementId: "G-7478NVRHP4"
 };
 
 let firebaseApp: FirebaseApp;
