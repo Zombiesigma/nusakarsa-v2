@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useAppContext } from '@/context/app-context';
 import { cn } from '@/lib/utils';
 import { Bookmark } from 'lucide-react';
+import type { Book } from '@/lib/types';
 
 interface BookCardProps {
   bookId: string;
@@ -27,11 +28,9 @@ export function BookCard({ bookId, className, isPriority = false }: BookCardProp
           <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-lg relative">
             <Image
               priority={isPriority}
-              src={book.coverImage.src}
+              src={book.coverUrl || `https://picsum.photos/seed/${book.id}/600/800`}
               alt={`Cover of ${book.title}`}
-              width={book.coverImage.width}
-              height={book.coverImage.height}
-              data-ai-hint={book.coverImage.hint}
+              fill
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="book-shine"></div>
@@ -40,13 +39,10 @@ export function BookCard({ bookId, className, isPriority = false }: BookCardProp
                 <Bookmark className="w-4 h-4 text-white" fill="white"/>
               </div>
             )}
-            {book.trending && (
-               <div className="absolute top-3 left-3 px-2 py-1 bg-gold/80 backdrop-blur-sm rounded-full text-[10px] text-white font-semibold z-10">Trending</div>
-            )}
             <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 bg-gradient-to-t from-black/80 to-transparent">
-              <span className="text-white/70 text-[10px] uppercase tracking-widest">{book.category}</span>
+              <span className="text-white/70 text-[10px] uppercase tracking-widest">{book.genre}</span>
               <h3 className="font-headline text-white text-base md:text-lg font-bold truncate">{book.title}</h3>
-              <p className="text-white/80 text-sm">{book.author}</p>
+              <p className="text-white/80 text-sm">{book.authorName}</p>
             </div>
           </div>
         </div>

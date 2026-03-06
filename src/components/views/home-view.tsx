@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from "@/context/app-context";
@@ -8,10 +9,16 @@ import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { BookCard } from '../common/book-card';
-import type { Book as BookType } from '@/lib/data';
+import type { Book } from '@/lib/types';
+import { Loader2 } from 'lucide-react';
 
-// Logged-out view
 const ParallaxHeroBooks = () => {
+    const { books, loading } = useAppContext();
+
+    const heroBooks = useMemo(() => {
+        return books.filter(b => b.status === 'published').slice(0, 3);
+    }, [books]);
+
     useEffect(() => {
         const hero = document.getElementById('heroSection');
         if (!hero) return;
@@ -36,17 +43,33 @@ const ParallaxHeroBooks = () => {
         return () => hero.removeEventListener('mousemove', handleMouseMove);
     }, []);
 
+    if (loading && heroBooks.length === 0) {
+        return (
+            <div className="relative h-[450px] md:h-[550px] flex items-center justify-center">
+                <Loader2 className="w-12 h-12 animate-spin text-primary" />
+            </div>
+        );
+    }
+    
+    if (heroBooks.length === 0) return null;
+
     return (
         <div className="relative h-[450px] md:h-[550px] opacity-0 animate-fade-up [animation-delay:0.3s]">
-            <div className="book-parallax absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 md:w-64 animate-float" data-depth="0.3">
-                <BookCard bookId={1} isPriority />
-            </div>
-            <div className="book-parallax absolute top-8 left-0 w-36 md:w-44 animate-float-alt" data-depth="0.6">
-                 <BookCard bookId={2} isPriority />
-            </div>
-            <div className="book-parallax absolute bottom-8 right-0 w-40 md:w-48 animate-float" data-depth="0.5">
-                 <BookCard bookId={3} isPriority />
-            </div>
+            {heroBooks[0] && (
+                <div className="book-parallax absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 md:w-64 animate-float" data-depth="0.3">
+                    <BookCard bookId={heroBooks[0].id} isPriority />
+                </div>
+            )}
+            {heroBooks[1] && (
+                <div className="book-parallax absolute top-8 left-0 w-36 md:w-44 animate-float-alt" data-depth="0.6">
+                    <BookCard bookId={heroBooks[1].id} isPriority />
+                </div>
+            )}
+            {heroBooks[2] && (
+                <div className="book-parallax absolute bottom-8 right-0 w-40 md:w-48 animate-float" data-depth="0.5">
+                    <BookCard bookId={heroBooks[2].id} isPriority />
+                </div>
+            )}
         </div>
     );
 };
@@ -67,7 +90,13 @@ const RevealWrapper = ({ children, delay }: { children: React.ReactNode, delay?:
 
 const LoggedOutHomeView = () => {
     const { books } = useAppContext();
-    const featuredBooks = books.slice(0, 4);
+    
+    const featuredBooks = useMemo(() => {
+        return books
+            .filter(b => b.status === 'published')
+            .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+            .slice(0, 4);
+    }, [books]);
 
     return (
         <>
@@ -77,7 +106,7 @@ const LoggedOutHomeView = () => {
                         <div className="text-center lg:text-left">
                             <div className="opacity-0 animate-fade-up inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
                                 <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                                <span className="text-primary font-semibold text-sm tracking-wide">12,500+ Buku Tersedia</span>
+                                <span className="text-primary font-semibold text-sm tracking-wide">{books.filter(b => b.status === 'published').length}+ Karya Terbit</span>
                             </div>
                             
                             <h1 className="opacity-0 animate-fade-up [animation-delay:0.1s] font-headline text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] mb-8">
@@ -129,52 +158,27 @@ const LoggedOutHomeView = () => {
     );
 };
 
-
-// Logged-in view
-const ContinueReading = ({ books }: { books: BookType[] }) => {
-    const booksWithProgress = books.filter(b => b.progress > 0 && b.progress < 100).slice(0, 3);
-
-    if (booksWithProgress.length === 0) return null;
-
-    return (
-        <div>
-            <h2 className="font-headline text-3xl font-bold mb-6">Lanjutkan Membaca</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-                {booksWithProgress.map(book => {
-                    const img = book.coverImage;
-                    return (
-                        <div key={book.id} className="bg-card border border-border rounded-3xl p-6 hover:border-accent/50 transition-colors cursor-pointer">
-                            <div className="flex items-center gap-4">
-                                <Image data-ai-hint={img.hint} src={img.src} alt={book.title} width={64} height={96} className="w-16 h-24 rounded-lg flex-shrink-0 object-cover shadow-md" />
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="font-headline font-bold truncate">{book.title}</h4>
-                                    <p className="text-muted-foreground text-sm">{book.author}</p>
-                                    <div className="mt-2">
-                                        <div className="h-1.5 bg-border rounded-full overflow-hidden">
-                                            <div className="h-full bg-accent rounded-full" style={{ width: `${book.progress}%` }}></div>
-                                        </div>
-                                        <span className="text-xs text-muted-foreground mt-1">{book.progress}% selesai</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-        </div>
-    );
-};
-
 const LoggedInHomeView = () => {
-    const { books } = useAppContext();
-    const newReleaseBooks = books.filter(b => b.year >= new Date().getFullYear() - 5).slice(0, 5);
-    const trendingBooks = books.filter(b => b.trending).slice(0, 5);
+    const { books, user } = useAppContext();
+
+    const newReleaseBooks = useMemo(() => {
+        return books
+            .filter(b => b.status === 'published')
+            .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+            .slice(0, 5);
+    }, [books]);
+    
+    const trendingBooks = useMemo(() => {
+        return books
+            .filter(b => b.status === 'published')
+            .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+            .slice(0, 5);
+    }, [books]);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-36 space-y-16">
-            <h1 className="font-headline text-5xl font-bold">Selamat Datang, Pengguna!</h1>
-            <ContinueReading books={books} />
-
+            <h1 className="font-headline text-5xl font-bold">Selamat Datang, {user?.displayName || 'Kawan'}!</h1>
+            
             <div>
               <h2 className="font-headline text-3xl font-bold mb-6">Rilisan Terbaru</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">

@@ -1,46 +1,26 @@
+
 "use client";
 
-import { useState } from 'react';
-import { useAppContext } from '@/context/app-context';
-import type { Category } from '@/lib/data';
+import { useState, useMemo } from 'react';
+import { useAppContext, Category } from '@/context/app-context';
 import { BookCard } from '../common/book-card';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const CategoryPill = ({ category, activeCategory, setCategory }: { category: Category, activeCategory: Category, setCategory: (c: Category) => void }) => {
-    const isActive = category === activeCategory;
-    return (
-        <button 
-            className={cn(
-                "relative px-5 py-2 rounded-full text-sm font-medium border transition-all duration-300 overflow-hidden",
-                isActive 
-                    ? "border-accent text-white" 
-                    : "border-border bg-bg-alt text-muted-foreground hover:border-accent"
-            )}
-            onClick={() => setCategory(category)}
-        >
-            <span className="relative z-10">{category}</span>
-            <span className={cn(
-                "absolute inset-0 bg-accent transition-transform duration-300 origin-left z-0",
-                isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-            )}></span>
-        </button>
-    )
-}
 
 export function ExploreView() {
     const { books, categories } = useAppContext();
     const [activeCategory, setActiveCategory] = useState<Category>('Semua');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredBooks = books.filter(book => {
-        const matchesCategory = activeCategory === 'Semua' || book.category === activeCategory;
+    const filteredBooks = useMemo(() => books.filter(book => {
+        if (book.status !== 'published') return false;
+        const matchesCategory = activeCategory === 'Semua' || book.genre === activeCategory;
         const matchesSearch = searchQuery === '' || 
                               book.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                              book.author.toLowerCase().includes(searchQuery.toLowerCase());
+                              book.authorName.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
-    });
+    }), [books, activeCategory, searchQuery]);
 
     return (
         <section id="page-explore" className="page-section pt-28 md:pt-36">

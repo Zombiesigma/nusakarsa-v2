@@ -2,16 +2,16 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
-import type { Book, Category } from '@/lib/data';
-import { categories as allCategories } from '@/lib/data';
+import type { Book } from '@/lib/types';
 import { useUser, useCollection, useDoc } from '@/firebase';
 import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData, serverTimestamp } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
-import { initialBooks } from '@/lib/data';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { v4 as uuidv4 } from 'uuid';
 
+export const categories = ["Semua", "Novel", "Non-Fiksi", "Sastra", "Puisi", "Naskah Film", "Fiksi Ilmiah", "Romansa"] as const;
+export type Category = typeof categories[number];
 
 type Theme = 'light' | 'dark';
 
@@ -57,44 +57,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const firestore = useFirestore();
 
   const booksCollectionRef = useMemo(() => firestore ? collection(firestore, 'books') : null, [firestore]);
-  const { data: books, loading: booksLoading } = useCollection(booksCollectionRef);
+  const { data: booksData, loading: booksLoading } = useCollection(booksCollectionRef);
+  const books = useMemo(() => (booksData as Book[] || []), [booksData]);
   
   const userDocRef = useMemo(() => (firestore && user) ? doc(firestore, `users/${user.uid}`) : null, [firestore, user]);
   const { data: userData, loading: userDataLoading } = useDoc(userDocRef);
   
   const bookmarkedBooks = useMemo(() => userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>(), [userData]);
 
-  // Seed initial books if the books collection is empty
-  useEffect(() => {
-    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0 && booksCollectionRef && firestore) {
-        const batch = writeBatch(firestore);
-        initialBooks.forEach(book => {
-            const newBookRef = doc(booksCollectionRef);
-            // This seeding is partial, update it to match the new Book type in types.ts
-            const partialNewBook = {
-                title: book.title,
-                authorName: book.author,
-                genre: book.category,
-                // Add other required fields with default values
-                authorId: 'system',
-                authorPhotoUrl: '',
-                type: 'book' as const,
-                synopsis: 'Synopsis not available.',
-                coverUrl: book.coverImage.src,
-                status: 'published' as const,
-                visibility: 'public' as const,
-                isCompleted: true,
-                viewCount: 0,
-                favoriteCount: 0,
-                chapterCount: 0,
-                createdAt: serverTimestamp(),
-                updatedAt: serverTimestamp(),
-            };
-            batch.set(newBookRef, partialNewBook);
-        });
-        batch.commit().catch(console.error);
-    }
-  }, [isLoggedIn, books, booksLoading, firestore, booksCollectionRef]);
 
   // Create user document for new users
   useEffect(() => {
@@ -186,7 +156,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         return;
     }
 
-    const newBook: Omit<Book, 'id'> = {
+    const newBook: Omit<Book, 'id' | 'createdAt' | 'updatedAt'> = {
         ...bookDetails,
         authorId: user.uid,
         authorName: user.displayName || 'Penulis Baru',
@@ -196,12 +166,14 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         viewCount: 0,
         favoriteCount: 0,
         chapterCount: 0,
-        createdAt: serverTimestamp() as any,
-        updatedAt: serverTimestamp() as any,
     };
 
     try {
-        const docRef = await addDoc(booksCollectionRef, newBook);
+        const docRef = await addDoc(booksCollectionRef, {
+          ...newBook,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
         
         if (!firestore) throw new Error("Firestore not initialized");
 
@@ -277,11 +249,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setMenuOpen,
     modalBookId,
     setModalBookId,
-    books: books as Book[] || [],
+    books: books,
     addBook,
     updateBook,
     deleteBook,
-    categories: allCategories,
+    categories,
     bookmarkedBooks,
     toggleBookmark,
     isLoggedIn,
