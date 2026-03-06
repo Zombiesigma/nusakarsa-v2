@@ -8,11 +8,16 @@ export function ConditionalLayout({ children }: { children: React.ReactNode }) {
     const isAuthPage = pathname === '/login' || pathname === '/register';
     const isEditorPage = pathname.startsWith('/studio/editor/');
     const isAdminPage = pathname.startsWith('/admin');
-    const isReadPage = pathname.startsWith('/read/');
-
-    if (isAuthPage || isAdminPage || isEditorPage || isReadPage) {
+    
+    // These pages have their own full-screen layout and don't need the standard app shell (Header, MobileNav, etc.)
+    if (isAuthPage || isEditorPage || isAdminPage) {
         return <AppProvider>{children}</AppProvider>;
     }
 
-    return <AppProvider><NusakarsaApp>{children}</NusakarsaApp></AppProvider>;
+    // All other pages get the full app shell via NusakarsaApp
+    return (
+        <AppProvider>
+            <NusakarsaApp>{children}</NusakarsaApp>
+        </AppProvider>
+    );
 }

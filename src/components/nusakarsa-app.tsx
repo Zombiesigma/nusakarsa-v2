@@ -10,9 +10,12 @@ import { ParticleBackground } from "./effects/particle-background";
 import { ReadingProgressBar } from "./effects/reading-progress-bar";
 import { AnimatePresence } from 'framer-motion';
 import { SplashScreen } from './splash-screen';
+import { usePathname } from "next/navigation";
 
 export function NusakarsaApp({ children }: { children: React.ReactNode }) {
   const { modalBookId, isLoggedIn, isSplashDone } = useAppContext();
+  const pathname = usePathname();
+  const isReadPage = pathname.startsWith('/read/');
 
   return (
     <>
@@ -26,7 +29,7 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
           <ParticleBackground />
           <MobileSideMenu />
           
-          <Header />
+          {!isReadPage && <Header />}
           
           <main>
             {children}
