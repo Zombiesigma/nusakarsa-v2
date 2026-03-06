@@ -85,6 +85,23 @@
   ::-webkit-scrollbar-track { background: hsl(var(--bg-alt)); }
   ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+
+  .prose p {
+    margin-bottom: 1.5em;
+    text-indent: 1.5em;
+  }
+  .prose p:first-of-type {
+    text-indent: 0;
+  }
+
+  @media (max-width: 768px) {
+    .font-mono article [class*="max-w-"] {
+      width: 90% !important;
+      padding-left: 0 !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+  }
 }
 
 @layer components {

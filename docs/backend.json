@@ -51,7 +51,11 @@
         "updatedAt": { "type": "string", "format": "date-time" },
         "collaboratorUids": { "type": "array", "items": { "type": "string" } },
         "fileUrl": { "type": "string", "format": "uri" },
-        "shotListUrl": { "type": "string", "format": "uri" }
+        "shotListUrl": { "type": "string", "format": "uri" },
+        "playlist": {
+          "type": "array",
+          "items": { "$ref": "#/entities/MusicTrack" }
+        }
       },
       "required": ["title", "authorId", "authorName", "type", "status"]
     },
@@ -96,6 +100,43 @@
             "createdAt": { "type": "string", "format": "date-time" }
         },
         "required": ["authorId", "authorName", "authorAvatarUrl", "createdAt"]
+    },
+    "Music": {
+      "title": "Music",
+      "description": "Represents a music track available in the internal library.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "youtubeId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "artist", "youtubeId", "createdAt"]
+    },
+    "Shot": {
+      "title": "Shot",
+      "description": "Represents a single shot in a screenplay's shot list.",
+      "type": "object",
+      "properties": {
+        "number": { "type": "number" },
+        "scene": { "type": "number" },
+        "type": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["number", "scene", "type", "description"]
+    },
+    "MusicTrack": {
+      "title": "Music Track",
+      "description": "Represents a music track in a book's playlist.",
+      "type": "object",
+      "properties": {
+          "name": { "type": "string" },
+          "artist": { "type": "string" },
+          "image": { "type": "string", "format": "uri" },
+          "id": { "type": "string" },
+          "source": { "type": "string", "enum": ["youtube", "internal"] }
+      },
+      "required": ["name", "artist", "image", "id", "source"]
     }
   },
   "auth": {
@@ -114,6 +155,10 @@
       "schema": { "$ref": "#/entities/Chapter" },
       "description": "Stores the chapters for a specific book."
     },
+    "/books/{bookId}/shotList/{shotId}": {
+      "schema": { "$ref": "#/entities/Shot" },
+      "description": "Stores the shot list for a specific screenplay."
+    },
     "/authorRequests/{requestId}": {
       "schema": { "$ref": "#/entities/AuthorRequest" },
       "description": "Stores requests from users to become authors."
@@ -121,6 +166,10 @@
     "/stories/{storyId}": {
       "schema": { "$ref": "#/entities/Story" },
       "description": "Stores user-created stories/moments."
+    },
+    "/music/{musicId}": {
+      "schema": { "$ref": "#/entities/Music" },
+      "description": "Stores the internal music library for the app."
     }
   }
 }

@@ -1,6 +1,659 @@
+'use client';
 
-import { ReadView } from '@/components/views/read-view';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { notFound, useParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Progress } from '@/components/ui/progress';
+import { Input } from "@/components/ui/input";
+import { 
+  ArrowLeft, 
+  Settings, 
+  ChevronsUp, 
+  Music2, 
+  Headphones, 
+  Search, 
+  Youtube, 
+  Download, 
+  ListChecks, 
+  ScrollText,
+  ChevronRight,
+  List,
+  Play,
+  Pause,
+  Sparkles,
+  Clapperboard,
+  FileText,
+  Bookmark,
+  Video,
+  Layers,
+  Loader2,
+  Feather,
+  AlertCircle,
+  ExternalLink,
+  Maximize2,
+  Minimize2
+} from 'lucide-react';
+import Link from 'next/link';
+import { useFirestore, useUser, useDoc, useCollection } from '@/firebase';
+import { doc, collection, query, orderBy } from 'firebase/firestore';
+import type { Book, Chapter, Music, ScreenplayBlock, Shot, MusicTrack } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { searchYouTube, getPreviewAudioUrl } from '@/app/actions/music';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
-export default function ReadPage({ params }: { params: { id: string } }) {
-  return <ReadView bookId={params.id} />;
+type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper' | 'studio';
+type FontFamily = 'font-serif' | 'font-sans' | 'font-mono';
+
+const PAPER_TEXTURE_URL = "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&q=80&w=1600";
+
+export default function ReadPage() {
+  const params = useParams<{ id: string }>();
+  const firestore = useFirestore();
+  const { user: currentUser } = useUser();
+  const { toast } = useToast();
+  const [isMounted, setIsMounted] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  
+  const [fontSize, setFontSize] = useState(18);
+  const [lineHeight, setLineHeight] = useState(1.2);
+  const [fontFamily, setFontFamily] = useState<FontFamily>('font-serif');
+  const [readingTheme, setReadingTheme] = useState<ReadingTheme>('studio');
+  
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+  const [activeTrack, setActiveTrack] = useState<MusicTrack | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  const [musicSearchQuery, setMusicSearchQuery] = useState("");
+  const [ytResults, setYtResults] = useState<MusicTrack[]>([]);
+  const [isSearchingYt, setIsSearchingYt] = useState(false);
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const bookRef = useMemo(() => (firestore ? doc(firestore, 'books', params.id) : null), [firestore, params.id]);
+  const { data: book, loading: isBookLoading } = useDoc<Book>(bookRef);
+
+  const chaptersQuery = useMemo(() => (
+    (firestore && currentUser) ? query(collection(firestore, 'books', params.id, 'chapters'), orderBy('order', 'asc')) : null
+  ), [firestore, currentUser, params.id]);
+  const { data: chapters } = useCollection<Chapter>(chaptersQuery);
+
+  const shotsQuery = useMemo(() => (
+    (firestore && currentUser && book?.type === 'screenplay') ? query(collection(firestore, 'books', params.id, 'shotList'), orderBy('number', 'asc')) : null
+  ), [firestore, currentUser, params.id, book?.type]);
+  const { data: shotList } = useCollection<Shot>(shotsQuery);
+
+  const musicQuery = useMemo(() => (
+    (firestore && currentUser) ? query(collection(firestore, 'music'), orderBy('createdAt', 'desc')) : null
+  ), [firestore, currentUser]);
+  const { data: musicList } = useCollection<Music>(musicQuery);
+
+  const filteredInternalMusic = useMemo(() => {
+    if (!musicList) return [];
+    if (!musicSearchQuery.trim()) return musicList;
+    return musicList.filter(m => 
+      m.title.toLowerCase().includes(musicSearchQuery.toLowerCase()) ||
+      m.artist.toLowerCase().includes(musicSearchQuery.toLowerCase())
+    );
+  }, [musicList, musicSearchQuery]);
+
+  const playTrack = async (track: MusicTrack) => {
+    if (!audioRef.current || !track.id) return;
+    
+    setIsAudioLoading(true);
+    setActiveTrack(track);
+    setIsPlaying(false);
+    
+    try {
+        const streamUrl = await getPreviewAudioUrl(track.id);
+        if (streamUrl) {
+            audioRef.current.src = streamUrl;
+            await audioRef.current.play();
+            setIsPlaying(true);
+        } else {
+            toast({ variant: 'destructive', title: "Musik Gagal Dimuat", description: "Tidak dapat menjangkau aliran suara kawan." });
+        }
+    } catch (err) {
+        console.warn("Playback error:", err);
+        setIsPlaying(false);
+    } finally {
+        setIsAudioLoading(false);
+    }
+  };
+
+  const handlePlayNext = useCallback(() => {
+    if (!book?.playlist || book.playlist.length === 0) return;
+    const currentIdx = book.playlist.findIndex(t => t.id === activeTrack?.id);
+    if (currentIdx !== -1 && currentIdx < book.playlist.length - 1) {
+        playTrack(book.playlist[currentIdx + 1]);
+    }
+  }, [book?.playlist, activeTrack]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+        audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  useEffect(() => {
+    const h = setTimeout(async () => {
+        if (musicSearchQuery.trim().length >= 2) {
+            setIsSearchingYt(true);
+            try { const r = await searchYouTube(musicSearchQuery); setYtResults(r); } catch(e){} finally { setIsSearchingYt(false); }
+        }
+    }, 600);
+    return () => clearTimeout(h);
+  }, [musicSearchQuery]);
+
+  const applyTheme = (t: ReadingTheme) => {
+    setReadingTheme(t);
+    localStorage.setItem('reading-theme', t);
+    document.documentElement.classList.toggle('dark', t === 'dark' || t === 'studio');
+  };
+
+  useEffect(() => {
+    setIsMounted(true);
+    const savedTheme = (localStorage.getItem('reading-theme') as ReadingTheme) || 'studio';
+    applyTheme(savedTheme);
+  }, []);
+
+  const handleScroll = () => {
+    const c = scrollContainerRef.current;
+    if (c) { 
+      setReadingProgress((c.scrollTop / (c.scrollHeight - c.clientHeight)) * 100); 
+      setShowScrollToTop(c.scrollTop > 500); 
+    }
+  };
+
+  if (isBookLoading || !isMounted) return <ReadPageSkeleton />;
+  if (!book) return notFound();
+
+  const isScreenplay = book.type === 'screenplay';
+  const isPoem = book.type === 'poem';
+
+  const paperStyles = readingTheme === 'paper' ? {
+    backgroundImage: `url("${PAPER_TEXTURE_URL}")`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
+    color: '#3e2723'
+  } : {};
+
+  let sceneCounter = 0;
+
+  return (
+    <div 
+      className={cn(
+        "flex h-full w-full transition-all duration-500 mx-auto overflow-hidden relative", 
+        readingTheme === 'sepia' ? "bg-[#f4ecd8] text-[#5b4636]" : 
+        readingTheme === 'dark' ? "bg-background" : 
+        readingTheme === 'studio' ? "bg-zinc-950 text-white" :
+        readingTheme === 'light' ? "bg-background" : ""
+      )}
+      style={paperStyles}
+    >
+      <audio 
+        ref={audioRef} 
+        onEnded={handlePlayNext} 
+        onError={() => {
+            setIsPlaying(false);
+            setIsAudioLoading(false);
+        }}
+      />
+
+      <div className="flex-1 flex flex-col relative overflow-hidden">
+        <header className={cn(
+            "flex items-center justify-between px-2 md:px-4 h-16 border-b sticky top-0 z-30 backdrop-blur-md",
+            readingTheme === 'paper' ? "bg-white/40 border-black/10" : 
+            readingTheme === 'studio' ? "bg-black/60 border-white/5" : "bg-background/80"
+        )}>
+          <Link href={`/`} className="shrink-0">
+            <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          
+          <div className="flex flex-col items-center flex-1 min-w-0 mx-1 md:mx-4 text-center">
+              <h2 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-40 truncate w-full">
+                Reading: {book.title}
+              </h2>
+              <div className="flex items-center justify-center gap-1.5 text-[7px] md:text-[8px] font-bold text-primary uppercase whitespace-nowrap">
+                  {isScreenplay ? <Clapperboard className="h-2 w-2 md:h-2.5 md:w-2.5" /> : isPoem ? <Feather className="h-2 w-2 md:h-2.5 md:w-2.5" /> : <ScrollText className="h-2 w-2 md:h-2.5 md:w-2.5" />}
+                  {isScreenplay ? 'INDUSTRIAL SCRIPT RENDERING' : isPoem ? 'POETRY MODE' : 'NOVEL MODE'}
+              </div>
+          </div>
+
+          <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
+            <AnimatePresence>
+                {activeTrack && (
+                    <motion.button 
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      onClick={() => {
+                          if (!audioRef.current || isAudioLoading) return;
+                          if (isPlaying) {
+                              audioRef.current.pause();
+                              setIsPlaying(false);
+                          } else {
+                              audioRef.current.play().catch(() => {});
+                              setIsPlaying(true);
+                          }
+                      }} 
+                      className="h-9 w-9 md:h-10 md:w-10 flex items-center justify-center relative"
+                    >
+                        <motion.div 
+                          animate={{ rotate: isPlaying ? 360 : 0 }} 
+                          transition={{ duration: 4, repeat: Infinity, ease: "linear" }} 
+                          className={cn(
+                            "h-7 w-7 md:h-8 md:w-8 rounded-full bg-zinc-900 border border-white/20 overflow-hidden shadow-lg",
+                            isAudioLoading && "opacity-50 animate-pulse"
+                          )}
+                        >
+                            <img src={activeTrack.image} className="w-full h-full object-cover" alt="" />
+                        </motion.div>
+                        {isAudioLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <Loader2 className="h-4 w-4 text-white animate-spin" />
+                            </div>
+                        )}
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
+                  <Headphones className={cn("h-4.5 w-4.5 md:h-5 md:w-5", isPlaying && "text-primary animate-pulse")} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-6 rounded-[2rem] border-none shadow-2xl bg-background/95 backdrop-blur-xl" align="end">
+                <div className="space-y-6">
+                    <div className="space-y-4">
+                        <div className="flex justify-between text-[10px] font-black uppercase"><span>Volume</span><span>{Math.round(volume*100)}%</span></div>
+                        <Slider defaultValue={[volume*100]} max={100} onValueChange={(v)=>setVolume(v[0]/100)} />
+                    </div>
+
+                    {book.playlist && book.playlist.length > 0 && (
+                        <div className="space-y-3">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                <Sparkles className="h-3 w-3" /> Playlist Penulis
+                            </p>
+                            <div className="max-h-40 overflow-y-auto space-y-2 no-scrollbar">
+                                {book.playlist.map((track, i) => (
+                                    <button 
+                                        key={i} 
+                                        className={cn(
+                                            "flex items-center gap-3 w-full p-2.5 rounded-xl transition-all text-left",
+                                            activeTrack?.id === track.id ? "bg-primary/10 text-primary shadow-inner" : "hover:bg-muted/50"
+                                        )}
+                                        onClick={() => playTrack(track)}
+                                    >
+                                        <div className="relative">
+                                            <img src={track.image} className="h-10 w-10 rounded-lg object-cover shadow-sm" alt="" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="font-black text-xs truncate italic">"{track.name}"</p>
+                                            <p className="text-[8px] font-bold opacity-60 uppercase mt-0.5">{track.artist}</p>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                        <Input placeholder="Cari musik lain..." className="pl-9 h-10 rounded-xl bg-muted/30 border-none" value={musicSearchQuery} onChange={(e)=>setMusicSearchQuery(e.target.value)} />
+                    </div>
+                    <div className="max-h-40 overflow-y-auto space-y-2 no-scrollbar">
+                        {filteredInternalMusic.map(m => (
+                            <Button key={m.id} variant="ghost" className="w-full justify-start h-12 rounded-xl text-xs" onClick={()=>playTrack({
+                                name: m.title,
+                                artist: m.artist,
+                                image: 'https://placehold.co/64x64?text=Music',
+                                id: m.id,
+                                source: 'internal'
+                            })}>"{m.title}"</Button>
+                        ))}
+                        {ytResults.map((t, i) => (
+                            <Button key={i} variant="ghost" className="w-full justify-start h-12 rounded-xl text-xs text-red-500" onClick={()=>playTrack(t)}><Youtube className="h-3 w-3 mr-2" /> {t.name}</Button>
+                        ))}
+                    </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
+                    <List className="h-4.5 w-4.5 md:h-5 md:w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" className="rounded-t-[3rem] h-[80vh] md:h-[70vh] p-0 overflow-hidden z-[300] border-none shadow-[0_-20px_50px_rgba(0,0,0,0.2)] bg-background">
+                    <div className="mx-auto w-16 h-1.5 bg-muted rounded-full mt-4 mb-2 shrink-0 opacity-50" />
+                    
+                    <div className="flex flex-col h-full">
+                        <SheetHeader className="px-8 pt-6 pb-6 text-left shrink-0">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-primary/10 text-primary rounded-2xl shadow-sm ring-1 ring-primary/20">
+                                    <Layers className="h-6 w-6" />
+                                </div>
+                                <div className="space-y-1">
+                                    <SheetTitle className="font-headline text-3xl font-black tracking-tight leading-none">Daftar Isi</SheetTitle>
+                                    <SheetDescription className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                                        Navigasi {isScreenplay ? 'Adegan & Scene' : isPoem ? 'Bait Puisi' : 'Struktur Cerita'}
+                                    </SheetDescription>
+                                </div>
+                            </div>
+                        </SheetHeader>
+
+                        <div className="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar">
+                            <div className="grid gap-3">
+                                {chapters?.map((c, idx) => (
+                                    <button 
+                                        key={c.id} 
+                                        onClick={()=> {
+                                            document.getElementById(`chapter-${c.id}`)?.scrollIntoView({behavior:'smooth'});
+                                            setIsSheetOpen(false);
+                                        }} 
+                                        className="group w-full flex items-center gap-4 p-4 rounded-[1.75rem] transition-all hover:bg-primary/5 active:scale-[0.98] border border-transparent hover:border-primary/10 text-left relative overflow-hidden"
+                                    >
+                                        <div className="h-12 w-12 rounded-2xl bg-muted group-hover:bg-primary group-hover:text-white transition-all duration-300 flex items-center justify-center shrink-0 shadow-sm font-black text-xs">
+                                            {String(idx + 1).padStart(2, '0')}
+                                        </div>
+                                        
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-60">
+                                                    {isScreenplay ? 'Scene' : isPoem ? 'Poem' : 'Bagian'}
+                                                </span>
+                                                <div className="h-1 w-1 rounded-full bg-border" />
+                                                <span className="text-[8px] font-bold text-muted-foreground uppercase">
+                                                    ID: {c.id.substring(0, 4)}
+                                                </span>
+                                            </div>
+                                            <p className="font-bold text-sm md:text-base truncate group-hover:text-primary transition-colors pr-4">
+                                                {c.title}
+                                            </p>
+                                        </div>
+
+                                        <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-primary/40 group-hover:translate-x-1 transition-all" />
+                                        
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-primary rounded-r-full transition-all group-hover:h-8" />
+                                    </button>
+                                ))}
+
+                                {isScreenplay && shotList && shotList.length > 0 && (
+                                    <button 
+                                        onClick={()=> {
+                                            document.getElementById('production-shot-list')?.scrollIntoView({behavior:'smooth'});
+                                            setIsSheetOpen(false);
+                                        }} 
+                                        className="w-full flex items-center gap-4 p-5 rounded-[2rem] transition-all bg-orange-500/5 hover:bg-orange-500/10 border-2 border-dashed border-orange-500/20 mt-6 active:scale-[0.98] text-left"
+                                    >
+                                        <div className="h-12 w-12 rounded-2xl bg-orange-500 text-white shadow-lg flex items-center justify-center shrink-0">
+                                            <Video className="h-6 w-6" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-orange-600 mb-1">Industrial Document</p>
+                                            <h4 className="font-black text-sm md:text-lg text-orange-600 italic tracking-tighter">PRODUCTION SHOT LIST</h4>
+                                        </div>
+                                        <ArrowLeft className="h-5 w-5 text-orange-500 rotate-180" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
+                  <Settings className="h-4.5 w-4.5 md:h-5 md:w-5"/>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-6 rounded-[2rem] border-none shadow-2xl bg-background/95 backdrop-blur-xl" align="end">
+                <div className="space-y-8">
+                    <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { id: 'light', label: 'Light', icon: null },
+                          { id: 'studio', label: 'Studio', icon: <Clapperboard className="h-3 w-3" /> },
+                          { id: 'sepia', label: 'Sepia', icon: null },
+                          { id: 'paper', label: 'Paper', icon: <ScrollText className="h-3 w-3" /> }
+                        ].map(t => (
+                            <Button 
+                                key={t.id} 
+                                variant={readingTheme === t.id ? 'default' : 'outline'} 
+                                onClick={() => applyTheme(t.id as any)} 
+                                className="h-10 text-[10px] uppercase font-black gap-2"
+                            >
+                                {t.icon}
+                                {t.label}
+                            </Button>
+                        ))}
+                    </div>
+                    <div className="space-y-4">
+                        <p className="text-[10px] font-black uppercase text-muted-foreground/60">Ukuran Huruf: {fontSize}px</p>
+                        <Slider defaultValue={[fontSize]} min={14} max={32} onValueChange={(v)=>setFontSize(v[0])} />
+                    </div>
+                    {!isScreenplay && (
+                        <div className="grid grid-cols-3 gap-2">
+                            {['font-serif','font-sans','font-mono'].map(f=>(<Button key={f} variant={fontFamily===f?'default':'outline'} onClick={()=>setFontFamily(f as any)} className={cn("h-10 text-xs", f)}>Aa</Button>))}
+                        </div>
+                    )}
+
+                    <div className="space-y-4 pt-4 border-t border-border/40">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 px-1">Aset Produksi</p>
+                        <div className="grid grid-cols-1 gap-2">
+                            {book.fileUrl && (
+                                <Button variant="outline" className="w-full justify-start h-11 rounded-xl gap-3 font-bold border-2" asChild>
+                                    <a href={book.fileUrl} target="_blank" rel="noopener noreferrer">
+                                        <Download className="h-4 w-4 text-primary" /> Unduh Naskah PDF
+                                    </a>
+                                </Button>
+                            )}
+                            {book.shotListUrl && (
+                                <Button variant="outline" className="w-full justify-start h-11 rounded-xl gap-3 font-bold border-2 border-orange-100 hover:bg-orange-50" asChild>
+                                    <a href={book.shotListUrl} target="_blank" rel="noopener noreferrer">
+                                        <ListChecks className="h-4 w-4 text-orange-500" /> Unduh Shot List PDF
+                                    </a>
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </header>
+
+        <Progress value={readingProgress} className="w-full h-1 rounded-none bg-muted/20" />
+        
+        <div 
+          ref={scrollContainerRef} 
+          onScroll={handleScroll} 
+          className="flex-1 overflow-y-auto scroll-smooth no-scrollbar relative z-10"
+        >
+          <div className={cn(
+              "w-full mx-auto",
+              isScreenplay ? "max-w-none px-0 py-0" : "max-w-4xl px-6 py-12"
+          )}>
+            {!isScreenplay && (
+                <header className="text-center space-y-6 mb-20">
+                    <h1 className="text-4xl md:text-6xl font-headline font-black italic">{book.title}</h1>
+                    <div className="flex flex-col items-center gap-2">
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Mahakarya Narasi Oleh</p>
+                        <p className="font-headline text-xl md:text-2xl font-black">{book.authorName}</p>
+                    </div>
+                </header>
+            )}
+
+            <article 
+              className={cn(
+                "transition-all duration-500 mx-auto", 
+                isScreenplay ? "font-mono max-w-none" : cn(fontFamily, "prose dark:prose-invert max-w-lg"),
+                isPoem && "text-center italic"
+              )} 
+              style={{ fontSize: `${fontSize}px`, lineHeight: isScreenplay ? '1.2' : lineHeight }}
+            >
+                <>
+                    {chapters?.map((chapter, cIdx) => (
+                        <section 
+                            key={chapter.id} 
+                            id={`chapter-${chapter.id}`} 
+                            className={cn(
+                                isScreenplay ? "mb-0" : "mb-32"
+                            )}
+                        >
+                            {!isScreenplay && (
+                                <h2 className="text-3xl font-black mb-14">
+                                    {chapter.title}
+                                </h2>
+                            )}
+                            
+                            {isScreenplay ? (
+                                <div className="bg-white text-zinc-900 px-6 py-12 md:pl-[1.5in] md:pr-[1in] md:py-[1in] shadow-2xl border-b border-zinc-100 relative overflow-hidden flex flex-col gap-0.5 mx-auto max-w-[8.5in] min-h-[11in]">
+                                    <div className="absolute top-10 right-10 text-[10pt] font-black opacity-30 select-none tracking-widest">
+                                        {cIdx + 1}.
+                                    </div>
+                                    
+                                    <h2 className="text-[10pt] text-center italic uppercase tracking-[0.6em] opacity-20 mb-16 select-none font-black">
+                                        {chapter.title}
+                                    </h2>
+
+                                    {(() => {
+                                        try {
+                                            if (chapter.content.trim().startsWith('[') && chapter.content.trim().endsWith(']')) {
+                                                const blocks: ScreenplayBlock[] = JSON.parse(chapter.content);
+                                                let lastCharacterInScene: string | null = null;
+
+                                                return (
+                                                    <div className="flex flex-col">
+                                                        {blocks.map(block => {
+                                                            let displayText = block.text;
+                                                            let isContd = false;
+                                                            
+                                                            if (block.type === 'slugline') {
+                                                                lastCharacterInScene = null;
+                                                            } else if (block.type === 'character') {
+                                                                const cleanName = block.text.trim().toUpperCase();
+                                                                if (lastCharacterInScene === cleanName && cleanName !== "") {
+                                                                    isContd = true;
+                                                                } else {
+                                                                    lastCharacterInScene = cleanName;
+                                                                }
+                                                            }
+
+                                                            return (
+                                                                <div key={block.id} className={cn(
+                                                                    "whitespace-pre-wrap transition-all duration-300 relative",
+                                                                    block.type === 'slugline' && "font-bold uppercase mt-10 mb-4 text-[1.15em] tracking-tighter border-b border-black/5 pb-1",
+                                                                    block.type === 'action' && "text-left mb-4 font-medium leading-[1.2]",
+                                                                    block.type === 'character' && "mt-6 mb-0.5 font-bold uppercase tracking-tight text-left w-full max-w-[3in] mx-auto pl-[1.2in]",
+                                                                    block.type === 'parenthetical' && "mb-0.5 italic text-[0.95em] opacity-80 text-left w-full max-w-[2.5in] mx-auto pl-[0.8in] before:content-['('] after:content-[')']",
+                                                                    block.type === 'dialogue' && "mb-4 leading-[1.2] text-[1.05em] text-left w-full max-w-[3.5in] mx-auto pl-[0.2in]",
+                                                                    block.type === 'transition' && "text-right font-bold uppercase mt-8 mb-8 tracking-[0.25em] text-[0.95em] opacity-60",
+                                                                )}
+                                                                >
+                                                                    {isContd && block.type === 'character' && (
+                                                                        <div className="absolute left-1/2 -translate-x-1/2 top-[-1rem] text-[7pt] font-black text-black/20 uppercase tracking-widest ml-[0.6in]">(CONT'D)</div>
+                                                                    )}
+                                                                    {displayText}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                );
+                                            } else {
+                                                return <div className="whitespace-pre-wrap italic opacity-60 text-center py-24 border-2 border-dashed rounded-3xl">Format naskah tidak didukung untuk tampilan studio kawan.</div>;
+                                            }
+                                        } catch (e) {
+                                            return <div className="whitespace-pre-wrap leading-relaxed">{chapter.content}</div>;
+                                        }
+                                    })()}
+                                </div>
+                            ) : (
+                                <div className={cn("markdown-content", isPoem && "text-center italic")}>
+                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {chapter.content}
+                                  </ReactMarkdown>
+                                </div>
+                            )}
+                        </section>
+                    ))}
+                </>
+
+                {isScreenplay && shotList && shotList.length > 0 && (
+                    <section id="production-shot-list" className="mt-0 py-24 bg-zinc-950 border-t border-white/5">
+                        <div className="max-w-5xl mx-auto px-6">
+                            <div className="text-center space-y-4 mb-16">
+                                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-orange-500/10 text-orange-500 text-[10px] font-black uppercase tracking-[0.4em] border border-orange-500/20">
+                                    <Sparkles className="h-3.5 w-3.5" /> Official Studio Document
+                                </div>
+                                <h2 className="text-4xl font-black uppercase tracking-[0.6em] text-white italic drop-shadow-2xl">Shot List</h2>
+                            </div>
+                            
+                            <div className="overflow-x-auto rounded-[3rem] border border-white/10 bg-zinc-900 shadow-[0_30px_100px_rgba(0,0,0,0.6)] overflow-hidden">
+                                <table className="w-full text-[10px] md:text-xs font-mono text-zinc-400">
+                                    <thead className="bg-white/5 border-b border-white/10">
+                                        <tr className="font-black uppercase tracking-tighter text-orange-500">
+                                            <th className="p-6 text-left w-16">#</th>
+                                            <th className="p-6 text-left w-16">SC</th>
+                                            <th className="p-6 text-left w-24">TYPE</th>
+                                            <th className="p-6 text-left">DESCRIPTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {shotList.map(shot => (
+                                            <tr key={shot.id} className="hover:bg-white/[0.02] transition-colors group">
+                                                <td className="p-6 font-black opacity-30">{shot.number}</td>
+                                                <td className="p-6 font-bold text-white">{shot.scene}</td>
+                                                <td className="p-6">
+                                                    <span className="bg-white/5 text-white px-3 py-1.5 rounded-xl font-black text-[9px] uppercase shadow-inner border border-white/10">
+                                                        {shot.type}
+                                                    </span>
+                                                </td>
+                                                <td className="p-6 text-zinc-400 italic leading-relaxed group-hover:text-white transition-colors">{shot.description}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="mt-20 text-center">
+                                <p className="text-[10px] font-black uppercase tracking-[0.8em] text-muted-foreground opacity-20">End of Production Document • Hollywood Grade Pro</p>
+                            </div>
+                        </div>
+                    </section>
+                )}
+            </article>
+          </div>
+        </div>
+
+        {showScrollToTop && (
+            <Button size="icon" className="fixed bottom-8 right-6 rounded-full h-14 w-14 shadow-[0_15px_40px_rgba(0,0,0,0.4)] z-50 bg-primary/90 backdrop-blur hover:bg-primary transition-all active:scale-90" onClick={() => scrollContainerRef.current?.scrollTo({top:0, behavior:'smooth'})}>
+                <ChevronsUp className="h-7 w-7 text-white"/>
+            </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ReadPageSkeleton() {
+  return <div className="max-w-lg mx-auto h-screen p-6 animate-pulse"><Skeleton className="h-12 w-full rounded-2xl mb-10" /><Skeleton className="h-64 w-full rounded-3xl" /></div>
 }

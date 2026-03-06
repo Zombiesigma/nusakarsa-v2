@@ -29,6 +29,14 @@ export type Chapter = {
   createdAt: Timestamp;
 };
 
+export type MusicTrack = {
+  name: string;
+  artist: string;
+  image: string;
+  id: string;
+  source: 'youtube' | 'internal';
+};
+
 export type Book = {
   id: string;
   title: string;
@@ -56,6 +64,7 @@ export type Book = {
   }[];
   fileUrl?: string;
   shotListUrl?: string;
+  playlist?: MusicTrack[];
 };
 
 export type Reel = {
@@ -116,3 +125,19 @@ export type Notification = {
     read: boolean;
     createdAt: Timestamp;
 }
+
+export type Music = {
+  id:string;
+  title: string;
+  artist: string;
+  youtubeId: string;
+  createdAt: Timestamp;
+};
+
+export type Shot = {
+  id: string;
+  number: number;
+  scene: number;
+  type: string;
+  description: string;
+};

@@ -37,15 +37,24 @@ service cloud.firestore {
         (resource.data.authorId == request.auth.uid && isWriter(request.auth.uid))
         || isAdmin(request.auth.uid)
       );
-    }
+      
+      match /chapters/{chapterId} {
+        allow read: if true;
+        allow write: if request.auth != null && (
+          get(/databases/$(database)/documents/books/$(bookId)).data.authorId == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/books/$(bookId)).data.collaboratorUids ||
+          isAdmin(request.auth.uid)
+        );
+      }
 
-    match /books/{bookId}/chapters/{chapterId} {
-      allow read: if true;
-      allow write: if request.auth != null && (
-        get(/databases/$(database)/documents/books/$(bookId)).data.authorId == request.auth.uid ||
-        request.auth.uid in get(/databases/$(database)/documents/books/$(bookId)).data.collaboratorUids ||
-        isAdmin(request.auth.uid)
-      );
+      match /shotList/{shotId} {
+        allow read: if true;
+        allow write: if request.auth != null && (
+          get(/databases/$(database)/documents/books/$(bookId)).data.authorId == request.auth.uid ||
+          request.auth.uid in get(/databases/$(database)/documents/books/$(bookId)).data.collaboratorUids ||
+          isAdmin(request.auth.uid)
+        );
+      }
     }
     
     match /authorRequests/{requestId} {
@@ -62,6 +71,11 @@ service cloud.firestore {
     match /collaborationInvitations/{invitationId} {
       allow read, update: if request.auth != null && request.auth.uid == resource.data.collaboratorId;
       allow create: if request.auth != null && isWriter(request.auth.uid);
+    }
+
+    match /music/{musicId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && isAdmin(request.auth.uid);
     }
   }
 }
