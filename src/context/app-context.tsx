@@ -6,7 +6,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import type { Book, Category } from '@/lib/data';
 import { categories as allCategories } from '@/lib/data';
 import { useUser, useCollection, useDoc } from '@/firebase';
-import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { initialBooks } from '@/lib/data';
 
@@ -54,21 +54,25 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   
   const bookmarkedBooks = userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>();
 
+  // Seed initial books if the books collection is empty
   useEffect(() => {
-    // Seed initial books for new users
-    if (user && userData === null) { // userData is null for a new user
-      const batch = writeBatch(firestore);
-      initialBooks.forEach(book => {
-        const newBookRef = doc(booksCollectionRef);
-        batch.set(newBookRef, { ...book, ownerId: null }); // Public books
-      });
-      // Set initial user data
-      const newUserDocRef = doc(firestore, `users/${user.uid}`);
-      batch.set(newUserDocRef, { bookmarks: [] });
-
-      batch.commit().catch(console.error);
+    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0) {
+        const batch = writeBatch(firestore);
+        initialBooks.forEach(book => {
+            const newBookRef = doc(booksCollectionRef);
+            batch.set(newBookRef, { ...book, ownerId: null }); // Public books
+        });
+        batch.commit().catch(console.error);
     }
-  }, [user, userData, firestore, booksCollectionRef]);
+  }, [isLoggedIn, books, booksLoading, firestore, booksCollectionRef]);
+
+  // Create user document for new users
+  useEffect(() => {
+      if (user && !userDataLoading && userData === null) {
+          const newUserDocRef = doc(firestore, `users/${user.uid}`);
+          setDoc(newUserDocRef, { bookmarks: [] }).catch(console.error);
+      }
+  }, [user, userData, userDataLoading, firestore]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nusakarsa-theme') as Theme | null;
