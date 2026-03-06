@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAppContext } from "@/context/app-context";
 import { cn } from "@/lib/utils";
 import { Home, Search, Library, User, PenSquare } from "lucide-react";
 
@@ -43,6 +44,9 @@ const NavItem = ({ href, icon, label }: NavItemProps) => {
 }
 
 export function MobileBottomNav() {
+    const { userData } = useAppContext();
+    const isWriter = userData?.role === 'penulis';
+
     return (
         <div className="mobile-bottom-nav md:hidden">
             <nav className="h-16 bg-background/90 backdrop-blur-xl border-t border-border shadow-[0_-5px_30px_-15px_rgba(0,0,0,0.1)]">
@@ -50,7 +54,7 @@ export function MobileBottomNav() {
                     <NavItem href="/" icon={<Home className="w-6 h-6" />} label="Beranda" />
                     <NavItem href="/explore" icon={<Search className="w-6 h-6" />} label="Jelajahi" />
                     <NavItem href="/library" icon={<Library className="w-6 h-6" />} label="Pustaka" />
-                    <NavItem href="/studio" icon={<PenSquare className="w-6 h-6" />} label="Studio" />
+                    {isWriter && <NavItem href="/studio" icon={<PenSquare className="w-6 h-6" />} label="Studio" />}
                     <NavItem href="/profile" icon={<User className="w-6 h-6" />} label="Profil" />
                 </div>
             </nav>

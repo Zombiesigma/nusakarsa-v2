@@ -58,9 +58,10 @@ const ThemeToggleButton = ({ className }: { className?: string }) => {
 };
 
 export function Header() {
-  const { setMenuOpen, isLoggedIn, user } = useAppContext();
+  const { setMenuOpen, isLoggedIn, user, userData } = useAppContext();
   const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
   const userAvatarHint = 'user avatar';
+  const isWriter = userData?.role === 'penulis';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border">
@@ -74,7 +75,7 @@ export function Header() {
             {isLoggedIn && (
                 <>
                     <NavLink href="/library">Pustaka</NavLink>
-                    <NavLink href="/studio">Studio</NavLink>
+                    {isWriter && <NavLink href="/studio">Studio</NavLink>}
                     <NavLink href="/profile">Profil</NavLink>
                 </>
             )}

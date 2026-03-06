@@ -31,7 +31,7 @@ const bookSchema = z.object({
 type BookFormData = z.infer<typeof bookSchema>;
 
 export function EditorView({ bookId }: { bookId: string }) {
-    const { user, books, addBook, updateBook, deleteBook } = useAppContext();
+    const { user, books, addBook, updateBook, deleteBook, userData, loading } = useAppContext();
     const router = useRouter();
     const { toast } = useToast();
     const [isNew, setIsNew] = useState(false);
@@ -44,10 +44,20 @@ export function EditorView({ bookId }: { bookId: string }) {
     });
 
     useEffect(() => {
+        if (loading) return; // Wait for context to load
+
+        const isWriter = userData?.role === 'penulis';
+
         if (!user) {
             router.push('/login');
             return;
         }
+        if (!isWriter) {
+            toast({ variant: 'destructive', title: "Akses Ditolak", description: "Anda bukan seorang penulis." });
+            router.push('/studio');
+            return;
+        }
+
         if (bookId === 'new') {
             setIsNew(true);
             reset({ title: '', author: user.displayName || 'Pengguna Demo', category: 'Custom', content: '' });
@@ -61,7 +71,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                 router.push('/studio');
             }
         }
-    }, [user, router, bookId, books, reset, toast]);
+    }, [user, loading, userData, router, bookId, books, reset, toast]);
 
     const onSubmit = (data: BookFormData) => {
         setIsSaving(true);
@@ -75,8 +85,6 @@ export function EditorView({ bookId }: { bookId: string }) {
             });
             toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
         }
-        // Optimistically navigate. The write will happen in the background.
-        // The dev overlay will show any permission errors.
         router.push('/studio');
     };
     
@@ -88,8 +96,8 @@ export function EditorView({ bookId }: { bookId: string }) {
         router.push('/studio');
     };
 
-    if (!user) {
-        return null;
+    if (loading || !user || !userData || userData.role !== 'penulis') {
+        return null; // Or a loading spinner, redirect is handled in useEffect
     }
     
     const EditorHeader = () => (

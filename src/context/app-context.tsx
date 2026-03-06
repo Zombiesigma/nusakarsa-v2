@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import type { Book, Category } from '@/lib/data';
 import { categories as allCategories } from '@/lib/data';
 import { useUser, useCollection, useDoc } from '@/firebase';
-import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { initialBooks } from '@/lib/data';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -32,6 +32,7 @@ interface AppContextType {
   toggleBookmark: (id: string) => void;
   isLoggedIn: boolean;
   user: any; // Consider using a more specific type for the user
+  userData: DocumentData | null;
   loading: boolean; // Add a loading state
 }
 
@@ -57,7 +58,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   // Seed initial books if the books collection is empty
   useEffect(() => {
-    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0 && booksCollectionRef) {
+    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0 && booksCollectionRef && firestore) {
         const batch = writeBatch(firestore);
         initialBooks.forEach(book => {
             const newBookRef = doc(booksCollectionRef);
@@ -69,9 +70,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   // Create user document for new users
   useEffect(() => {
-      if (user && !userDataLoading && userData === null) {
+      if (user && !userDataLoading && userData === null && firestore) {
           const newUserDocRef = doc(firestore, `users/${user.uid}`);
-          setDoc(newUserDocRef, { bookmarks: [] }).catch(console.error);
+          setDoc(newUserDocRef, { bookmarks: [], role: 'pembaca' }).catch(console.error);
       }
   }, [user, userData, userDataLoading, firestore]);
 
@@ -158,7 +159,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateBook = (updatedBook: Book) => {
-      if (!user) {
+      if (!user || !firestore) {
           console.error("User not authenticated");
           return;
       }
@@ -176,7 +177,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const deleteBook = (bookId: string) => {
-    if (!user) {
+    if (!user || !firestore) {
         console.error("User not authenticated");
         return;
     }
@@ -207,6 +208,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     toggleBookmark,
     isLoggedIn,
     user,
+    userData,
     loading: userLoading || booksLoading || userDataLoading,
   };
 

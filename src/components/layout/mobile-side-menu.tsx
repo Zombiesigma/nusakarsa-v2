@@ -13,10 +13,11 @@ import { cn } from '@/lib/utils';
 import { getAuth, signOut } from 'firebase/auth';
 
 export function MobileSideMenu() {
-    const { isMenuOpen, setMenuOpen, theme, toggleTheme, isLoggedIn, user } = useAppContext();
+    const { isMenuOpen, setMenuOpen, theme, toggleTheme, isLoggedIn, user, userData } = useAppContext();
     const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
     const userAvatarHint = 'user avatar';
     const pathname = usePathname();
+    const isWriter = userData?.role === 'penulis';
 
     const handleLogout = async () => {
         const auth = getAuth();
@@ -59,7 +60,7 @@ export function MobileSideMenu() {
                     {isLoggedIn && (
                         <>
                         <MenuItem icon={<Library className="w-5 h-5"/>} label="Pustaka" href="/library" active={pathname === '/library'} />
-                        <MenuItem icon={<PenSquare className="w-5 h-5"/>} label="Studio" href="/studio" active={pathname.startsWith('/studio')} />
+                        {isWriter && <MenuItem icon={<PenSquare className="w-5 h-5"/>} label="Studio" href="/studio" active={pathname.startsWith('/studio')} />}
                         <MenuItem icon={<User className="w-5 h-5"/>} label="Profil" href="/profile" active={pathname === '/profile'} />
                         </>
                     )}

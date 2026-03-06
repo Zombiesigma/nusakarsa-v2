@@ -6,23 +6,47 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/app-context';
 import { Button } from '@/components/ui/button';
-import { Feather, PlusCircle, Pencil } from 'lucide-react';
+import { Feather, PlusCircle, Pencil, ShieldAlert } from 'lucide-react';
 import Image from 'next/image';
 
 export function StudioView() {
-    const { isLoggedIn, user, books } = useAppContext();
+    const { isLoggedIn, user, books, userData, loading } = useAppContext();
     const router = useRouter();
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (!loading && !isLoggedIn) {
             router.push('/login');
         }
-    }, [isLoggedIn, router]);
+    }, [isLoggedIn, loading, router]);
 
     const myBooks = user ? books.filter(book => book.ownerId === user.uid) : [];
+    
+    // Check for writer role, handle loading state
+    const isWriter = userData?.role === 'penulis';
+
+    if (loading) {
+        return null; // Or a loading spinner
+    }
 
     if (!isLoggedIn) {
-        return null;
+        return null; // Redirect is handled by useEffect
+    }
+
+    if (!isWriter) {
+        return (
+            <section id="page-studio" className="page-section pt-28 md:pt-36">
+                <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 text-center">
+                    <div className="bg-card rounded-3xl p-12 md:p-20 border border-border shadow-sm">
+                        <ShieldAlert className="w-20 h-20 mx-auto text-destructive/80 mb-6" strokeWidth={1.5} />
+                        <h1 className="text-3xl font-headline font-bold text-foreground">Akses Ditolak</h1>
+                        <p className="text-muted-foreground mt-2 mb-8 max-w-md mx-auto">Anda tidak memiliki hak akses sebagai 'penulis' untuk melihat halaman ini. Silakan hubungi administrator jika Anda merasa ini adalah sebuah kesalahan.</p>
+                        <Button asChild size="lg" className="btn-primary rounded-xl px-8">
+                            <Link href="/">Kembali ke Beranda</Link>
+                        </Button>
+                    </div>
+                </div>
+            </section>
+        );
     }
 
     return (

@@ -11,6 +11,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "role": {
+          "type": "string",
+          "description": "User role, determines access level.",
+          "enum": ["penulis", "pembaca"]
         }
       }
     },
