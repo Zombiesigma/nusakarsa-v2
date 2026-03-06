@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
@@ -9,6 +8,8 @@ import { useUser, useCollection, useDoc } from '@/firebase';
 import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { initialBooks } from '@/lib/data';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 
 type Theme = 'light' | 'dark';
@@ -22,9 +23,9 @@ interface AppContextType {
   setModalBookId: (id: string | null) => void;
   
   books: Book[];
-  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage' | 'ownerId'>) => Promise<void>;
-  updateBook: (book: Book) => Promise<void>;
-  deleteBook: (bookId: string) => Promise<void>;
+  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage' | 'ownerId'>) => void;
+  updateBook: (book: Book) => void;
+  deleteBook: (bookId: string) => void;
 
   categories: readonly Category[];
   bookmarkedBooks: Set<string>;
@@ -46,7 +47,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const isLoggedIn = !!user;
   const firestore = useFirestore();
 
-  const booksCollectionRef = useMemo(() => collection(firestore, 'books'), [firestore]);
+  const booksCollectionRef = useMemo(() => firestore ? collection(firestore, 'books') : null, [firestore]);
   const { data: books, loading: booksLoading } = useCollection(booksCollectionRef);
   
   const userDocRef = useMemo(() => user ? doc(firestore, `users/${user.uid}`) : null, [firestore, user]);
@@ -56,7 +57,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   // Seed initial books if the books collection is empty
   useEffect(() => {
-    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0) {
+    if (isLoggedIn && !booksLoading && Array.isArray(books) && books.length === 0 && booksCollectionRef) {
         const batch = writeBatch(firestore);
         initialBooks.forEach(book => {
             const newBookRef = doc(booksCollectionRef);
@@ -105,7 +106,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   }, []);
 
-  const toggleBookmark = async (id: string) => {
+  const toggleBookmark = (id: string) => {
     if (!userDocRef) return;
     const newSet = new Set(bookmarkedBooks);
     if (newSet.has(id)) {
@@ -113,11 +114,23 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     } else {
       newSet.add(id);
     }
-    await updateDoc(userDocRef, { bookmarks: Array.from(newSet) });
+    const updatedData = { bookmarks: Array.from(newSet) };
+    updateDoc(userDocRef, updatedData)
+      .catch(async (serverError) => {
+        const permissionError = new FirestorePermissionError({
+          path: userDocRef.path,
+          operation: 'update',
+          requestResourceData: updatedData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
-  const addBook = async (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage'| 'ownerId'>) => {
-    if (!user) throw new Error("User not authenticated");
+  const addBook = (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage'| 'ownerId'>) => {
+    if (!user || !booksCollectionRef) {
+        console.error("User not authenticated or books collection not ready.");
+        return;
+    }
     const newBook: Omit<Book, 'id'> = {
         ...newBookData,
         ownerId: user.uid,
@@ -133,19 +146,49 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           hint: 'abstract texture'
         },
     };
-    await addDoc(booksCollectionRef, newBook);
+    addDoc(booksCollectionRef, newBook)
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: booksCollectionRef.path,
+                operation: 'create',
+                requestResourceData: newBook,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
 
-  const updateBook = async (updatedBook: Book) => {
-      if (!user) throw new Error("User not authenticated");
+  const updateBook = (updatedBook: Book) => {
+      if (!user) {
+          console.error("User not authenticated");
+          return;
+      }
       const bookRef = doc(firestore, 'books', updatedBook.id);
-      await updateDoc(bookRef, { ...updatedBook });
+      const { id, ...bookData } = updatedBook;
+      updateDoc(bookRef, { ...bookData })
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: bookRef.path,
+                operation: 'update',
+                requestResourceData: bookData,
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
   
-  const deleteBook = async (bookId: string) => {
-    if (!user) throw new Error("User not authenticated");
+  const deleteBook = (bookId: string) => {
+    if (!user) {
+        console.error("User not authenticated");
+        return;
+    }
     const bookRef = doc(firestore, 'books', bookId);
-    await deleteDoc(bookRef);
+    deleteDoc(bookRef)
+        .catch(async (serverError) => {
+            const permissionError = new FirestorePermissionError({
+                path: bookRef.path,
+                operation: 'delete',
+            });
+            errorEmitter.emit('permission-error', permissionError);
+        });
   };
 
   const value = {

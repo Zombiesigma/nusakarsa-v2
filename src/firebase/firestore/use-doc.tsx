@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { onSnapshot, DocumentReference, DocumentData, FirestoreError, DocumentSnapshot } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 interface UseDocOptions {
   // You can add options if needed
@@ -30,9 +32,14 @@ export function useDoc(ref: DocumentReference | null, options?: UseDocOptions) {
           setData(null); // Document does not exist
         }
         setLoading(false);
+        setError(null);
       }, 
-      (err: FirestoreError) => {
-        console.error(err);
+      async (err: FirestoreError) => {
+        const permissionError = new FirestorePermissionError({
+            path: ref.path,
+            operation: 'get',
+        });
+        errorEmitter.emit('permission-error', permissionError);
         setError(err);
         setLoading(false);
       }

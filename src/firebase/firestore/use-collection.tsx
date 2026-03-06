@@ -1,8 +1,9 @@
 
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, onSnapshot, Query, DocumentData, FirestoreError, QuerySnapshot, CollectionReference } from 'firebase/firestore';
-import { useFirestore } from '../provider';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 interface UseCollectionOptions {
   // You can add options like queries, limits, etc.
@@ -30,9 +31,14 @@ export function useCollection(ref: CollectionReference | Query | null, options?:
         }));
         setData(data);
         setLoading(false);
+        setError(null);
       }, 
-      (err: FirestoreError) => {
-        console.error(err);
+      async (err: FirestoreError) => {
+        const permissionError = new FirestorePermissionError({
+            path: (ref as CollectionReference).path,
+            operation: 'list',
+        });
+        errorEmitter.emit('permission-error', permissionError);
         setError(err);
         setLoading(false);
       }
@@ -43,4 +49,3 @@ export function useCollection(ref: CollectionReference | Query | null, options?:
 
   return { data, loading, error };
 }
-

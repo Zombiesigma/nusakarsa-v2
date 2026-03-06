@@ -56,46 +56,36 @@ export function EditorView({ bookId }: { bookId: string }) {
             if (bookToEdit && bookToEdit.ownerId === user.uid) {
                 setCurrentBook(bookToEdit);
                 reset(bookToEdit);
-            } else {
+            } else if (books.length > 0) { // Only redirect if books have loaded
                 toast({ variant: 'destructive', title: "Error", description: "Buku tidak ditemukan atau Anda tidak memiliki izin untuk mengeditnya." });
                 router.push('/studio');
             }
         }
     }, [user, router, bookId, books, reset, toast]);
 
-    const onSubmit = async (data: BookFormData) => {
+    const onSubmit = (data: BookFormData) => {
         setIsSaving(true);
-        try {
-            if (isNew) {
-                await addBook({ ...data, content: data.content || '' });
-                toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan ke studio Anda.` });
-            } else if (currentBook) {
-                await updateBook({
-                    ...currentBook,
-                    ...data,
-                });
-                toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
-            }
-            router.push('/studio');
-        } catch (error) {
-            console.error("Failed to save book:", error);
-            toast({ variant: 'destructive', title: "Error", description: "Tidak dapat menyimpan buku." });
-            setIsSaving(false);
+        if (isNew) {
+            addBook({ ...data, content: data.content || '' });
+            toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan ke studio Anda.` });
+        } else if (currentBook) {
+            updateBook({
+                ...currentBook,
+                ...data,
+            });
+            toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
         }
+        // Optimistically navigate. The write will happen in the background.
+        // The dev overlay will show any permission errors.
+        router.push('/studio');
     };
     
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (!currentBook) return;
         setIsDeleting(true);
-        try {
-            await deleteBook(currentBook.id);
-            toast({ title: "Buku Dihapus", description: `'${currentBook.title}' telah dihapus.` });
-            router.push('/studio');
-        } catch (error) {
-            console.error("Failed to delete book:", error);
-            toast({ variant: 'destructive', title: "Error", description: "Tidak dapat menghapus buku." });
-            setIsDeleting(false);
-        }
+        deleteBook(currentBook.id);
+        toast({ title: "Buku Dihapus", description: `'${currentBook.title}' telah dihapus.` });
+        router.push('/studio');
     };
 
     if (!user) {
@@ -182,7 +172,7 @@ export function EditorView({ bookId }: { bookId: string }) {
         <section id="page-editor" className="bg-card min-h-screen">
             <EditorHeader />
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-12 md:pt-32">
-                <form noValidate className="page-section space-y-12">
+                <form noValidate onSubmit={handleSubmit(onSubmit)} className="page-section space-y-12">
                     <div>
                         <Input
                             id="title"
