@@ -1,3 +1,106 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "laskar-pelangi",
+      "description": "Cover of Laskar Pelangi",
+      "imageUrl": "https://picsum.photos/seed/1/600/800",
+      "imageHint": "abstract dark"
+    },
+    {
+      "id": "filosofi-teras",
+      "description": "Cover of Filosofi Teras",
+      "imageUrl": "https://picsum.photos/seed/2/600/800",
+      "imageHint": "abstract red"
+    },
+    {
+      "id": "bumi-manusia",
+      "description": "Cover of Bumi Manusia",
+      "imageUrl": "https://picsum.photos/seed/3/600/800",
+      "imageHint": "abstract gold"
+    },
+    {
+      "id": "pulang",
+      "description": "Cover of Pulang",
+      "imageUrl": "https://picsum.photos/seed/4/600/800",
+      "imageHint": "abstract blue"
+    },
+    {
+      "id": "sapiens",
+      "description": "Cover of Sapiens",
+      "imageUrl": "https://picsum.photos/seed/5/600/800",
+      "imageHint": "abstract brown"
+    },
+    {
+      "id": "cantik-itu-luka",
+      "description": "Cover of Cantik Itu Luka",
+      "imageUrl": "https://picsum.photos/seed/6/600/800",
+      "imageHint": "abstract purple"
+    },
+    {
+      "id": "negeri-5-menara",
+      "description": "Cover of Negeri 5 Menara",
+      "imageUrl": "https://picsum.photos/seed/7/600/800",
+      "imageHint": "abstract green"
+    },
+    {
+      "id": "atomic-habits",
+      "description": "Cover of Atomic Habits",
+      "imageUrl": "https://picsum.photos/seed/8/600/800",
+      "imageHint": "abstract grey"
+    },
+    {
+      "id": "ronggeng-dukuh-paruk",
+      "description": "Cover of Ronggeng Dukuh Paruk",
+      "imageUrl": "https://picsum.photos/seed/9/600/800",
+      "imageHint": "abstract orange"
+    },
+    {
+      "id": "perahu-kertas",
+      "description": "Cover of Perahu Kertas",
+      "imageUrl": "https://picsum.photos/seed/10/600/800",
+      "imageHint": "abstract pink"
+    },
+    {
+      "id": "psychology-of-money",
+      "description": "Cover of The Psychology of Money",
+      "imageUrl": "https://picsum.photos/seed/11/600/800",
+      "imageHint": "abstract dark blue"
+    },
+    {
+      "id": "saman",
+      "description": "Cover of Saman",
+      "imageUrl": "https://picsum.photos/seed/12/600/800",
+      "imageHint": "abstract light green"
+    },
+    {
+      "id": "hero-main",
+      "description": "Floating book cover for Laskar Pelangi in hero section",
+      "imageUrl": "https://picsum.photos/seed/1/224/288",
+      "imageHint": "abstract dark"
+    },
+    {
+      "id": "hero-side1",
+      "description": "Floating book cover for Filosofi Teras in hero section",
+      "imageUrl": "https://picsum.photos/seed/2/176/232",
+      "imageHint": "abstract red"
+    },
+    {
+      "id": "hero-side2",
+      "description": "Floating book cover for Bumi Manusia in hero section",
+      "imageUrl": "https://picsum.photos/seed/3/192/256",
+      "imageHint": "abstract gold"
+    },
+    {
+      "id": "currently-reading-cover",
+      "description": "Cover for the currently reading book",
+      "imageUrl": "https://picsum.photos/seed/1/64/96",
+      "imageHint": "abstract dark"
+    },
+    {
+      "id": "user-avatar",
+      "description": "User avatar placeholder",
+      "imageUrl": "https://picsum.photos/seed/99/128/128",
+      "imageHint": "abstract person"
+    }
+  ]
 }
