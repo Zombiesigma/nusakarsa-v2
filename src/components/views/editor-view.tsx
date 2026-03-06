@@ -101,7 +101,7 @@ export function EditorView({ bookId }: { bookId: string }) {
     }
     
     const EditorHeader = () => (
-        <div className="fixed top-0 left-0 right-0 z-50 glass border-b border-border">
+        <div className="hidden md:block fixed top-0 left-0 right-0 z-50 glass border-b border-border">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 md:h-20">
                      <Button variant="ghost" asChild>
@@ -128,11 +128,35 @@ export function EditorView({ bookId }: { bookId: string }) {
         </div>
     );
 
+    const EditorFooter = () => (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-border p-3 flex items-center justify-between">
+            <Button variant="ghost" size="sm" asChild>
+                <Link href="/studio">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Kembali
+                </Link>
+            </Button>
+            <div className="flex items-center gap-2">
+                <span className={cn("text-xs text-muted-foreground transition-opacity", isDirty && !isSaving ? 'opacity-100' : 'opacity-0')}>
+                    Belum disimpan
+                </span>
+                <Button onClick={handleSubmit(onSubmit)} size="icon" className="btn-primary rounded-lg" disabled={isSaving || !isDirty}>
+                    {isSaving ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                        <Save className="h-5 w-5" />
+                    )}
+                    <span className="sr-only">{isSaving ? 'Menyimpan...' : (isNew ? 'Terbitkan' : 'Simpan')}</span>
+                </Button>
+            </div>
+        </div>
+    );
+
     return (
         <section id="page-editor" className="bg-card min-h-screen">
             <EditorHeader />
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-32 page-section">
-                <form noValidate className="space-y-12">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-12 md:pt-32">
+                <form noValidate className="space-y-12 page-section">
                     <div>
                         <Input
                             id="title"
@@ -190,6 +214,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                     </div>
                 </form>
             </div>
+            <EditorFooter />
         </section>
     );
 }
