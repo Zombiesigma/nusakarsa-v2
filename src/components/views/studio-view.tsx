@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -9,7 +10,7 @@ import { Feather, PlusCircle, Pencil } from 'lucide-react';
 import Image from 'next/image';
 
 export function StudioView() {
-    const { isLoggedIn, books } = useAppContext();
+    const { isLoggedIn, user, books } = useAppContext();
     const router = useRouter();
 
     useEffect(() => {
@@ -18,7 +19,7 @@ export function StudioView() {
         }
     }, [isLoggedIn, router]);
 
-    const myBooks = books.filter(book => book.isUserCreated);
+    const myBooks = user ? books.filter(book => book.ownerId === user.uid) : [];
 
     if (!isLoggedIn) {
         return null;

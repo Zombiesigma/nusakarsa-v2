@@ -10,14 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search, PenSquare } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from '@/lib/utils';
+import { getAuth, signOut } from 'firebase/auth';
 
 export function MobileSideMenu() {
-    const { isMenuOpen, setMenuOpen, theme, toggleTheme, isLoggedIn, setIsLoggedIn } = useAppContext();
-    const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar')!;
+    const { isMenuOpen, setMenuOpen, theme, toggleTheme, isLoggedIn, user } = useAppContext();
+    const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
+    const userAvatarHint = 'user avatar';
     const pathname = usePathname();
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
+    const handleLogout = async () => {
+        const auth = getAuth();
+        await signOut(auth);
         setMenuOpen(false);
     }
     
@@ -31,10 +34,10 @@ export function MobileSideMenu() {
                 
                 {isLoggedIn ? (
                     <div className="p-6 flex items-center gap-4" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
-                        <Image src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User Avatar" width={64} height={64} className="w-16 h-16 rounded-full object-cover border-2 border-white/50" />
+                        <Image src={userAvatar} data-ai-hint={userAvatarHint} alt="User Avatar" width={64} height={64} className="w-16 h-16 rounded-full object-cover border-2 border-white/50" />
                         <div>
-                            <h3 className="font-bold text-lg text-primary-foreground">Pengguna Demo</h3>
-                            <p className="text-primary-foreground/70 text-sm">pengguna.demo@example.com</p>
+                            <h3 className="font-bold text-lg text-primary-foreground truncate">{user?.displayName || 'Pengguna Baru'}</h3>
+                            <p className="text-primary-foreground/70 text-sm truncate">{user?.email}</p>
                         </div>
                     </div>
                 ) : (

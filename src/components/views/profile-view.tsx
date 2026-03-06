@@ -9,10 +9,12 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { getAuth, signOut } from "firebase/auth";
 
 export function ProfileView() {
-    const { isLoggedIn, setIsLoggedIn } = useAppContext();
-    const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar')!;
+    const { isLoggedIn, user } = useAppContext();
+    const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
+    const userAvatarHint = 'user avatar';
     const router = useRouter();
 
     useEffect(() => {
@@ -21,12 +23,13 @@ export function ProfileView() {
         }
     }, [isLoggedIn, router]);
     
-    const handleLogout = () => {
-        setIsLoggedIn(false);
+    const handleLogout = async () => {
+        const auth = getAuth();
+        await signOut(auth);
         router.push('/');
     }
 
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !user) {
         return (
             <section id="page-profile" className="page-section pt-28 md:pt-36">
                 <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8 pb-24 text-center">
@@ -50,11 +53,11 @@ export function ProfileView() {
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
                 <div className="bg-card border border-border rounded-3xl p-8">
                     <div className="flex flex-col sm:flex-row items-center gap-8">
-                        <Image src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User Avatar" width={128} height={128} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg" />
+                        <Image src={userAvatar} data-ai-hint={userAvatarHint} alt="User Avatar" width={128} height={128} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg" />
                         <div className="flex-1 text-center sm:text-left">
-                            <h1 className="font-headline text-3xl sm:text-4xl font-bold">Pengguna Demo</h1>
-                            <p className="text-muted-foreground mt-1">pengguna.demo@example.com</p>
-                            <p className="text-sm text-primary font-medium mt-2">Anggota Sejak 2024</p>
+                            <h1 className="font-headline text-3xl sm:text-4xl font-bold">{user.displayName || 'Pengguna Baru'}</h1>
+                            <p className="text-muted-foreground mt-1">{user.email}</p>
+                            <p className="text-sm text-primary font-medium mt-2">Anggota Sejak {new Date(user.metadata.creationTime).getFullYear()}</p>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-center">

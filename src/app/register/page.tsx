@@ -4,25 +4,38 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAppContext } from '@/context/app-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
 
 export default function RegisterPage() {
-  const { setIsLoggedIn } = useAppContext();
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd create a new user here
-    setIsLoggedIn(true);
-    router.push('/');
+    setLoading(true);
+    const auth = getAuth();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, { displayName: name });
+      router.push('/');
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Registrasi Gagal",
+        description: error.message,
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,6 +65,7 @@ export default function RegisterPage() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="rounded-lg"
+                        disabled={loading}
                     />
                 </div>
                 <div className="grid gap-2">
@@ -64,6 +78,7 @@ export default function RegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="rounded-lg"
+                    disabled={loading}
                     />
                 </div>
                 <div className="grid gap-2">
@@ -75,10 +90,12 @@ export default function RegisterPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="rounded-lg"
+                        disabled={loading}
                     />
                 </div>
-                <Button type="submit" className="w-full btn-primary rounded-xl mt-2">
-                    Buat Akun
+                <Button type="submit" className="w-full btn-primary rounded-xl mt-2" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {loading ? 'Memproses...' : 'Buat Akun'}
                 </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">

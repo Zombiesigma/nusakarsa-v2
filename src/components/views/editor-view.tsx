@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -14,9 +15,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
+
 
 const bookSchema = z.object({
   title: z.string().min(3, "Judul harus memiliki setidaknya 3 karakter."),
@@ -28,35 +31,29 @@ const bookSchema = z.object({
 type BookFormData = z.infer<typeof bookSchema>;
 
 export function EditorView({ bookId }: { bookId: string }) {
-    const { isLoggedIn, books, addBook, updateBook } = useAppContext();
+    const { user, books, addBook, updateBook, deleteBook } = useAppContext();
     const router = useRouter();
     const { toast } = useToast();
     const [isNew, setIsNew] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [currentBook, setCurrentBook] = useState<Book | undefined>(undefined);
 
     const { register, handleSubmit, control, reset, formState: { errors, isDirty } } = useForm<BookFormData>({
         resolver: zodResolver(bookSchema),
-        defaultValues: {
-            title: '',
-            author: '',
-            category: 'Custom',
-            content: '',
-        }
     });
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (!user) {
             router.push('/login');
             return;
         }
         if (bookId === 'new') {
             setIsNew(true);
-            reset({ title: '', author: 'Pengguna Demo', category: 'Custom', content: '' });
+            reset({ title: '', author: user.displayName || 'Pengguna Demo', category: 'Custom', content: '' });
         } else {
-            const id = parseInt(bookId);
-            const bookToEdit = books.find(b => b.id === id);
-            if (bookToEdit && bookToEdit.isUserCreated) {
+            const bookToEdit = books.find(b => b.id === bookId);
+            if (bookToEdit && bookToEdit.ownerId === user.uid) {
                 setCurrentBook(bookToEdit);
                 reset(bookToEdit);
             } else {
@@ -64,39 +61,44 @@ export function EditorView({ bookId }: { bookId: string }) {
                 router.push('/studio');
             }
         }
-    }, [isLoggedIn, router, bookId, books, reset, toast]);
+    }, [user, router, bookId, books, reset, toast]);
 
-    const onSubmit = (data: BookFormData) => {
+    const onSubmit = async (data: BookFormData) => {
         setIsSaving(true);
         try {
-            // Simulate network delay
-            setTimeout(() => {
-                if (isNew) {
-                    addBook({
-                        ...data,
-                        year: new Date().getFullYear(),
-                        pages: 0, 
-                        isUserCreated: true,
-                        content: data.content || '',
-                    });
-                    toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan ke studio Anda.` });
-                } else if (currentBook) {
-                    updateBook({
-                        ...currentBook,
-                        ...data,
-                    });
-                    toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
-                }
-                router.push('/studio');
-            }, 1000);
+            if (isNew) {
+                await addBook({ ...data, content: data.content || '' });
+                toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan ke studio Anda.` });
+            } else if (currentBook) {
+                await updateBook({
+                    ...currentBook,
+                    ...data,
+                });
+                toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
+            }
+            router.push('/studio');
         } catch (error) {
             console.error("Failed to save book:", error);
             toast({ variant: 'destructive', title: "Error", description: "Tidak dapat menyimpan buku." });
             setIsSaving(false);
         }
     };
+    
+    const handleDelete = async () => {
+        if (!currentBook) return;
+        setIsDeleting(true);
+        try {
+            await deleteBook(currentBook.id);
+            toast({ title: "Buku Dihapus", description: `'${currentBook.title}' telah dihapus.` });
+            router.push('/studio');
+        } catch (error) {
+            console.error("Failed to delete book:", error);
+            toast({ variant: 'destructive', title: "Error", description: "Tidak dapat menghapus buku." });
+            setIsDeleting(false);
+        }
+    };
 
-    if (!isLoggedIn) {
+    if (!user) {
         return null;
     }
     
@@ -114,6 +116,30 @@ export function EditorView({ bookId }: { bookId: string }) {
                          <span className={cn("text-sm text-muted-foreground transition-opacity", isDirty && !isSaving ? 'opacity-100' : 'opacity-0')}>
                             Perubahan belum disimpan
                          </span>
+                         {!isNew && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" size="icon" disabled={isDeleting}>
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Anda yakin?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Tindakan ini tidak dapat diurungkan. Ini akan menghapus buku Anda secara permanen.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                                        <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                                            {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : null}
+                                            Hapus
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                         )}
                          <Button onClick={handleSubmit(onSubmit)} className="btn-primary rounded-xl" disabled={isSaving || !isDirty}>
                             {isSaving ? (
                                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -156,7 +182,7 @@ export function EditorView({ bookId }: { bookId: string }) {
         <section id="page-editor" className="bg-card min-h-screen">
             <EditorHeader />
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-12 md:pt-32">
-                <form noValidate className="space-y-12 page-section">
+                <form noValidate className="page-section space-y-12">
                     <div>
                         <Input
                             id="title"
@@ -176,6 +202,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                                 id="author"
                                 {...register('author')}
                                 className="w-full border-0 bg-transparent p-0 font-semibold !ring-0 focus-visible:!ring-0"
+                                readOnly
                             />
                             {errors.author && <p className="text-sm text-destructive">{errors.author.message}</p>}
                         </div>

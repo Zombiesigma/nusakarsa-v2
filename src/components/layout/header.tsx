@@ -58,8 +58,9 @@ const ThemeToggleButton = ({ className }: { className?: string }) => {
 };
 
 export function Header() {
-  const { setMenuOpen, isLoggedIn } = useAppContext();
-  const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar')!;
+  const { setMenuOpen, isLoggedIn, user } = useAppContext();
+  const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
+  const userAvatarHint = 'user avatar';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border">
@@ -88,7 +89,7 @@ export function Header() {
                         <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full text-[10px] text-primary-foreground flex items-center justify-center font-bold">3</span>
                     </Button>
                      <Link href="/profile" className="hidden md:block rounded-full overflow-hidden border-2 border-border hover:border-primary transition-all">
-                        <Image src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User Avatar" width={36} height={36} className="w-9 h-9" />
+                        <Image src={userAvatar} data-ai-hint={userAvatarHint} alt="User Avatar" width={36} height={36} className="w-9 h-9" />
                     </Link>
                 </>
             ) : (

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -6,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Bookmark } from 'lucide-react';
 
 interface BookCardProps {
-  bookId: number;
+  bookId: string;
   className?: string;
   isPriority?: boolean;
 }

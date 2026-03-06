@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -12,19 +13,23 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 export function ReadView({ bookId }: { bookId: string }) {
     const { isLoggedIn, books } = useAppContext();
     const router = useRouter();
-    const id = parseInt(bookId);
-    const book = books.find(b => b.id === id);
+    const book = books.find(b => b.id === bookId);
 
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
         } else if (!book) {
-            router.push('/');
+            // Wait for books to load, then redirect if still not found
+            setTimeout(() => {
+                const updatedBook = books.find(b => b.id === bookId);
+                if (!updatedBook) {
+                    router.push('/');
+                }
+            }, 1000);
         }
-    }, [isLoggedIn, book, router]);
+    }, [isLoggedIn, book, router, bookId, books]);
 
     if (!isLoggedIn || !book) {
-        // While redirecting or if book not found
         return null;
     }
 
