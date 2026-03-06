@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useAppContext } from "@/context/app-context";
 import { Sheet, SheetContent, SheetOverlay, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search } from "lucide-react";
+import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search, PenSquare } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from '@/lib/utils';
 
@@ -56,6 +56,7 @@ export function MobileSideMenu() {
                     {isLoggedIn && (
                         <>
                         <MenuItem icon={<Library className="w-5 h-5"/>} label="Pustaka" href="/library" active={pathname === '/library'} />
+                        <MenuItem icon={<PenSquare className="w-5 h-5"/>} label="Studio" href="/studio" active={pathname.startsWith('/studio')} />
                         <MenuItem icon={<User className="w-5 h-5"/>} label="Profil" href="/profile" active={pathname === '/profile'} />
                         </>
                     )}

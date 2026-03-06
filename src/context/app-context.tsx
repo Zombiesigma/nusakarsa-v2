@@ -16,6 +16,9 @@ interface AppContextType {
   setModalBookId: (id: number | null) => void;
   
   books: Book[];
+  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage'>) => void;
+  updateBook: (book: Book) => void;
+
   categories: readonly Category[];
   bookmarkedBooks: Set<number>;
   toggleBookmark: (id: number) => void;
@@ -31,6 +34,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [modalBookId, setModalBookId] = useState<number | null>(null);
   const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(() => new Set());
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [books, setBooks] = useState<Book[]>(allBooks);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nusakarsa-theme') as Theme | null;
@@ -79,6 +83,33 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       return newSet;
     });
   };
+
+  const addBook = (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage'>) => {
+    setBooks(prevBooks => {
+        const newBook: Book = {
+            ...newBookData,
+            id: (prevBooks.length > 0 ? Math.max(...prevBooks.map(b => b.id)) : 0) + 1,
+            rating: 0,
+            readers: "0",
+            trending: false,
+            progress: 0,
+            isUserCreated: true,
+            coverImage: {
+              src: `https://picsum.photos/seed/${new Date().getTime()}/600/800`,
+              width: 600,
+              height: 800,
+              hint: 'abstract texture'
+            },
+        };
+        return [...prevBooks, newBook];
+    });
+  };
+
+  const updateBook = (updatedBook: Book) => {
+      setBooks(prevBooks => 
+        prevBooks.map(book => book.id === updatedBook.id ? updatedBook : book)
+      );
+  };
   
   const handleLogin = (status: boolean) => {
     setIsLoggedIn(status);
@@ -92,7 +123,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setMenuOpen,
     modalBookId,
     setModalBookId,
-    books: allBooks,
+    books,
+    addBook,
+    updateBook,
     categories: allCategories,
     bookmarkedBooks,
     toggleBookmark,

@@ -73,6 +73,7 @@ export function Header() {
             {isLoggedIn && (
                 <>
                     <NavLink href="/library">Pustaka</NavLink>
+                    <NavLink href="/studio">Studio</NavLink>
                     <NavLink href="/profile">Profil</NavLink>
                 </>
             )}

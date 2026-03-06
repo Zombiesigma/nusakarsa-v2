@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils";
-import { Home, Search, Library, User } from "lucide-react";
+import { Home, Search, Library, User, PenSquare } from "lucide-react";
 
 type NavItemProps = {
     href: string;
@@ -17,7 +17,7 @@ const NavItem = ({ href, icon, label }: NavItemProps) => {
     const isActive = pathname === href;
 
     return (
-        <Link href={href} className={cn("nav-item flex flex-col items-center justify-center py-2 px-4", isActive && "active")}>
+        <Link href={href} className={cn("nav-item flex flex-col items-center justify-center py-2 px-4 w-full", isActive && "active")}>
             <div className="nav-icon transition-transform">{icon}</div>
             <span className="text-[10px] mt-1 font-medium">{label}</span>
         </Link>
@@ -31,6 +31,7 @@ export function MobileBottomNav() {
                 <NavItem href="/" icon={<Home className="w-6 h-6" />} label="Beranda" />
                 <NavItem href="/explore" icon={<Search className="w-6 h-6" />} label="Jelajahi" />
                 <NavItem href="/library" icon={<Library className="w-6 h-6" />} label="Pustaka" />
+                <NavItem href="/studio" icon={<PenSquare className="w-6 h-6" />} label="Studio" />
                 <NavItem href="/profile" icon={<User className="w-6 h-6" />} label="Profil" />
             </div>
         </nav>

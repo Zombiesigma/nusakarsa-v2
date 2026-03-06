@@ -1,10 +1,11 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export type Book = {
   id: number;
   title: string;
   author: string;
-  category: 'Novel' | 'Non-Fiksi' | 'Sastra';
+  category: 'Novel' | 'Non-Fiksi' | 'Sastra' | 'Custom';
   rating: number;
   year: number;
   pages: number;
@@ -16,7 +17,9 @@ export type Book = {
     width: number;
     height: number;
     hint: string;
-  }
+  },
+  content?: string;
+  isUserCreated?: boolean;
 };
 
 const findImage = (id: string) => {
@@ -44,6 +47,6 @@ export const books: Book[] = [
       { id: 12, title: "Saman", author: "Ayu Utami", category: "Sastra", rating: 4.5, year: 1998, pages: 276, readers: "70K", trending: false, progress: 0, coverImage: findImage('saman') }
 ];
 
-export const categories = ["Semua", "Novel", "Non-Fiksi", "Sastra"] as const;
+export const categories = ["Semua", "Novel", "Non-Fiksi", "Sastra", "Custom"] as const;
 
 export type Category = typeof categories[number];
