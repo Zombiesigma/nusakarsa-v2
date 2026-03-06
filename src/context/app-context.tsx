@@ -30,7 +30,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<number | null>(null);
-  const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(() => new Set([1, 3, 8]));
+  const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(() => new Set());
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nusakarsa-theme') as Theme | null;

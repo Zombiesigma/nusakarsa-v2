@@ -47,7 +47,7 @@ export function BookModal() {
                 <span className="text-2xl font-bold text-accent">{book.readers}</span>
                 <span className="text-muted-foreground text-sm block">pembaca</span>
               </div>
-              <button className="btn-primary px-6 py-3 rounded-xl font-semibold">Mulai Baca</button>
+              <Button disabled className="btn-primary px-6 py-3 rounded-xl font-semibold">Login untuk Membaca</Button>
             </div>
             <div className="flex gap-3">
               <button
