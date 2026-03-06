@@ -129,9 +129,9 @@ export function EditorView({ bookId }: { bookId: string }) {
     );
 
     return (
-        <section id="page-editor" className="page-section bg-card">
+        <section id="page-editor" className="bg-card min-h-screen">
             <EditorHeader />
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-32">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-32 page-section">
                 <form noValidate className="space-y-12">
                     <div>
                         <Input
