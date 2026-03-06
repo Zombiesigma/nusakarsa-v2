@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -8,22 +7,11 @@ import { useAppContext } from "@/context/app-context";
 import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Book, Library, Wand2 } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Wand2 } from 'lucide-react';
 import { BookCard } from '../common/book-card';
 import type { Book as BookType } from '@/lib/data';
 import { personalizeBookRecommendations, PersonalizeBookRecommendationsOutput } from '@/ai/flows/personalized-book-recommendations';
 import { Skeleton } from '../ui/skeleton';
-
-const findImage = (id: string) => {
-    const img = PlaceHolderImages.find(p => p.id === id);
-    if (!img) return { src: 'https://picsum.photos/seed/error/64/96', width: 64, height: 96, hint: 'placeholder' };
-    const url = new URL(img.imageUrl);
-    const pathParts = url.pathname.split('/');
-    const width = parseInt(pathParts[pathParts.length - 2]);
-    const height = parseInt(pathParts[pathParts.length - 1]);
-    return { src: img.imageUrl, width, height, hint: img.imageHint };
-};
 
 // Logged-out view
 const ParallaxHeroBooks = () => {
@@ -82,7 +70,7 @@ const RevealWrapper = ({ children, delay }: { children: React.ReactNode, delay?:
 
 const LoggedOutHomeView = () => {
     const { books } = useAppContext();
-    const trendingBooks = books.filter(b => b.trending).slice(0, 4);
+    const featuredBooks = books.slice(0, 4);
 
     return (
         <>
@@ -132,7 +120,7 @@ const LoggedOutHomeView = () => {
                     </RevealWrapper>
                     
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                        {trendingBooks.map((book, i) => (
+                        {featuredBooks.map((book, i) => (
                            <RevealWrapper key={book.id} delay={`${i * 0.1}s`}>
                                 <BookCard bookId={book.id} />
                            </RevealWrapper>
@@ -156,11 +144,11 @@ const ContinueReading = ({ books }: { books: BookType[] }) => {
             <h2 className="font-headline text-3xl font-bold mb-6">Lanjutkan Membaca</h2>
             <div className="grid md:grid-cols-3 gap-6">
                 {booksWithProgress.map(book => {
-                    const img = findImage(book.coverImage.src.split('/').slice(-1)[0].split('?')[0]); // hacky way to get id
+                    const img = book.coverImage;
                     return (
                         <div key={book.id} className="bg-card border border-border rounded-3xl p-6 hover:border-accent/50 transition-colors cursor-pointer">
                             <div className="flex items-center gap-4">
-                                <Image data-ai-hint={img.hint} src={img.src} alt={book.title} width={img.width} height={img.height} className="w-16 h-24 rounded-lg flex-shrink-0 object-cover shadow-md" />
+                                <Image data-ai-hint={img.hint} src={img.src} alt={book.title} width={64} height={96} className="w-16 h-24 rounded-lg flex-shrink-0 object-cover shadow-md" />
                                 <div className="flex-1 min-w-0">
                                     <h4 className="font-headline font-bold truncate">{book.title}</h4>
                                     <p className="text-muted-foreground text-sm">{book.author}</p>
