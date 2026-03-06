@@ -123,9 +123,8 @@ export function EditorView({ bookId }: { bookId: string }) {
   const bookRef = useMemo(() => (firestore ? doc(firestore, 'books', bookId) : null), [firestore, bookId]);
   const { data: book, loading: isBookLoading } = useDoc<Book>(bookRef);
   
-  const { data: userProfile } = useDoc<AppUser>(
-    (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null
-  );
+  const userProfileRef = useMemo(() => (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null, [firestore, currentUser]);
+  const { data: userProfile } = useDoc<AppUser>(userProfileRef);
 
   const chaptersQuery = useMemo(() => (
     firestore ? query(collection(firestore, 'books', bookId, 'chapters'), orderBy('order', 'asc')) : null
