@@ -7,11 +7,8 @@ import { useAppContext } from "@/context/app-context";
 import { useInView } from 'react-intersection-observer';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Wand2 } from 'lucide-react';
 import { BookCard } from '../common/book-card';
 import type { Book as BookType } from '@/lib/data';
-import { personalizeBookRecommendations, PersonalizeBookRecommendationsOutput } from '@/ai/flows/personalized-book-recommendations';
-import { Skeleton } from '../ui/skeleton';
 
 // Logged-out view
 const ParallaxHeroBooks = () => {
@@ -168,89 +165,33 @@ const ContinueReading = ({ books }: { books: BookType[] }) => {
     );
 };
 
-const RecommendedForYou = ({ readingHistory }: { readingHistory: BookType[] }) => {
-    const { books: allBooks, setModalBookId } = useAppContext();
-    const [recommendations, setRecommendations] = useState<PersonalizeBookRecommendationsOutput | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchRecommendations = async () => {
-            setIsLoading(true);
-            try {
-                const history = readingHistory.map(b => ({ title: b.title, author: b.author, category: b.category }));
-                const result = await personalizeBookRecommendations({ readingHistory: history });
-                setRecommendations(result);
-            } catch (error) {
-                console.error("Failed to get AI recommendations:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchRecommendations();
-    }, [readingHistory]);
-
-    const recommendedBooks = recommendations?.recommendations.map(rec => {
-        const book = allBooks.find(b => b.title === rec.title);
-        return { ...rec, book };
-    }).filter(item => item.book);
-
-    return (
-        <div>
-            <div className="flex items-center gap-4 mb-6">
-                <Wand2 className="w-8 h-8 text-primary" />
-                <h2 className="font-headline text-3xl font-bold">Rekomendasi Untukmu</h2>
-            </div>
-            {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[...Array(3)].map((_, i) => (
-                        <div key={i} className="bg-card border border-border rounded-2xl p-4">
-                            <div className="flex gap-4">
-                                <Skeleton className="w-20 h-28 rounded-md"/>
-                                <div className="flex-1 space-y-2">
-                                    <Skeleton className="h-5 w-3/4"/>
-                                    <Skeleton className="h-4 w-1/2"/>
-                                    <Skeleton className="h-10 w-full mt-2"/>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : recommendedBooks && recommendedBooks.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {recommendedBooks.map((rec, i) => (
-                        <div key={i} className="bg-card border border-border rounded-2xl p-4 flex gap-4 items-start cursor-pointer hover:border-accent transition-colors" onClick={() => setModalBookId(rec.book!.id)}>
-                            <div className="flex-shrink-0">
-                                <Image 
-                                    src={rec.book!.coverImage.src} 
-                                    alt={rec.book!.title}
-                                    width={80}
-                                    height={112}
-                                    data-ai-hint={rec.book!.coverImage.hint}
-                                    className="w-20 h-28 object-cover rounded-md shadow-lg"
-                                />
-                            </div>
-                            <div>
-                                <h3 className="font-headline font-bold text-lg leading-tight">{rec.title}</h3>
-                                <p className="text-sm text-muted-foreground">{rec.author}</p>
-                                <p className="text-xs text-muted-foreground mt-2 italic">"{rec.reason}"</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : <p className="text-muted-foreground">Tidak dapat memuat rekomendasi saat ini.</p>}
-        </div>
-    );
-}
-
 const LoggedInHomeView = () => {
-    const { books, bookmarkedBooks } = useAppContext();
-    const readingHistory = books.filter(b => bookmarkedBooks.has(b.id) || b.progress > 5);
+    const { books } = useAppContext();
+    const newReleaseBooks = books.filter(b => b.year >= new Date().getFullYear() - 5).slice(0, 5);
+    const trendingBooks = books.filter(b => b.trending).slice(0, 5);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-36 space-y-16">
             <h1 className="font-headline text-5xl font-bold">Selamat Datang, Pengguna!</h1>
             <ContinueReading books={books} />
-            <RecommendedForYou readingHistory={readingHistory} />
+
+            <div>
+              <h2 className="font-headline text-3xl font-bold mb-6">Rilisan Terbaru</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                  {newReleaseBooks.map(book => (
+                      <BookCard key={book.id} bookId={book.id} />
+                  ))}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="font-headline text-3xl font-bold mb-6">Trending</h2>
+               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+                  {trendingBooks.map(book => (
+                      <BookCard key={book.id} bookId={book.id} />
+                  ))}
+              </div>
+            </div>
         </div>
     );
 };
