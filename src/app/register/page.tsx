@@ -4,11 +4,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, ImagePlus } from 'lucide-react';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -17,16 +18,87 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Memproses...');
   const { toast } = useToast();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+          variant: "destructive",
+          title: "Ukuran File Terlalu Besar",
+          description: "Ukuran foto profil tidak boleh melebihi 5MB.",
+        });
+        return;
+      }
+      setProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name) {
+        toast({ variant: "destructive", title: "Registrasi Gagal", description: "Nama lengkap harus diisi." });
+        return;
+    }
     setLoading(true);
+
+    let photoURL = '';
+
+    if (profilePic) {
+      setLoadingMessage('Mengunggah foto...');
+      const formData = new FormData();
+      formData.append('file', profilePic);
+      formData.append('folder', `profile/${name.replace(/\s+/g, '_').toLowerCase()}`);
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          toast({
+            variant: "destructive",
+            title: "Upload Foto Gagal",
+            description: result.error || 'Terjadi kesalahan saat mengunggah foto profil.',
+          });
+          setLoading(false);
+          return;
+        }
+        photoURL = result.url;
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Upload Foto Gagal",
+          description: error.message || 'Koneksi ke server upload gagal.',
+        });
+        setLoading(false);
+        return;
+      }
+    }
+    
+    setLoadingMessage('Membuat akun...');
     const auth = getAuth();
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, { displayName: name });
+      
+      await updateProfile(userCredential.user, { 
+        displayName: name,
+        ...(photoURL && { photoURL: photoURL })
+      });
+      
       router.push('/');
     } catch (error: any) {
       toast({
@@ -56,10 +128,25 @@ export default function RegisterPage() {
             <CardContent>
             <form onSubmit={handleRegister}>
                 <div className="grid gap-4">
+                
+                <div className="flex flex-col items-center gap-2">
+                    <Label htmlFor="profile-pic-input" className="cursor-pointer">
+                        <div className="w-24 h-24 rounded-full bg-bg-alt border-2 border-dashed border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors relative overflow-hidden">
+                            {preview ? (
+                                <Image src={preview} alt="Pratinjau foto profil" fill className="object-cover" />
+                            ) : (
+                                <ImagePlus className="w-8 h-8" />
+                            )}
+                        </div>
+                    </Label>
+                    <Input id="profile-pic-input" type="file" className="hidden" accept="image/png, image/jpeg, image/gif" onChange={handleFileChange} disabled={loading} />
+                    <p className="text-sm text-muted-foreground -mt-1">Pilih foto profil</p>
+                </div>
+                
                 <div className="grid gap-2">
-                    <Label htmlFor="first-name">Nama Lengkap</Label>
+                    <Label htmlFor="full-name">Nama Lengkap</Label>
                     <Input 
-                        id="first-name" 
+                        id="full-name" 
                         placeholder="John Doe" 
                         required 
                         value={name}
@@ -95,7 +182,7 @@ export default function RegisterPage() {
                 </div>
                 <Button type="submit" className="w-full btn-primary rounded-xl mt-2" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {loading ? 'Memproses...' : 'Buat Akun'}
+                    {loading ? loadingMessage : 'Buat Akun'}
                 </Button>
                 </div>
                 <div className="mt-4 text-center text-sm">
