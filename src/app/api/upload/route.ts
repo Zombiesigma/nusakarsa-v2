@@ -42,10 +42,10 @@ export async function POST(request: Request) {
         'Authorization': `Bearer ${GITHUB_TOKEN}`,
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Nusakarsa-App',
+        'User-Agent': 'Elitera-App',
       },
       body: JSON.stringify({
-        message: `Upload ${fileName} from Nusakarsa`,
+        message: `Upload ${fileName} from Elitera`,
         content: base64Content,
         branch: 'main'
       }),

@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import type { Book, Category } from '@/lib/data';
 import { categories as allCategories } from '@/lib/data';
 import { useUser, useCollection, useDoc } from '@/firebase';
-import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData, serverTimestamp } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { initialBooks } from '@/lib/data';
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -23,7 +23,7 @@ interface AppContextType {
   setModalBookId: (id: string | null) => void;
   
   books: Book[];
-  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId'>) => void;
+  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId' | 'isUserCreated' | 'coverUrl' | 'authorName' | 'authorPhotoUrl' | 'status' | 'visibility' | 'isCompleted' | 'viewCount' | 'favoriteCount' | 'chapterCount' | 'createdAt' | 'updatedAt' | 'type'>) => Promise<string | undefined>;
   updateBook: (book: Book) => void;
   deleteBook: (bookId: string) => void;
 
@@ -62,7 +62,27 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         const batch = writeBatch(firestore);
         initialBooks.forEach(book => {
             const newBookRef = doc(booksCollectionRef);
-            batch.set(newBookRef, { ...book, ownerId: null }); // Public books
+            // This seeding is partial, update it to match the new Book type in types.ts
+            const partialNewBook = {
+                title: book.title,
+                authorName: book.author,
+                genre: book.category,
+                // Add other required fields with default values
+                authorId: 'system',
+                authorPhotoUrl: '',
+                type: 'book' as const,
+                synopsis: 'Synopsis not available.',
+                coverUrl: book.coverImage.src,
+                status: 'published' as const,
+                visibility: 'public' as const,
+                isCompleted: true,
+                viewCount: 0,
+                favoriteCount: 0,
+                chapterCount: 0,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            };
+            batch.set(newBookRef, partialNewBook);
         });
         batch.commit().catch(console.error);
     }
@@ -127,29 +147,49 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       });
   };
 
-  const addBook = (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId'>) => {
-    if (!user || !booksCollectionRef) {
+  const addBook = async (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId' | 'isUserCreated' | 'coverUrl' | 'authorName' | 'authorPhotoUrl' | 'status' | 'visibility' | 'isCompleted' | 'viewCount' | 'favoriteCount' | 'chapterCount' | 'createdAt' | 'updatedAt' | 'type'>) => {
+    if (!user || !booksCollectionRef || !userData) {
         console.error("User not authenticated or books collection not ready.");
         return;
     }
     const newBook: Omit<Book, 'id'> = {
         ...newBookData,
-        ownerId: user.uid,
-        rating: 0,
-        readers: "0",
-        trending: false,
-        progress: 0,
-        isUserCreated: true,
+        authorId: user.uid,
+        authorName: user.displayName || 'Penulis Baru',
+        authorPhotoUrl: user.photoURL || '',
+        status: 'draft',
+        visibility: 'public',
+        isCompleted: false,
+        viewCount: 0,
+        favoriteCount: 0,
+        chapterCount: 1, // Start with one chapter
+        createdAt: serverTimestamp() as any,
+        updatedAt: serverTimestamp() as any,
+        type: 'book', // default type
+        coverUrl: `https://picsum.photos/seed/${Date.now()}/600/800`,
+        synopsis: 'Belum ada sinopsis.',
+        genre: 'Custom',
     };
-    addDoc(booksCollectionRef, newBook)
-        .catch(async (serverError) => {
-            const permissionError = new FirestorePermissionError({
-                path: booksCollectionRef.path,
-                operation: 'create',
-                requestResourceData: newBook,
-            });
-            errorEmitter.emit('permission-error', permissionError);
+    try {
+        const docRef = await addDoc(booksCollectionRef, newBook);
+         // Also create the first chapter
+        const chapterCollectionRef = collection(firestore, 'books', docRef.id, 'chapters');
+        await addDoc(chapterCollectionRef, {
+            title: 'Bab 1',
+            content: 'Mulai tulis ceritamu di sini...',
+            order: 1,
+            createdAt: serverTimestamp()
         });
+        return docRef.id;
+    } catch(serverError: any) {
+        const permissionError = new FirestorePermissionError({
+            path: booksCollectionRef.path,
+            operation: 'create',
+            requestResourceData: newBook,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+        return undefined;
+    }
   };
 
   const updateBook = (updatedBook: Book) => {
@@ -159,7 +199,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       }
       const bookRef = doc(firestore, 'books', updatedBook.id);
       const { id, ...bookData } = updatedBook;
-      updateDoc(bookRef, { ...bookData })
+      updateDoc(bookRef, { ...bookData, updatedAt: serverTimestamp() })
         .catch(async (serverError) => {
             const permissionError = new FirestorePermissionError({
                 path: bookRef.path,

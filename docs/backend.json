@@ -5,19 +5,27 @@
       "description": "Represents a user's profile data.",
       "type": "object",
       "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string", "format": "uri" },
+        "username": { "type": "string" },
+        "bio": { "type": "string" },
+        "role": {
+          "type": "string",
+          "enum": ["admin", "penulis", "pembaca"]
+        },
+        "followers": { "type": "array", "items": { "type": "string" } },
+        "following": { "type": "array", "items": { "type": "string" } },
         "bookmarks": {
           "type": "array",
           "description": "An array of book IDs that the user has bookmarked.",
           "items": {
             "type": "string"
           }
-        },
-        "role": {
-          "type": "string",
-          "description": "User role, determines access level.",
-          "enum": ["penulis", "pembaca"]
         }
-      }
+      },
+      "required": ["uid", "email", "displayName", "role"]
     },
     "Book": {
       "title": "Book",
@@ -25,20 +33,36 @@
       "type": "object",
       "properties": {
         "title": { "type": "string" },
-        "author": { "type": "string" },
-        "category": { "type": "string" },
-        "rating": { "type": "number" },
-        "year": { "type": "number" },
-        "pages": { "type": "number" },
-        "readers": { "type": "string" },
-        "trending": { "type": "boolean" },
-        "progress": { "type": "number" },
-        "coverImage": { "type": "object" },
-        "content": { "type": "string" },
-        "isUserCreated": { "type": "boolean" },
-        "ownerId": { "type": "string" }
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorPhotoUrl": { "type": "string", "format": "uri" },
+        "type": { "type": "string", "enum": ["book", "screenplay", "poem"] },
+        "genre": { "type": "string" },
+        "synopsis": { "type": "string" },
+        "coverUrl": { "type": "string", "format": "uri" },
+        "status": { "type": "string", "enum": ["draft", "pending_review", "published"] },
+        "visibility": { "type": "string", "enum": ["public", "followers_only"] },
+        "isCompleted": { "type": "boolean" },
+        "viewCount": { "type": "number" },
+        "favoriteCount": { "type": "number" },
+        "chapterCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "collaboratorUids": { "type": "array", "items": { "type": "string" } }
       },
-      "required": ["title", "author", "category"]
+      "required": ["title", "authorId", "authorName", "type", "status"]
+    },
+    "Chapter": {
+        "title": "Chapter",
+        "description": "Represents a chapter within a book.",
+        "type": "object",
+        "properties": {
+            "title": { "type": "string" },
+            "content": { "type": "string" },
+            "order": { "type": "number" },
+            "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["title", "content", "order"]
     }
   },
   "auth": {
@@ -52,6 +76,10 @@
     "/books/{bookId}": {
       "schema": { "$ref": "#/entities/Book" },
       "description": "Stores all the books available in the application."
+    },
+    "/books/{bookId}/chapters/{chapterId}": {
+      "schema": { "$ref": "#/entities/Chapter" },
+      "description": "Stores the chapters for a specific book."
     }
   }
 }
