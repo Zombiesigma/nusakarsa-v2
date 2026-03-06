@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Image from 'next/image';
 
 import { useAppContext } from '@/context/app-context';
 import type { Book } from '@/lib/data';
@@ -15,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Save, Loader2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, Trash2, ImagePlus } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
@@ -38,6 +39,8 @@ export function EditorView({ bookId }: { bookId: string }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [currentBook, setCurrentBook] = useState<Book | undefined>(undefined);
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+    const [coverPreview, setCoverPreview] = useState<string | null>(null);
 
     const { register, handleSubmit, control, reset, formState: { errors, isDirty } } = useForm<BookFormData>({
         resolver: zodResolver(bookSchema),
@@ -61,11 +64,13 @@ export function EditorView({ bookId }: { bookId: string }) {
         if (bookId === 'new') {
             setIsNew(true);
             reset({ title: '', author: user.displayName || 'Pengguna Demo', category: 'Custom', content: '' });
+            setCoverPreview(null);
         } else {
             const bookToEdit = books.find(b => b.id === bookId);
             if (bookToEdit && bookToEdit.ownerId === user.uid) {
                 setCurrentBook(bookToEdit);
                 reset(bookToEdit);
+                setCoverPreview(bookToEdit.coverImage.src);
             } else if (books.length > 0) { // Only redirect if books have loaded
                 toast({ variant: 'destructive', title: "Error", description: "Buku tidak ditemukan atau Anda tidak memiliki izin untuk mengeditnya." });
                 router.push('/studio');
@@ -73,15 +78,68 @@ export function EditorView({ bookId }: { bookId: string }) {
         }
     }, [user, loading, userData, router, bookId, books, reset, toast]);
 
-    const onSubmit = (data: BookFormData) => {
+    const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                toast({
+                    variant: "destructive",
+                    title: "Ukuran File Terlalu Besar",
+                    description: "Ukuran sampul buku tidak boleh melebihi 5MB.",
+                });
+                return;
+            }
+            setCoverFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCoverPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
+    const onSubmit = async (data: BookFormData) => {
+        if (!user) return;
         setIsSaving(true);
+        
+        let finalCoverImage = currentBook?.coverImage;
+
+        if (coverFile) {
+            const formData = new FormData();
+            formData.append('file', coverFile);
+            formData.append('folder', `covers/${data.title.replace(/\s+/g, '_').toLowerCase()}`);
+
+            try {
+                const response = await fetch('/api/upload', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Gagal mengunggah sampul.');
+                }
+                finalCoverImage = { src: result.url, width: 600, height: 800, hint: `cover for ${data.title}` };
+            } catch (error: any) {
+                toast({ variant: "destructive", title: "Upload Gagal", description: error.message });
+                setIsSaving(false);
+                return;
+            }
+        }
+        
         if (isNew) {
-            addBook({ ...data, content: data.content || '' });
-            toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan ke studio Anda.` });
+            addBook({ 
+                ...data, 
+                content: data.content || '',
+                coverImage: finalCoverImage || {
+                    src: `https://picsum.photos/seed/${new Date().getTime()}/600/800`,
+                    width: 600,
+                    height: 800,
+                    hint: 'abstract texture'
+                }
+            });
+            toast({ title: "Buku Dibuat!", description: `'${data.title}' telah ditambahkan.` });
         } else if (currentBook) {
             updateBook({
                 ...currentBook,
                 ...data,
+                ...(finalCoverImage && { coverImage: finalCoverImage }),
             });
             toast({ title: "Buku Disimpan!", description: `'${data.title}' telah diperbarui.` });
         }
@@ -100,6 +158,8 @@ export function EditorView({ bookId }: { bookId: string }) {
         return null; // Or a loading spinner, redirect is handled in useEffect
     }
     
+    const hasUnsavedChanges = isDirty || !!coverFile;
+
     const EditorHeader = () => (
         <div className="hidden md:block fixed top-0 left-0 right-0 z-50 glass border-b border-border">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +171,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                         </Link>
                     </Button>
                     <div className="flex items-center gap-4">
-                         <span className={cn("text-sm text-muted-foreground transition-opacity", isDirty && !isSaving ? 'opacity-100' : 'opacity-0')}>
+                         <span className={cn("text-sm text-muted-foreground transition-opacity", hasUnsavedChanges && !isSaving ? 'opacity-100' : 'opacity-0')}>
                             Perubahan belum disimpan
                          </span>
                          {!isNew && (
@@ -138,7 +198,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                                 </AlertDialogContent>
                             </AlertDialog>
                          )}
-                         <Button onClick={handleSubmit(onSubmit)} className="btn-primary rounded-xl" disabled={isSaving || !isDirty}>
+                         <Button onClick={handleSubmit(onSubmit)} className="btn-primary rounded-xl" disabled={isSaving || !hasUnsavedChanges}>
                             {isSaving ? (
                                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                             ) : (
@@ -161,10 +221,10 @@ export function EditorView({ bookId }: { bookId: string }) {
                 </Link>
             </Button>
             <div className="flex items-center gap-2">
-                <span className={cn("text-xs text-muted-foreground transition-opacity", isDirty && !isSaving ? 'opacity-100' : 'opacity-0')}>
+                <span className={cn("text-xs text-muted-foreground transition-opacity", hasUnsavedChanges && !isSaving ? 'opacity-100' : 'opacity-0')}>
                     Belum disimpan
                 </span>
-                <Button onClick={handleSubmit(onSubmit)} size="icon" className="btn-primary rounded-lg" disabled={isSaving || !isDirty}>
+                <Button onClick={handleSubmit(onSubmit)} size="icon" className="btn-primary rounded-lg" disabled={isSaving || !hasUnsavedChanges}>
                     {isSaving ? (
                         <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
@@ -180,62 +240,89 @@ export function EditorView({ bookId }: { bookId: string }) {
         <section id="page-editor" className="bg-card min-h-screen">
             <EditorHeader />
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-12 md:pt-32">
-                <form noValidate onSubmit={handleSubmit(onSubmit)} className="page-section space-y-12">
-                    <div>
-                        <Input
-                            id="title"
-                            {...register('title')}
-                            placeholder="Judul Mahakaryamu..."
-                            className="h-auto w-full border-0 bg-transparent p-0 text-3xl font-bold font-headline !ring-0 focus-visible:!ring-0 md:text-5xl"
-                        />
-                        {errors.title && <p className="mt-2 text-sm text-destructive">{errors.title.message}</p>}
-                    </div>
-
-                    <div className="flex flex-col gap-6 border-y border-border py-6 md:flex-row md:gap-8">
-                        <div className="grid flex-1 gap-1.5">
-                            <Label htmlFor="author" className="text-muted-foreground">
-                                Penulis
-                            </Label>
-                            <Input
-                                id="author"
-                                {...register('author')}
-                                className="w-full border-0 bg-transparent p-0 font-semibold !ring-0 focus-visible:!ring-0"
-                                readOnly
-                            />
-                            {errors.author && <p className="text-sm text-destructive">{errors.author.message}</p>}
-                        </div>
-                        <div className="grid flex-1 gap-1.5">
-                            <Label htmlFor="category" className="text-muted-foreground">
-                                Kategori
-                            </Label>
-                            <Controller
-                                name="category"
-                                control={control}
-                                render={({ field }) => (
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <SelectTrigger className="w-full border-0 bg-transparent p-0 font-semibold !ring-0 focus:!ring-0">
-                                            <SelectValue placeholder="Pilih kategori" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Novel">Novel</SelectItem>
-                                            <SelectItem value="Non-Fiksi">Non-Fiksi</SelectItem>
-                                            <SelectItem value="Sastra">Sastra</SelectItem>
-                                            <SelectItem value="Custom">Lainnya</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                <form noValidate onSubmit={handleSubmit(onSubmit)} className="page-section">
+                    <div className="mb-12">
+                        <Label htmlFor="cover-input" className="cursor-pointer group">
+                            <div className="aspect-[3/4] max-w-xs mx-auto rounded-xl bg-bg-alt border-2 border-dashed border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-colors relative overflow-hidden">
+                                {coverPreview ? (
+                                    <>
+                                        <Image src={coverPreview} alt="Pratinjau sampul buku" fill className="object-cover" />
+                                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="text-white text-center">
+                                                <ImagePlus className="w-8 h-8 mx-auto" />
+                                                <p>Ganti Sampul</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="text-center">
+                                        <ImagePlus className="w-10 h-10 mx-auto" />
+                                        <p className="mt-2">Unggah Sampul</p>
+                                        <p className="text-xs">(Maks 5MB)</p>
+                                    </div>
                                 )}
-                            />
-                            {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
-                        </div>
+                            </div>
+                        </Label>
+                        <Input id="cover-input" type="file" className="hidden" accept="image/png, image/jpeg, image/gif" onChange={handleCoverChange} disabled={isSaving} />
                     </div>
+                    
+                    <div className="space-y-12">
+                      <div>
+                          <Input
+                              id="title"
+                              {...register('title')}
+                              placeholder="Judul Mahakaryamu..."
+                              className="h-auto w-full border-0 bg-transparent p-0 text-3xl font-bold font-headline !ring-0 focus-visible:!ring-0 md:text-5xl"
+                          />
+                          {errors.title && <p className="mt-2 text-sm text-destructive">{errors.title.message}</p>}
+                      </div>
 
-                    <div>
-                        <Textarea
-                            id="content"
-                            {...register('content')}
-                            className="min-h-[60vh] w-full resize-none border-none bg-transparent p-0 text-lg leading-relaxed !ring-0 focus-visible:!ring-0"
-                            placeholder="Mulai tulis ceritamu di sini..."
-                        />
+                      <div className="flex flex-col gap-6 border-y border-border py-6 md:flex-row md:gap-8">
+                          <div className="grid flex-1 gap-1.5">
+                              <Label htmlFor="author" className="text-muted-foreground">
+                                  Penulis
+                              </Label>
+                              <Input
+                                  id="author"
+                                  {...register('author')}
+                                  className="w-full border-0 bg-transparent p-0 font-semibold !ring-0 focus-visible:!ring-0"
+                                  readOnly
+                              />
+                              {errors.author && <p className="text-sm text-destructive">{errors.author.message}</p>}
+                          </div>
+                          <div className="grid flex-1 gap-1.5">
+                              <Label htmlFor="category" className="text-muted-foreground">
+                                  Kategori
+                              </Label>
+                              <Controller
+                                  name="category"
+                                  control={control}
+                                  render={({ field }) => (
+                                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                          <SelectTrigger className="w-full border-0 bg-transparent p-0 font-semibold !ring-0 focus:!ring-0">
+                                              <SelectValue placeholder="Pilih kategori" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                              <SelectItem value="Novel">Novel</SelectItem>
+                                              <SelectItem value="Non-Fiksi">Non-Fiksi</SelectItem>
+                                              <SelectItem value="Sastra">Sastra</SelectItem>
+                                              <SelectItem value="Custom">Lainnya</SelectItem>
+                                          </SelectContent>
+                                      </Select>
+                                  )}
+                              />
+                              {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+                          </div>
+                      </div>
+
+                      <div>
+                          <Textarea
+                              id="content"
+                              {...register('content')}
+                              className="min-h-[60vh] w-full resize-none border-none bg-transparent p-0 text-lg leading-relaxed !ring-0 focus-visible:!ring-0"
+                              placeholder="Mulai tulis ceritamu di sini..."
+                          />
+                      </div>
                     </div>
                 </form>
             </div>

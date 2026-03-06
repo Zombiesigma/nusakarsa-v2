@@ -23,7 +23,7 @@ interface AppContextType {
   setModalBookId: (id: string | null) => void;
   
   books: Book[];
-  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage' | 'ownerId'>) => void;
+  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId'>) => void;
   updateBook: (book: Book) => void;
   deleteBook: (bookId: string) => void;
 
@@ -127,7 +127,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       });
   };
 
-  const addBook = (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'coverImage'| 'ownerId'>) => {
+  const addBook = (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId'>) => {
     if (!user || !booksCollectionRef) {
         console.error("User not authenticated or books collection not ready.");
         return;
@@ -140,12 +140,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         trending: false,
         progress: 0,
         isUserCreated: true,
-        coverImage: {
-          src: `https://picsum.photos/seed/${new Date().getTime()}/600/800`,
-          width: 600,
-          height: 800,
-          hint: 'abstract texture'
-        },
     };
     addDoc(booksCollectionRef, newBook)
         .catch(async (serverError) => {
