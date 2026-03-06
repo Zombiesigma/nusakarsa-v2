@@ -46,7 +46,7 @@ import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { generateBookPdf, generateShotListPdf } from "@/app/actions/pdf-generator";
+import { generateBookPdf } from "@/app/actions/pdf-generator";
 import Image from "next/image";
 
 export default function AdminPage() {
@@ -143,21 +143,11 @@ export default function AdminPage() {
       
       const pdfUrl = await generateBookPdf(bookId);
       
-      let shotListUrl = "";
-      if (bookData.type === 'screenplay') {
-          try {
-              shotListUrl = await generateShotListPdf(bookId);
-          } catch (e) {
-              console.warn("Shot list generation skipped or failed:", e);
-          }
-      }
-
       const batch = writeBatch(firestore);
       
       batch.update(bookRef, { 
         status: 'published',
         fileUrl: pdfUrl,
-        shotListUrl: shotListUrl || null
       });
 
       const allUsersSnap = await getDocs(collection(firestore, 'users'));

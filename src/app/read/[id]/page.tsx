@@ -17,17 +17,14 @@ import {
   Search, 
   Youtube, 
   Download, 
-  ListChecks, 
   ScrollText,
   ChevronRight,
   List,
   Play,
   Pause,
   Sparkles,
-  Clapperboard,
   FileText,
   Bookmark,
-  Video,
   Layers,
   Loader2,
   Feather,
@@ -39,7 +36,7 @@ import {
 import Link from 'next/link';
 import { useFirestore, useUser, useDoc, useCollection } from '@/firebase';
 import { doc, collection, query, orderBy } from 'firebase/firestore';
-import type { Book, Chapter, Music, ScreenplayBlock, Shot, MusicTrack } from '@/lib/types';
+import type { Book, Chapter, Music, MusicTrack } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -51,8 +48,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescri
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
-type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper' | 'studio';
-type FontFamily = 'font-serif' | 'font-sans' | 'font-mono';
+type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper';
+type FontFamily = 'font-serif' | 'font-sans';
 
 const PAPER_TEXTURE_URL = "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&q=80&w=1600";
 
@@ -67,7 +64,7 @@ export default function ReadPage() {
   const [fontSize, setFontSize] = useState(18);
   const [lineHeight, setLineHeight] = useState(1.2);
   const [fontFamily, setFontFamily] = useState<FontFamily>('font-serif');
-  const [readingTheme, setReadingTheme] = useState<ReadingTheme>('studio');
+  const [readingTheme, setReadingTheme] = useState<ReadingTheme>('light');
   
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -91,11 +88,6 @@ export default function ReadPage() {
     (firestore && currentUser) ? query(collection(firestore, 'books', params.id, 'chapters'), orderBy('order', 'asc')) : null
   ), [firestore, currentUser, params.id]);
   const { data: chapters } = useCollection<Chapter>(chaptersQuery);
-
-  const shotsQuery = useMemo(() => (
-    (firestore && currentUser && book?.type === 'screenplay') ? query(collection(firestore, 'books', params.id, 'shotList'), orderBy('number', 'asc')) : null
-  ), [firestore, currentUser, params.id, book?.type]);
-  const { data: shotList } = useCollection<Shot>(shotsQuery);
 
   const musicQuery = useMemo(() => (
     (firestore && currentUser) ? query(collection(firestore, 'music'), orderBy('createdAt', 'desc')) : null
@@ -162,12 +154,12 @@ export default function ReadPage() {
   const applyTheme = (t: ReadingTheme) => {
     setReadingTheme(t);
     localStorage.setItem('reading-theme', t);
-    document.documentElement.classList.toggle('dark', t === 'dark' || t === 'studio');
+    document.documentElement.classList.toggle('dark', t === 'dark');
   };
 
   useEffect(() => {
     setIsMounted(true);
-    const savedTheme = (localStorage.getItem('reading-theme') as ReadingTheme) || 'studio';
+    const savedTheme = (localStorage.getItem('reading-theme') as ReadingTheme) || 'light';
     applyTheme(savedTheme);
   }, []);
 
@@ -182,7 +174,6 @@ export default function ReadPage() {
   if (isBookLoading || !isMounted) return <ReadPageSkeleton />;
   if (!book) return notFound();
 
-  const isScreenplay = book.type === 'screenplay';
   const isPoem = book.type === 'poem';
 
   const paperStyles = readingTheme === 'paper' ? {
@@ -193,15 +184,12 @@ export default function ReadPage() {
     color: '#3e2723'
   } : {};
 
-  let sceneCounter = 0;
-
   return (
     <div 
       className={cn(
         "flex h-full w-full transition-all duration-500 mx-auto overflow-hidden relative", 
         readingTheme === 'sepia' ? "bg-[#f4ecd8] text-[#5b4636]" : 
         readingTheme === 'dark' ? "bg-background" : 
-        readingTheme === 'studio' ? "bg-zinc-950 text-white" :
         readingTheme === 'light' ? "bg-background" : ""
       )}
       style={paperStyles}
@@ -218,10 +206,9 @@ export default function ReadPage() {
       <div className="flex-1 flex flex-col relative overflow-hidden">
         <header className={cn(
             "flex items-center justify-between px-2 md:px-4 h-16 border-b sticky top-0 z-30 backdrop-blur-md",
-            readingTheme === 'paper' ? "bg-white/40 border-black/10" : 
-            readingTheme === 'studio' ? "bg-black/60 border-white/5" : "bg-background/80"
+            readingTheme === 'paper' ? "bg-white/40 border-black/10" : "bg-background/80"
         )}>
-          <Link href={`/`} className="shrink-0">
+          <Link href={`/explore`} className="shrink-0">
             <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -232,8 +219,8 @@ export default function ReadPage() {
                 Reading: {book.title}
               </h2>
               <div className="flex items-center justify-center gap-1.5 text-[7px] md:text-[8px] font-bold text-primary uppercase whitespace-nowrap">
-                  {isScreenplay ? <Clapperboard className="h-2 w-2 md:h-2.5 md:w-2.5" /> : isPoem ? <Feather className="h-2 w-2 md:h-2.5 md:w-2.5" /> : <ScrollText className="h-2 w-2 md:h-2.5 md:w-2.5" />}
-                  {isScreenplay ? 'INDUSTRIAL SCRIPT RENDERING' : isPoem ? 'POETRY MODE' : 'NOVEL MODE'}
+                  {isPoem ? <Feather className="h-2 w-2 md:h-2.5 md:w-2.5" /> : <ScrollText className="h-2 w-2 md:h-2.5 md:w-2.5" />}
+                  {isPoem ? 'POETRY MODE' : 'NOVEL MODE'}
               </div>
           </div>
 
@@ -356,7 +343,7 @@ export default function ReadPage() {
                                 <div className="space-y-1">
                                     <SheetTitle className="font-headline text-3xl font-black tracking-tight leading-none">Daftar Isi</SheetTitle>
                                     <SheetDescription className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
-                                        Navigasi {isScreenplay ? 'Adegan & Scene' : isPoem ? 'Bait Puisi' : 'Struktur Cerita'}
+                                        Navigasi {isPoem ? 'Bait Puisi' : 'Struktur Cerita'}
                                     </SheetDescription>
                                 </div>
                             </div>
@@ -380,7 +367,7 @@ export default function ReadPage() {
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-60">
-                                                    {isScreenplay ? 'Scene' : isPoem ? 'Poem' : 'Bagian'}
+                                                    {isPoem ? 'Poem' : 'Bagian'}
                                                 </span>
                                                 <div className="h-1 w-1 rounded-full bg-border" />
                                                 <span className="text-[8px] font-bold text-muted-foreground uppercase">
@@ -397,25 +384,6 @@ export default function ReadPage() {
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-primary rounded-r-full transition-all group-hover:h-8" />
                                     </button>
                                 ))}
-
-                                {isScreenplay && shotList && shotList.length > 0 && (
-                                    <button 
-                                        onClick={()=> {
-                                            document.getElementById('production-shot-list')?.scrollIntoView({behavior:'smooth'});
-                                            setIsSheetOpen(false);
-                                        }} 
-                                        className="w-full flex items-center gap-4 p-5 rounded-[2rem] transition-all bg-orange-500/5 hover:bg-orange-500/10 border-2 border-dashed border-orange-500/20 mt-6 active:scale-[0.98] text-left"
-                                    >
-                                        <div className="h-12 w-12 rounded-2xl bg-orange-500 text-white shadow-lg flex items-center justify-center shrink-0">
-                                            <Video className="h-6 w-6" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-orange-600 mb-1">Industrial Document</p>
-                                            <h4 className="font-black text-sm md:text-lg text-orange-600 italic tracking-tighter">PRODUCTION SHOT LIST</h4>
-                                        </div>
-                                        <ArrowLeft className="h-5 w-5 text-orange-500 rotate-180" />
-                                    </button>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -430,20 +398,18 @@ export default function ReadPage() {
               </PopoverTrigger>
               <PopoverContent className="w-80 p-6 rounded-[2rem] border-none shadow-2xl bg-background/95 backdrop-blur-xl" align="end">
                 <div className="space-y-8">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2">
                         {[
-                          { id: 'light', label: 'Light', icon: null },
-                          { id: 'studio', label: 'Studio', icon: <Clapperboard className="h-3 w-3" /> },
-                          { id: 'sepia', label: 'Sepia', icon: null },
-                          { id: 'paper', label: 'Paper', icon: <ScrollText className="h-3 w-3" /> }
+                          { id: 'light', label: 'Light' },
+                          { id: 'sepia', label: 'Sepia' },
+                          { id: 'paper', label: 'Paper' }
                         ].map(t => (
                             <Button 
                                 key={t.id} 
                                 variant={readingTheme === t.id ? 'default' : 'outline'} 
                                 onClick={() => applyTheme(t.id as any)} 
-                                className="h-10 text-[10px] uppercase font-black gap-2"
+                                className="h-10 text-[10px] uppercase font-black"
                             >
-                                {t.icon}
                                 {t.label}
                             </Button>
                         ))}
@@ -452,11 +418,9 @@ export default function ReadPage() {
                         <p className="text-[10px] font-black uppercase text-muted-foreground/60">Ukuran Huruf: {fontSize}px</p>
                         <Slider defaultValue={[fontSize]} min={14} max={32} onValueChange={(v)=>setFontSize(v[0])} />
                     </div>
-                    {!isScreenplay && (
-                        <div className="grid grid-cols-3 gap-2">
-                            {['font-serif','font-sans','font-mono'].map(f=>(<Button key={f} variant={fontFamily===f?'default':'outline'} onClick={()=>setFontFamily(f as any)} className={cn("h-10 text-xs", f)}>Aa</Button>))}
-                        </div>
-                    )}
+                    <div className="grid grid-cols-2 gap-2">
+                        {['font-serif','font-sans'].map(f=>(<Button key={f} variant={fontFamily===f?'default':'outline'} onClick={()=>setFontFamily(f as any)} className={cn("h-10 text-xs", f)}>Aa</Button>))}
+                    </div>
 
                     <div className="space-y-4 pt-4 border-t border-border/40">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 px-1">Aset Produksi</p>
@@ -465,13 +429,6 @@ export default function ReadPage() {
                                 <Button variant="outline" className="w-full justify-start h-11 rounded-xl gap-3 font-bold border-2" asChild>
                                     <a href={book.fileUrl} target="_blank" rel="noopener noreferrer">
                                         <Download className="h-4 w-4 text-primary" /> Unduh Naskah PDF
-                                    </a>
-                                </Button>
-                            )}
-                            {book.shotListUrl && (
-                                <Button variant="outline" className="w-full justify-start h-11 rounded-xl gap-3 font-bold border-2 border-orange-100 hover:bg-orange-50" asChild>
-                                    <a href={book.shotListUrl} target="_blank" rel="noopener noreferrer">
-                                        <ListChecks className="h-4 w-4 text-orange-500" /> Unduh Shot List PDF
                                     </a>
                                 </Button>
                             )}
@@ -491,156 +448,43 @@ export default function ReadPage() {
           className="flex-1 overflow-y-auto scroll-smooth no-scrollbar relative z-10"
         >
           <div className={cn(
-              "w-full mx-auto",
-              isScreenplay ? "max-w-none px-0 py-0" : "max-w-4xl px-6 py-12"
+              "w-full mx-auto max-w-4xl px-6 py-12"
           )}>
-            {!isScreenplay && (
-                <header className="text-center space-y-6 mb-20">
-                    <h1 className="text-4xl md:text-6xl font-headline font-black italic">{book.title}</h1>
-                    <div className="flex flex-col items-center gap-2">
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Mahakarya Narasi Oleh</p>
-                        <p className="font-headline text-xl md:text-2xl font-black">{book.authorName}</p>
-                    </div>
-                </header>
-            )}
-
+            <header className="text-center space-y-6 mb-20">
+                <h1 className="text-4xl md:text-6xl font-headline font-black italic">{book.title}</h1>
+                <div className="flex flex-col items-center gap-2">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] opacity-40">Mahakarya Narasi Oleh</p>
+                    <p className="font-headline text-xl md:text-2xl font-black">{book.authorName}</p>
+                </div>
+            </header>
+            
             <article 
               className={cn(
                 "transition-all duration-500 mx-auto", 
-                isScreenplay ? "font-mono max-w-none" : cn(fontFamily, "prose dark:prose-invert max-w-lg"),
+                cn(fontFamily, "prose dark:prose-invert max-w-lg"),
                 isPoem && "text-center italic"
               )} 
-              style={{ fontSize: `${fontSize}px`, lineHeight: isScreenplay ? '1.2' : lineHeight }}
+              style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
             >
                 <>
                     {chapters?.map((chapter, cIdx) => (
                         <section 
                             key={chapter.id} 
                             id={`chapter-${chapter.id}`} 
-                            className={cn(
-                                isScreenplay ? "mb-0" : "mb-32"
-                            )}
+                            className="mb-32"
                         >
-                            {!isScreenplay && (
-                                <h2 className="text-3xl font-black mb-14">
-                                    {chapter.title}
-                                </h2>
-                            )}
+                            <h2 className="text-3xl font-black mb-14">
+                                {chapter.title}
+                            </h2>
                             
-                            {isScreenplay ? (
-                                <div className="bg-white text-zinc-900 px-6 py-12 md:pl-[1.5in] md:pr-[1in] md:py-[1in] shadow-2xl border-b border-zinc-100 relative overflow-hidden flex flex-col gap-0.5 mx-auto max-w-[8.5in] min-h-[11in]">
-                                    <div className="absolute top-10 right-10 text-[10pt] font-black opacity-30 select-none tracking-widest">
-                                        {cIdx + 1}.
-                                    </div>
-                                    
-                                    <h2 className="text-[10pt] text-center italic uppercase tracking-[0.6em] opacity-20 mb-16 select-none font-black">
-                                        {chapter.title}
-                                    </h2>
-
-                                    {(() => {
-                                        try {
-                                            if (chapter.content.trim().startsWith('[') && chapter.content.trim().endsWith(']')) {
-                                                const blocks: ScreenplayBlock[] = JSON.parse(chapter.content);
-                                                let lastCharacterInScene: string | null = null;
-
-                                                return (
-                                                    <div className="flex flex-col">
-                                                        {blocks.map(block => {
-                                                            let displayText = block.text;
-                                                            let isContd = false;
-                                                            
-                                                            if (block.type === 'slugline') {
-                                                                lastCharacterInScene = null;
-                                                            } else if (block.type === 'character') {
-                                                                const cleanName = block.text.trim().toUpperCase();
-                                                                if (lastCharacterInScene === cleanName && cleanName !== "") {
-                                                                    isContd = true;
-                                                                } else {
-                                                                    lastCharacterInScene = cleanName;
-                                                                }
-                                                            }
-
-                                                            return (
-                                                                <div key={block.id} className={cn(
-                                                                    "whitespace-pre-wrap transition-all duration-300 relative",
-                                                                    block.type === 'slugline' && "font-bold uppercase mt-10 mb-4 text-[1.15em] tracking-tighter border-b border-black/5 pb-1",
-                                                                    block.type === 'action' && "text-left mb-4 font-medium leading-[1.2]",
-                                                                    block.type === 'character' && "mt-6 mb-0.5 font-bold uppercase tracking-tight text-left w-full max-w-[3in] mx-auto pl-[1.2in]",
-                                                                    block.type === 'parenthetical' && "mb-0.5 italic text-[0.95em] opacity-80 text-left w-full max-w-[2.5in] mx-auto pl-[0.8in] before:content-['('] after:content-[')']",
-                                                                    block.type === 'dialogue' && "mb-4 leading-[1.2] text-[1.05em] text-left w-full max-w-[3.5in] mx-auto pl-[0.2in]",
-                                                                    block.type === 'transition' && "text-right font-bold uppercase mt-8 mb-8 tracking-[0.25em] text-[0.95em] opacity-60",
-                                                                )}
-                                                                >
-                                                                    {isContd && block.type === 'character' && (
-                                                                        <div className="absolute left-1/2 -translate-x-1/2 top-[-1rem] text-[7pt] font-black text-black/20 uppercase tracking-widest ml-[0.6in]">(CONT'D)</div>
-                                                                    )}
-                                                                    {displayText}
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                );
-                                            } else {
-                                                return <div className="whitespace-pre-wrap italic opacity-60 text-center py-24 border-2 border-dashed rounded-3xl">Format naskah tidak didukung untuk tampilan studio kawan.</div>;
-                                            }
-                                        } catch (e) {
-                                            return <div className="whitespace-pre-wrap leading-relaxed">{chapter.content}</div>;
-                                        }
-                                    })()}
-                                </div>
-                            ) : (
-                                <div className={cn("markdown-content", isPoem && "text-center italic")}>
-                                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                    {chapter.content}
-                                  </ReactMarkdown>
-                                </div>
-                            )}
+                            <div className={cn("markdown-content", isPoem && "text-center italic")}>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {chapter.content}
+                                </ReactMarkdown>
+                            </div>
                         </section>
                     ))}
                 </>
-
-                {isScreenplay && shotList && shotList.length > 0 && (
-                    <section id="production-shot-list" className="mt-0 py-24 bg-zinc-950 border-t border-white/5">
-                        <div className="max-w-5xl mx-auto px-6">
-                            <div className="text-center space-y-4 mb-16">
-                                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-orange-500/10 text-orange-500 text-[10px] font-black uppercase tracking-[0.4em] border border-orange-500/20">
-                                    <Sparkles className="h-3.5 w-3.5" /> Official Studio Document
-                                </div>
-                                <h2 className="text-4xl font-black uppercase tracking-[0.6em] text-white italic drop-shadow-2xl">Shot List</h2>
-                            </div>
-                            
-                            <div className="overflow-x-auto rounded-[3rem] border border-white/10 bg-zinc-900 shadow-[0_30px_100px_rgba(0,0,0,0.6)] overflow-hidden">
-                                <table className="w-full text-[10px] md:text-xs font-mono text-zinc-400">
-                                    <thead className="bg-white/5 border-b border-white/10">
-                                        <tr className="font-black uppercase tracking-tighter text-orange-500">
-                                            <th className="p-6 text-left w-16">#</th>
-                                            <th className="p-6 text-left w-16">SC</th>
-                                            <th className="p-6 text-left w-24">TYPE</th>
-                                            <th className="p-6 text-left">DESCRIPTION</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5">
-                                        {shotList.map(shot => (
-                                            <tr key={shot.id} className="hover:bg-white/[0.02] transition-colors group">
-                                                <td className="p-6 font-black opacity-30">{shot.number}</td>
-                                                <td className="p-6 font-bold text-white">{shot.scene}</td>
-                                                <td className="p-6">
-                                                    <span className="bg-white/5 text-white px-3 py-1.5 rounded-xl font-black text-[9px] uppercase shadow-inner border border-white/10">
-                                                        {shot.type}
-                                                    </span>
-                                                </td>
-                                                <td className="p-6 text-zinc-400 italic leading-relaxed group-hover:text-white transition-colors">{shot.description}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="mt-20 text-center">
-                                <p className="text-[10px] font-black uppercase tracking-[0.8em] text-muted-foreground opacity-20">End of Production Document • Hollywood Grade Pro</p>
-                            </div>
-                        </div>
-                    </section>
-                )}
             </article>
           </div>
         </div>

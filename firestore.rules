@@ -46,15 +46,6 @@ service cloud.firestore {
           isAdmin(request.auth.uid)
         );
       }
-
-      match /shotList/{shotId} {
-        allow read: if true;
-        allow write: if request.auth != null && (
-          get(/databases/$(database)/documents/books/$(bookId)).data.authorId == request.auth.uid ||
-          request.auth.uid in get(/databases/$(database)/documents/books/$(bookId)).data.collaboratorUids ||
-          isAdmin(request.auth.uid)
-        );
-      }
     }
     
     match /authorRequests/{requestId} {

@@ -236,7 +236,7 @@ export function StudioView() {
                                       <CardContent className="p-6 space-y-4">
                                           <div>
                                               <h3 className="font-headline text-lg font-black truncate italic">"{book.title}"</h3>
-                                              <p className="text-[10px] font-black uppercase text-primary tracking-widest mt-1">{book.genre} • {book.type === 'screenplay' ? 'Naskah Film' : book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
+                                              <p className="text-[10px] font-black uppercase text-primary tracking-widest mt-1">{book.genre} • {book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
                                           </div>
                                           <div className="space-y-2">
                                               <Button className="w-full rounded-2xl h-12 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20 transition-all active:scale-95" asChild>
@@ -295,7 +295,7 @@ export function StudioView() {
                                       <CardContent className="p-6 space-y-4">
                                           <div>
                                               <h3 className="font-headline text-lg font-black truncate italic">"{book.title}"</h3>
-                                              <p className="text-[10px] font-black uppercase text-indigo-600 tracking-widest mt-1">Tim Kolaborasi • {book.type === 'screenplay' ? 'Naskah' : book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
+                                              <p className="text-[10px] font-black uppercase text-indigo-600 tracking-widest mt-1">Tim Kolaborasi • {book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
                                           </div>
                                           <Button className="w-full rounded-2xl h-12 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-indigo-500/20 bg-indigo-600 hover:bg-indigo-700 transition-all active:scale-95" asChild>
                                               <Link href={`/studio/editor/${book.id}`}>

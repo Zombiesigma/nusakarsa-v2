@@ -15,16 +15,10 @@ export type User = {
   createdAt?: Timestamp;
 };
 
-export type ScreenplayBlock = {
-  id: string;
-  type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
-  text: string;
-};
-
 export type Chapter = {
   id: string;
   title: string;
-  content: string; // For novels/poems, it's markdown. For screenplays, it's a stringified JSON of ScreenplayBlock[]
+  content: string; // For novels/poems, it's markdown.
   order: number;
   createdAt: Timestamp;
 };
@@ -43,7 +37,7 @@ export type Book = {
   authorId: string;
   authorName: string;
   authorPhotoUrl: string;
-  type: 'book' | 'screenplay' | 'poem';
+  type: 'book' | 'poem';
   genre: string;
   synopsis: string;
   coverUrl: string;
@@ -63,7 +57,6 @@ export type Book = {
     username: string;
   }[];
   fileUrl?: string;
-  shotListUrl?: string;
   playlist?: MusicTrack[];
 };
 

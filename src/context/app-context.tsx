@@ -10,7 +10,7 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { v4 as uuidv4 } from 'uuid';
 
-export const categories = ["Semua", "Novel", "Non-Fiksi", "Sastra", "Puisi", "Naskah Film", "Fiksi Ilmiah", "Romansa"] as const;
+export const categories = ["Semua", "Novel", "Non-Fiksi", "Sastra", "Puisi", "Fiksi Ilmiah", "Romansa"] as const;
 export type Category = typeof categories[number];
 
 type Theme = 'light' | 'dark';
@@ -28,7 +28,7 @@ interface AppContextType {
     title: string;
     synopsis: string;
     genre: string;
-    type: 'book' | 'screenplay' | 'poem';
+    type: 'book' | 'poem';
     visibility: 'public' | 'followers_only';
     coverUrl: string;
   }) => Promise<string | undefined>;
@@ -160,7 +160,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     title: string;
     synopsis: string;
     genre: string;
-    type: 'book' | 'screenplay' | 'poem';
+    type: 'book' | 'poem';
     visibility: 'public' | 'followers_only';
     coverUrl: string;
   }) => {
@@ -192,14 +192,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
         const chapterCollectionRef = collection(firestore, 'books', docRef.id, 'chapters');
         
-        const initialContent = bookDetails.type === 'screenplay' 
-          ? JSON.stringify([{ id: uuidv4(), type: 'slugline', text: 'INT. LOKASI - WAKTU' }])
-          : "Mulai tulis...";
+        const initialContent = "Mulai tulis...";
 
         const batch = writeBatch(firestore);
         const newChapterDoc = doc(chapterCollectionRef);
         batch.set(newChapterDoc, {
-            title: bookDetails.type === 'screenplay' ? `SCENE 1` : bookDetails.type === 'poem' ? `BAIT 1` : `Bab 1`,
+            title: bookDetails.type === 'poem' ? `BAIT 1` : `Bab 1`,
             content: initialContent,
             order: 1,
             createdAt: serverTimestamp()

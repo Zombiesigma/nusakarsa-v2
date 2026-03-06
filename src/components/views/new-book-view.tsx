@@ -34,7 +34,7 @@ const bookCreationSchema = z.object({
   title: z.string().min(3, { message: 'Judul harus memiliki setidaknya 3 karakter.' }).max(100),
   synopsis: z.string().min(10, { message: 'Sinopsis harus memiliki setidaknya 10 karakter.' }).max(1500),
   genre: z.string().min(1, { message: 'Genre harus diisi.' }),
-  type: z.enum(['book', 'screenplay', 'poem'], { required_error: 'Tipe karya harus dipilih.' }),
+  type: z.enum(['book', 'poem'], { required_error: 'Tipe karya harus dipilih.' }),
   visibility: z.enum(['public', 'followers_only'], { required_error: 'Visibilitas harus dipilih.' }),
   coverImageFile: z.instanceof(File, { message: "Sampul buku diperlukan." }).refine(file => file.size < 5 * 1024 * 1024, 'Ukuran gambar maksimal 5MB.'),
 });
@@ -240,7 +240,6 @@ export function NewBookView() {
                                                     </FormControl>
                                                     <SelectContent>
                                                         <SelectItem value="book">Buku (Novel)</SelectItem>
-                                                        <SelectItem value="screenplay">Naskah Film</SelectItem>
                                                         <SelectItem value="poem">Puisi</SelectItem>
                                                     </SelectContent>
                                                 </Select>
