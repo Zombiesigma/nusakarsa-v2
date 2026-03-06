@@ -13,7 +13,7 @@ import { ParticleBackground } from "./effects/particle-background";
 import { ReadingProgressBar } from "./effects/reading-progress-bar";
 
 export function NusakarsaApp() {
-  const { activePage, modalBookId } = useAppContext();
+  const { activePage, modalBookId, isLoggedIn } = useAppContext();
 
   const renderActivePage = () => {
     switch (activePage) {
@@ -42,7 +42,7 @@ export function NusakarsaApp() {
         {renderActivePage()}
       </main>
 
-      <MobileBottomNav />
+      {isLoggedIn && <MobileBottomNav />}
 
       {modalBookId !== null && <BookModal />}
     </>

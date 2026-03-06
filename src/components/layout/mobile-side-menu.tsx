@@ -3,10 +3,18 @@
 import { useAppContext } from "@/context/app-context";
 import { Sheet, SheetContent, SheetOverlay, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, HelpCircle, LogIn } from "lucide-react";
+import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search } from "lucide-react";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function MobileSideMenu() {
-    const { isMenuOpen, setMenuOpen, theme, toggleTheme } = useAppContext();
+    const { isMenuOpen, setMenuOpen, theme, toggleTheme, isLoggedIn, setIsLoggedIn, activePage, setActivePage } = useAppContext();
+    const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar')!;
+    
+    const handleNavClick = (page: 'home' | 'explore' | 'library' | 'profile') => {
+        setActivePage(page);
+        setMenuOpen(false);
+    }
     
     return (
         <Sheet open={isMenuOpen} onOpenChange={setMenuOpen}>
@@ -15,19 +23,37 @@ export function MobileSideMenu() {
                 <SheetHeader>
                     <SheetTitle className="sr-only">Menu</SheetTitle>
                 </SheetHeader>
-                <div className="p-6 text-center" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
-                    <h3 className="font-bold text-lg text-primary-foreground">Gabung Nusakarsa</h3>
-                    <p className="text-primary-foreground/70 text-sm mt-1 mb-4">Daftar atau masuk untuk membaca tanpa batas.</p>
-                    <Button className="w-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm rounded-xl">
-                        Masuk / Daftar
-                    </Button>
-                </div>
+                
+                {isLoggedIn ? (
+                    <div className="p-6 flex items-center gap-4" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
+                        <Image src={userAvatar.imageUrl} data-ai-hint={userAvatar.imageHint} alt="User Avatar" width={64} height={64} className="w-16 h-16 rounded-full object-cover border-2 border-white/50" />
+                        <div>
+                            <h3 className="font-bold text-lg text-primary-foreground">Pengguna Demo</h3>
+                            <p className="text-primary-foreground/70 text-sm">pengguna.demo@example.com</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="p-6 text-center" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
+                        <h3 className="font-bold text-lg text-primary-foreground">Gabung Nusakarsa</h3>
+                        <p className="text-primary-foreground/70 text-sm mt-1 mb-4">Daftar atau masuk untuk membaca tanpa batas.</p>
+                        <Button className="w-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm rounded-xl" onClick={() => { setIsLoggedIn(true); setMenuOpen(false); }}>
+                            Masuk / Daftar
+                        </Button>
+                    </div>
+                )}
 
                 <div className="flex-1 overflow-y-auto py-4">
-                    <div className="px-6 py-3">
+                     <div className="px-6 py-3">
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Navigasi</p>
+                    </div>
+                    <MenuItem icon={<Home className="w-5 h-5"/>} label="Beranda" onClick={() => handleNavClick('home')} active={activePage === 'home'} />
+                    <MenuItem icon={<Search className="w-5 h-5"/>} label="Jelajahi" onClick={() => handleNavClick('explore')} active={activePage === 'explore'} />
+                    <MenuItem icon={<Library className="w-5 h-5"/>} label="Pustaka" onClick={() => handleNavClick('library')} active={activePage === 'library'} />
+                    <MenuItem icon={<User className="w-5 h-5"/>} label="Profil" onClick={() => handleNavClick('profile')} active={activePage === 'profile'} />
+
+                    <div className="px-6 py-3 mt-4">
                         <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Preferensi</p>
                     </div>
-
                     <div className="flex items-center justify-between px-6 py-4 hover:bg-bg-alt/50 transition-colors cursor-pointer" onClick={toggleTheme}>
                          <div className="flex items-center gap-3.5 text-foreground">
                             {theme === 'light' ? <Sun className="w-5 h-5 text-muted-foreground"/> : <Moon className="w-5 h-5 text-muted-foreground"/>}
@@ -41,12 +67,14 @@ export function MobileSideMenu() {
                     <MenuItem icon={<HelpCircle className="w-5 h-5"/>} label="Bantuan" />
                 </div>
                 
-                <div className="p-4 border-t border-border">
-                    <Button className="btn-primary w-full justify-center gap-2 py-3 rounded-xl font-semibold">
-                        <LogIn className="w-5 h-5" />
-                        Masuk
-                    </Button>
-                </div>
+                {isLoggedIn && (
+                    <div className="p-4 border-t border-border">
+                        <Button variant="outline" className="w-full justify-center gap-2 py-3 rounded-xl font-semibold" onClick={() => { setIsLoggedIn(false); setMenuOpen(false); }}>
+                            <LogOut className="w-5 h-5" />
+                            Keluar
+                        </Button>
+                    </div>
+                )}
             </SheetContent>
         </Sheet>
     );
@@ -56,11 +84,12 @@ interface MenuItemProps {
     icon: React.ReactNode;
     label: string;
     onClick?: () => void;
+    active?: boolean;
 }
 
-const MenuItem = ({ icon, label, onClick }: MenuItemProps) => (
-    <button className="w-full text-left flex items-center gap-3.5 px-6 py-4 text-foreground hover:bg-bg-alt/50 transition-colors" onClick={onClick}>
-        <span className="text-muted-foreground">{icon}</span>
-        <span>{label}</span>
+const MenuItem = ({ icon, label, onClick, active }: MenuItemProps) => (
+    <button className={`w-full text-left flex items-center gap-3.5 px-6 py-4 transition-colors ${active ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-bg-alt/50'}`} onClick={onClick}>
+        <span className={`${active ? 'text-primary' : 'text-muted-foreground'}`}>{icon}</span>
+        <span className="font-medium">{label}</span>
     </button>
 )

@@ -21,6 +21,8 @@ interface AppContextType {
   categories: readonly Category[];
   bookmarkedBooks: Set<number>;
   toggleBookmark: (id: number) => void;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<number | null>(null);
   const [bookmarkedBooks, setBookmarkedBooks] = useState<Set<number>>(() => new Set());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('nusakarsa-theme') as Theme | null;
@@ -94,6 +97,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     categories: allCategories,
     bookmarkedBooks,
     toggleBookmark,
+    isLoggedIn,
+    setIsLoggedIn,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

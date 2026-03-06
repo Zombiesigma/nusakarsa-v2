@@ -8,7 +8,7 @@ import { Star, Share2, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function BookModal() {
-  const { modalBookId, setModalBookId, books, bookmarkedBooks, toggleBookmark } = useAppContext();
+  const { modalBookId, setModalBookId, books, bookmarkedBooks, toggleBookmark, isLoggedIn, setIsLoggedIn } = useAppContext();
   const book = books.find(b => b.id === modalBookId);
 
   if (!book) return null;
@@ -47,18 +47,25 @@ export function BookModal() {
                 <span className="text-2xl font-bold text-accent">{book.readers}</span>
                 <span className="text-muted-foreground text-sm block">pembaca</span>
               </div>
-              <Button disabled className="btn-primary px-6 py-3 rounded-xl font-semibold">Login untuk Membaca</Button>
+              <Button 
+                className="btn-primary px-6 py-3 rounded-xl font-semibold" 
+                onClick={() => { if (!isLoggedIn) setIsLoggedIn(true) }}
+                disabled={isLoggedIn}
+              >
+                {isLoggedIn ? 'Mulai Membaca' : 'Login untuk Membaca'}
+              </Button>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={() => toggleBookmark(book.id)}
                 className={cn(
                   "btn-secondary flex-1 px-4 py-3 rounded-xl flex items-center justify-center gap-2",
-                  isBookmarked && 'border-gold text-gold'
+                  isBookmarked && isLoggedIn && 'border-gold text-gold'
                 )}
+                disabled={!isLoggedIn}
               >
-                <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
-                {isBookmarked ? 'Tersimpan' : 'Simpan'}
+                <Bookmark className={cn("w-5 h-5", isBookmarked && isLoggedIn && "fill-current")} />
+                {isBookmarked && isLoggedIn ? 'Tersimpan' : 'Simpan'}
               </button>
               <button className="btn-secondary flex-1 px-4 py-3 rounded-xl flex items-center justify-center gap-2">
                 <Share2 className="w-5 h-5" />
