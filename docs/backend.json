@@ -20,10 +20,10 @@
         "bookmarks": {
           "type": "array",
           "description": "An array of book IDs that the user has bookmarked.",
-          "items": {
-            "type": "string"
-          }
-        }
+          "items": { "type": "string" }
+        },
+        "phoneNumber": { "type": "string" },
+        "domicile": { "type": "string" }
       },
       "required": ["uid", "email", "displayName", "role"]
     },
@@ -48,7 +48,9 @@
         "chapterCount": { "type": "number" },
         "createdAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" },
-        "collaboratorUids": { "type": "array", "items": { "type": "string" } }
+        "collaboratorUids": { "type": "array", "items": { "type": "string" } },
+        "fileUrl": { "type": "string", "format": "uri" },
+        "shotListUrl": { "type": "string", "format": "uri" }
       },
       "required": ["title", "authorId", "authorName", "type", "status"]
     },
@@ -63,6 +65,36 @@
             "createdAt": { "type": "string", "format": "date-time" }
         },
         "required": ["title", "content", "order"]
+    },
+    "AuthorRequest": {
+        "title": "Author Request",
+        "description": "A user's request to become an author.",
+        "type": "object",
+        "properties": {
+            "userId": { "type": "string" },
+            "name": { "type": "string" },
+            "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+            "phoneNumber": { "type": "string" },
+            "domicile": { "type": "string" },
+            "portfolio": { "type": "string", "format": "uri" },
+            "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["userId", "name", "status", "phoneNumber", "domicile", "createdAt"]
+    },
+    "Story": {
+        "title": "Story",
+        "description": "A short-lived story/moment posted by a user.",
+        "type": "object",
+        "properties": {
+            "authorId": { "type": "string" },
+            "authorName": { "type": "string" },
+            "authorAvatarUrl": { "type": "string", "format": "uri" },
+            "content": { "type": "string" },
+            "mediaUrl": { "type": "string", "format": "uri" },
+            "mediaType": { "type": "string", "enum": ["image", "video"] },
+            "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["authorId", "authorName", "authorAvatarUrl", "createdAt"]
     }
   },
   "auth": {
@@ -80,6 +112,14 @@
     "/books/{bookId}/chapters/{chapterId}": {
       "schema": { "$ref": "#/entities/Chapter" },
       "description": "Stores the chapters for a specific book."
+    },
+    "/authorRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/AuthorRequest" },
+      "description": "Stores requests from users to become authors."
+    },
+    "/stories/{storyId}": {
+      "schema": { "$ref": "#/entities/Story" },
+      "description": "Stores user-created stories/moments."
     }
   }
 }

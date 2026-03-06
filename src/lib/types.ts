@@ -10,6 +10,8 @@ export type User = {
   role: 'admin' | 'penulis' | 'pembaca';
   followers: string[];
   following: string[];
+  phoneNumber?: string;
+  domicile?: string;
 };
 
 export type ScreenplayBlock = {
@@ -51,6 +53,8 @@ export type Book = {
     photoURL: string;
     username: string;
   }[];
+  fileUrl?: string;
+  shotListUrl?: string;
 };
 
 export type Reel = {
@@ -61,6 +65,28 @@ export type Reel = {
   bookId?: string;
   likes: number;
   commentCount: number;
+  createdAt: Timestamp;
+}
+
+export type Story = {
+  id: string;
+  authorId: string;
+  authorName: string;
+  authorAvatarUrl: string;
+  content?: string;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video';
+  createdAt: Timestamp;
+}
+
+export type AuthorRequest = {
+  id: string;
+  userId: string;
+  name: string;
+  status: 'pending' | 'approved' | 'rejected';
+  phoneNumber: string;
+  domicile: string;
+  portfolio?: string;
   createdAt: Timestamp;
 }
 
@@ -78,7 +104,7 @@ export type CollaborationInvitation = {
 
 export type Notification = {
     id: string;
-    type: 'follow' | 'comment' | 'collaboration' | 'system';
+    type: 'follow' | 'comment' | 'collaboration' | 'system' | 'broadcast';
     text: string;
     link: string;
     actor: {
