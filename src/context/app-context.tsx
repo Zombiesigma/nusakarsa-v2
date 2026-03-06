@@ -10,6 +10,7 @@ import { useFirestore } from '@/firebase';
 import { initialBooks } from '@/lib/data';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import { v4 as uuidv4 } from 'uuid';
 
 
 type Theme = 'light' | 'dark';
@@ -23,7 +24,14 @@ interface AppContextType {
   setModalBookId: (id: string | null) => void;
   
   books: Book[];
-  addBook: (book: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId' | 'isUserCreated' | 'coverUrl' | 'authorName' | 'authorPhotoUrl' | 'status' | 'visibility' | 'isCompleted' | 'viewCount' | 'favoriteCount' | 'chapterCount' | 'createdAt' | 'updatedAt' | 'type'>) => Promise<string | undefined>;
+  addBook: (bookDetails: {
+    title: string;
+    synopsis: string;
+    genre: string;
+    type: 'book' | 'screenplay' | 'poem';
+    visibility: 'public' | 'followers_only';
+    coverUrl: string;
+  }) => Promise<string | undefined>;
   updateBook: (book: Book) => void;
   deleteBook: (bookId: string) => void;
 
@@ -147,39 +155,57 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       });
   };
 
-  const addBook = async (newBookData: Omit<Book, 'id' | 'rating' | 'readers' | 'trending' | 'progress' | 'ownerId' | 'isUserCreated' | 'coverUrl' | 'authorName' | 'authorPhotoUrl' | 'status' | 'visibility' | 'isCompleted' | 'viewCount' | 'favoriteCount' | 'chapterCount' | 'createdAt' | 'updatedAt' | 'type'>) => {
+  const addBook = async (bookDetails: {
+    title: string;
+    synopsis: string;
+    genre: string;
+    type: 'book' | 'screenplay' | 'poem';
+    visibility: 'public' | 'followers_only';
+    coverUrl: string;
+  }) => {
     if (!user || !booksCollectionRef || !userData) {
         console.error("User not authenticated or books collection not ready.");
         return;
     }
+
     const newBook: Omit<Book, 'id'> = {
-        ...newBookData,
+        ...bookDetails,
         authorId: user.uid,
         authorName: user.displayName || 'Penulis Baru',
         authorPhotoUrl: user.photoURL || '',
         status: 'draft',
-        visibility: 'public',
         isCompleted: false,
         viewCount: 0,
         favoriteCount: 0,
-        chapterCount: 1, // Start with one chapter
+        chapterCount: 0,
         createdAt: serverTimestamp() as any,
         updatedAt: serverTimestamp() as any,
-        type: 'book', // default type
-        coverUrl: `https://picsum.photos/seed/${Date.now()}/600/800`,
-        synopsis: 'Belum ada sinopsis.',
-        genre: 'Custom',
     };
+
     try {
         const docRef = await addDoc(booksCollectionRef, newBook);
-         // Also create the first chapter
+        
+        if (!firestore) throw new Error("Firestore not initialized");
+
         const chapterCollectionRef = collection(firestore, 'books', docRef.id, 'chapters');
-        await addDoc(chapterCollectionRef, {
-            title: 'Bab 1',
-            content: 'Mulai tulis ceritamu di sini...',
+        
+        const initialContent = bookDetails.type === 'screenplay' 
+          ? JSON.stringify([{ id: uuidv4(), type: 'slugline', text: 'INT. LOKASI - WAKTU' }])
+          : "Mulai tulis...";
+
+        const batch = writeBatch(firestore);
+        const newChapterDoc = doc(chapterCollectionRef);
+        batch.set(newChapterDoc, {
+            title: bookDetails.type === 'screenplay' ? `SCENE 1` : bookDetails.type === 'poem' ? `BAIT 1` : `Bab 1`,
+            content: initialContent,
             order: 1,
             createdAt: serverTimestamp()
         });
+        
+        batch.update(docRef, { chapterCount: 1 });
+
+        await batch.commit();
+        
         return docRef.id;
     } catch(serverError: any) {
         const permissionError = new FirestorePermissionError({

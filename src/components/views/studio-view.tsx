@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -53,7 +54,7 @@ export function StudioView() {
   const userProfileRef = useMemo(() => (
     (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null
   ), [firestore, currentUser]);
-  const { data: userProfile, loading: profileLoading } = useDoc<AppUser>(userProfileRef);
+  const { data: userProfile, loading: profileLoading } = useDoc(userProfileRef);
 
   // Queries - My own books
   const booksQuery = useMemo(() => (
@@ -178,7 +179,7 @@ export function StudioView() {
           </motion.div>
           
           <Button className="rounded-full font-black shadow-xl shadow-primary/20 h-12 md:h-14 px-8 text-xs md:text-sm uppercase tracking-widest" asChild>
-              <Link href="/studio/editor/new">
+              <Link href="/studio/new">
                   <PlusCircle className="mr-2 h-4 w-4" /> Karya Baru
               </Link>
           </Button>
@@ -208,7 +209,7 @@ export function StudioView() {
                               <p className="text-muted-foreground max-w-xs mx-auto">Anda belum memiliki draf karya. Mari ciptakan sesuatu yang luar biasa hari ini.</p>
                           </div>
                           <Button asChild className="rounded-full px-10 h-12 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20">
-                              <Link href="/studio/editor/new">Buat Karya Pertama</Link>
+                              <Link href="/studio/new">Buat Karya Pertama</Link>
                           </Button>
                       </div>
                   ) : (
