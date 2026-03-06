@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import type { Book, Category } from '@/lib/data';
 import { categories as allCategories } from '@/lib/data';
 import { useUser, useCollection, useDoc } from '@/firebase';
@@ -46,13 +46,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const isLoggedIn = !!user;
   const firestore = useFirestore();
 
-  const booksCollectionRef = collection(firestore, 'books');
+  const booksCollectionRef = useMemo(() => collection(firestore, 'books'), [firestore]);
   const { data: books, loading: booksLoading } = useCollection(booksCollectionRef);
   
-  const userDocRef = user ? doc(firestore, `users/${user.uid}`) : null;
+  const userDocRef = useMemo(() => user ? doc(firestore, `users/${user.uid}`) : null, [firestore, user]);
   const { data: userData, loading: userDataLoading } = useDoc(userDocRef);
   
-  const bookmarkedBooks = userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>();
+  const bookmarkedBooks = useMemo(() => userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>(), [userData]);
 
   // Seed initial books if the books collection is empty
   useEffect(() => {
