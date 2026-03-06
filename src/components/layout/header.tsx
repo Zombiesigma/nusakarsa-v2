@@ -13,13 +13,12 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 const Logo = () => (
     <Link href="/" className="flex items-center gap-3 group cursor-pointer">
       <div className="relative w-10 h-10">
-        <svg className="w-10 h-10 text-primary" viewBox="0 0 40 40" fill="none" stroke="currentColor">
-          <rect x="6" y="6" width="24" height="28" rx="2" strokeWidth="2"/>
-          <path d="M10 6V34" strokeWidth="2"/>
-          <path d="M34 10L30 14V26L34 30V10Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          <circle cx="20" cy="20" r="5" className="stroke-current text-gold" strokeWidth="1.5"/>
-          <circle cx="20" cy="20" r="2" className="fill-current text-gold"/>
-        </svg>
+        <Image 
+          src="https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp" 
+          alt="Nusakarsa Logo" 
+          fill
+          className="object-contain"
+        />
       </div>
       <div>
         <span className="font-headline text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">Nusakarsa</span>
