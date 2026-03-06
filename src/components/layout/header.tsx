@@ -62,6 +62,7 @@ export function Header() {
   const userAvatar = user?.photoURL || PlaceHolderImages.find(p => p.id === 'user-avatar')!.imageUrl;
   const userAvatarHint = 'user avatar';
   const isWriter = userData?.role === 'penulis';
+  const isAdmin = userData?.role === 'admin';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border">
@@ -77,6 +78,7 @@ export function Header() {
                     <NavLink href="/library">Pustaka</NavLink>
                     {isWriter && <NavLink href="/studio">Studio</NavLink>}
                     <NavLink href="/profile">Profil</NavLink>
+                    {isAdmin && <NavLink href="/admin">Admin</NavLink>}
                 </>
             )}
           </div>
