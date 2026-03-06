@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
 import type { Book } from '@/lib/types';
 import { useUser, useCollection, useDoc } from '@/firebase';
-import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, addDoc, updateDoc, deleteDoc, writeBatch, setDoc, DocumentData, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -52,6 +52,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<string | null>(null);
   const [isSplashDone, setIsSplashDone] = useState(false);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
   // Firebase integration
   const { user, loading: userLoading } = useUser();
@@ -69,19 +70,24 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const loading = userLoading || booksLoading || userDataLoading;
 
+  // This effect runs once on mount to set a minimum display time
   useEffect(() => {
-    if (!loading) {
-      const timer = setTimeout(() => {
-        setIsSplashDone(true);
-      }, 2000); // Minimum splash screen time
+    const timer = setTimeout(() => {
+      setMinTimeElapsed(true);
+    }, 1500); // Minimum splash time: 1.5 seconds
 
-      return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // This effect checks both loading status and minimum time before hiding the splash screen
+  useEffect(() => {
+    if (!loading && minTimeElapsed) {
+      setIsSplashDone(true);
     }
-  }, [loading]);
+  }, [loading, minTimeElapsed]);
 
   // Create user document for new users
   useEffect(() => {
-    // Condition to ensure this only runs once for a new user after all loading is complete
     if (user && !userLoading && !userDataLoading && userData === null && firestore) {
       const newUserDocRef = doc(firestore, `users/${user.uid}`);
       
