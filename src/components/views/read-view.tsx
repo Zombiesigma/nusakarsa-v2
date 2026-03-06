@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect } from 'react';
@@ -19,19 +18,13 @@ export function ReadView({ bookId }: { bookId: string }) {
     useEffect(() => {
         if (!isLoggedIn) {
             router.push('/login');
-        }
-    }, [isLoggedIn, router]);
-
-    if (!isLoggedIn) {
-        // While redirecting
-        return null;
-    }
-    
-    if (!book) {
-        // After login check, if book is still not found
-        useEffect(() => {
+        } else if (!book) {
             router.push('/');
-        }, [router]);
+        }
+    }, [isLoggedIn, book, router]);
+
+    if (!isLoggedIn || !book) {
+        // While redirecting or if book not found
         return null;
     }
 
