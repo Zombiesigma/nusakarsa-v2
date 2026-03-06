@@ -10,7 +10,7 @@
     --card-foreground: 28 4% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 28 4% 10%;
-    --primary: 355 45% 39%; /* #91363C */
+    --primary: 47 96% 39%; /* #c39505 */
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 20% 88%; /* #E5E0DA */
     --input: 0 20% 88%;
-    --ring: 24 75% 60%;
+    --ring: 47 96% 39%;
     --radius: 0.75rem;
 
     --bg-alt: 0 14% 93%; /* #F0EDE8 */
@@ -37,8 +37,8 @@
     --card-foreground: 0 33% 95%;
     --popover: 28 4% 10%;
     --popover-foreground: 0 33% 95%;
-    --primary: 355 55% 50%; /* Lighter burgundy */
-    --primary-foreground: 0 0% 98%;
+    --primary: 47 80% 55%; /* #e1b735 */
+    --primary-foreground: 28 4% 10%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
@@ -49,7 +49,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 28 5% 16%; /* #2D2A28 */
     --input: 28 5% 16%;
-    --ring: 24 80% 65%;
+    --ring: 47 80% 55%;
 
     --bg-alt: 28 4% 10%;
     --gold: 40 50% 63%; /* #D4A96A */
@@ -75,7 +75,7 @@
     body { padding-bottom: 80px; }
   }
   *:focus-visible {
-    outline: 2px solid hsl(var(--accent));
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 3px;
     border-radius: var(--radius);
   }
