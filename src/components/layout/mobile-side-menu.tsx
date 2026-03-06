@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppContext } from "@/context/app-context";
-import { Sheet, SheetContent, SheetOverlay } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetOverlay, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User, Bookmark, Shield, Bell, Sun, Moon, HelpCircle, LogOut } from "lucide-react";
@@ -18,6 +18,9 @@ export function MobileSideMenu() {
         <Sheet open={isMenuOpen} onOpenChange={setMenuOpen}>
             <SheetOverlay className="bg-black/50 backdrop-blur-sm" />
             <SheetContent side="right" className="bg-card p-0 w-[85%] max-w-sm flex flex-col">
+                <SheetHeader>
+                    <SheetTitle className="sr-only">Menu</SheetTitle>
+                </SheetHeader>
                 <div className="p-6" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, oklch(from hsl(var(--primary)) l-0.1 h c) 100%)' }}>
                     <div className="flex items-center gap-4">
                         <Avatar className="w-14 h-14">
