@@ -241,25 +241,9 @@
   .mobile-bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    z-index: 60;
+    z-index: 50;
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
-  
-  .nav-item { position: relative; transition: all 0.3s ease; }
-  .nav-item.active { color: hsl(var(--primary)); }
-  .nav-item.active .nav-icon { transform: translateY(-2px); }
-  
-  .nav-item::before {
-    content: '';
-    position: absolute;
-    top: -8px; left: 50%;
-    transform: translateX(-50%) scale(0);
-    width: 4px; height: 4px;
-    background: hsl(var(--primary));
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-  }
-  .nav-item.active::before { transform: translateX(-50%) scale(1); }
 
   /* --- PAGE TRANSITIONS --- */
   .page-section {
