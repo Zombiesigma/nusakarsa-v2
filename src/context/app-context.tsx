@@ -42,6 +42,7 @@ interface AppContextType {
   user: any; // Consider using a more specific type for the user
   userData: DocumentData | null;
   loading: boolean; // Add a loading state
+  isSplashDone: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -50,6 +51,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<string | null>(null);
+  const [isSplashDone, setIsSplashDone] = useState(false);
 
   // Firebase integration
   const { user, loading: userLoading } = useUser();
@@ -65,6 +67,17 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   
   const bookmarkedBooks = useMemo(() => userData?.bookmarks ? new Set(userData.bookmarks) : new Set<string>(), [userData]);
 
+  const loading = userLoading || booksLoading || userDataLoading;
+
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setIsSplashDone(true);
+      }, 2000); // Minimum splash screen time
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   // Create user document for new users
   useEffect(() => {
@@ -259,7 +272,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     isLoggedIn,
     user,
     userData,
-    loading: userLoading || booksLoading || userDataLoading,
+    loading,
+    isSplashDone,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -8,34 +8,35 @@ import { MobileSideMenu } from "./layout/mobile-side-menu";
 import { BookModal } from "./common/book-modal";
 import { ParticleBackground } from "./effects/particle-background";
 import { ReadingProgressBar } from "./effects/reading-progress-bar";
-import { Loader2 } from "lucide-react";
+import { AnimatePresence } from 'framer-motion';
+import { SplashScreen } from './splash-screen';
 
 export function NusakarsaApp({ children }: { children: React.ReactNode }) {
-  const { modalBookId, isLoggedIn, loading } = useAppContext();
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
-      </div>
-    )
-  }
+  const { modalBookId, isLoggedIn, isSplashDone } = useAppContext();
 
   return (
     <>
-      <ReadingProgressBar />
-      <ParticleBackground />
-      <MobileSideMenu />
+      <AnimatePresence>
+        {!isSplashDone && <SplashScreen />}
+      </AnimatePresence>
       
-      <Header />
-      
-      <main>
-        {children}
-      </main>
+      {isSplashDone && (
+        <>
+          <ReadingProgressBar />
+          <ParticleBackground />
+          <MobileSideMenu />
+          
+          <Header />
+          
+          <main>
+            {children}
+          </main>
 
-      {isLoggedIn && <MobileBottomNav />}
+          {isLoggedIn && <MobileBottomNav />}
 
-      {modalBookId !== null && <BookModal />}
+          {modalBookId !== null && <BookModal />}
+        </>
+      )}
     </>
   );
 }
