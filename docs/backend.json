@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a user's profile data.",
+      "type": "object",
+      "properties": {
+        "bookmarks": {
+          "type": "array",
+          "description": "An array of book IDs that the user has bookmarked.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Book": {
+      "title": "Book",
+      "description": "Represents a book in the library.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "category": { "type": "string" },
+        "rating": { "type": "number" },
+        "year": { "type": "number" },
+        "pages": { "type": "number" },
+        "readers": { "type": "string" },
+        "trending": { "type": "boolean" },
+        "progress": { "type": "number" },
+        "coverImage": { "type": "object" },
+        "content": { "type": "string" },
+        "isUserCreated": { "type": "boolean" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["title", "author", "category"]
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Stores user profile information."
+    },
+    "/books/{bookId}": {
+      "schema": { "$ref": "#/entities/Book" },
+      "description": "Stores all the books available in the application."
+    }
+  }
+}
