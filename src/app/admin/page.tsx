@@ -55,9 +55,11 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  const { data: adminProfile, loading: isAdminChecking } = useDoc<AppUser>(
+  const adminDocRef = useMemo(() => (
     (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null
-  );
+  ), [firestore, currentUser]);
+
+  const { data: adminProfile, loading: isAdminChecking } = useDoc<AppUser>(adminDocRef);
 
   const isAdmin = adminProfile?.role === 'admin';
 
@@ -539,3 +541,4 @@ export default function AdminPage() {
     </div>
   );
 }
+```
