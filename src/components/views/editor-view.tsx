@@ -7,7 +7,7 @@ import * as z from 'zod';
 import { notFound } from 'next/navigation';
 import { useFirestore, useUser, useDoc, useCollection } from '@/firebase';
 import { doc, updateDoc, collection, serverTimestamp, query, orderBy, writeBatch, increment, deleteDoc } from 'firebase/firestore';
-import type { Book, Chapter, User as AppUser, ScreenplayBlock } from '@/lib/types';
+import type { Book, Chapter, User as AppUser } from '@/lib/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,29 +28,19 @@ import {
   Headset,
   ArrowLeft,
   CheckCircle2,
-  Clapperboard,
   FileText,
-  ImageIcon,
-  Megaphone,
-  User,
-  MessageCircle,
-  ArrowLeftRight,
-  Video,
-  Wand2,
-  Bot,
-  ListChecks,
   Users,
   Bold,
   Italic,
   Quote,
   Heading1,
-  Hash,
   Clock,
   Trash2,
   AlertTriangle,
   Eye,
-  Type,
-  Feather
+  Feather,
+  Wand2,
+  Bot
 } from "lucide-react";
 import {
   AlertDialog,
@@ -61,7 +51,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import {
   Popover,
@@ -74,11 +63,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { MusicSidebar } from '@/components/MusicSidebar';
-import { ScreenplayEditor, type ScreenplayEditorHandle } from '@/components/editor/ScreenplayEditor';
-import { ShotListEditor } from '@/components/editor/ShotListEditor';
 import { CollaboratorManager } from '@/components/editor/CollaboratorManager';
-import { v4 as uuidv4 } from 'uuid';
-import { screenplayHelper } from '@/ai/flows/screenplay-helper-flow';
 import { novelHelper } from '@/ai/flows/novel-helper-flow';
 import { poetryHelper } from '@/ai/flows/poetry-helper-flow';
 
@@ -90,12 +75,12 @@ const chapterSchema = z.object({
 const bookSettingsSchema = z.object({
   title: z.string().min(3).max(100),
   genre: z.string(),
-  type: z.enum(['book', 'screenplay', 'poem']),
+  type: z.enum(['book', 'poem']),
   synopsis: z.string().min(10).max(1000),
   visibility: z.enum(['public', 'followers_only']),
 });
 
-type EditorTab = 'editor' | 'settings' | 'music' | 'shotlist' | 'collaborators';
+type EditorTab = 'editor' | 'settings' | 'music' | 'collaborators';
 
 export function EditorView({ bookId }: { bookId: string }) {
   const firestore = useFirestore();
@@ -112,11 +97,9 @@ export function EditorView({ bookId }: { bookId: string }) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isZenMode, setIsZenMode] = useState(false);
-  const [activeBlockType, setActiveBlockType] = useState<ScreenplayBlock['type'] | null>(null);
   const [isAiRunning, setIsAiRunning] = useState(false);
   const [isDeletingChapter, setIsDeletingChapter] = useState<string | null>(null);
   
-  const screenplayEditorRef = useRef<ScreenplayEditorHandle>(null);
   const novelTextareaRef = useRef<HTMLTextAreaElement>(null);
   const prevChapterIdRef = useRef<string | null>(null);
 
@@ -246,12 +229,10 @@ export function EditorView({ bookId }: { bookId: string }) {
     const batch = writeBatch(firestore);
     const newChapterDoc = doc(collection(firestore, 'books', bookId, 'chapters'));
     
-    const initialContent = book?.type === 'screenplay' 
-      ? JSON.stringify([{ id: uuidv4(), type: 'slugline', text: 'INT. LOKASI - WAKTU' }])
-      : "Mulai tulis...";
+    const initialContent = "Mulai tulis...";
 
     batch.set(newChapterDoc, {
-        title: book?.type === 'screenplay' ? `SCENE ${newOrder}` : book?.type === 'poem' ? `BAIT ${newOrder}` : `Bab ${newOrder}`,
+        title: book?.type === 'poem' ? `BAIT ${newOrder}` : `Bab ${newOrder}`,
         content: initialContent,
         order: newOrder,
         createdAt: serverTimestamp()
@@ -283,14 +264,6 @@ export function EditorView({ bookId }: { bookId: string }) {
         toast({ variant: 'destructive', title: "Gagal Menghapus" });
     }
   };
-
-  const handleEditorChange = useCallback((val: string) => {
-    chapterForm.setValue('content', val, { shouldDirty: true });
-  }, [chapterForm]);
-
-  const handleBlockFocus = useCallback((type: ScreenplayBlock['type']) => {
-    setActiveBlockType(type);
-  }, []);
 
   const runAiNovelAssistant = async (task: 'tone_polish' | 'describe_scene' | 'show_dont_tell') => {
     const currentContent = chapterForm.getValues('content');
@@ -336,28 +309,6 @@ export function EditorView({ bookId }: { bookId: string }) {
     }
   };
 
-  const runAiScreenplayDoctor = async (task: 'summarize' | 'naturalize_dialogue' | 'suggest_plot') => {
-    if (!screenplayEditorRef.current) return;
-    const currentBlocks = screenplayEditorRef.current.getBlocks();
-    if (currentBlocks.length === 0) return;
-
-    setIsAiRunning(true);
-    try {
-        const context = currentBlocks.map(b => b.text).join('\n');
-        const { result } = await screenplayHelper({ context, task });
-        
-        toast({
-            title: task === 'summarize' ? "AI Logline Summary" : task === 'naturalize_dialogue' ? "AI Dialogue Doctor" : "AI Plot Suggestions",
-            description: result,
-            duration: 10000,
-        });
-    } catch (e) {
-        toast({ variant: 'destructive', title: "AI sedang sibuk kawan." });
-    } finally {
-        setIsAiRunning(false);
-    }
-  };
-
   const insertMarkdown = (prefix: string, suffix: string = '') => {
     const textarea = novelTextareaRef.current;
     if (!textarea) return;
@@ -391,7 +342,6 @@ export function EditorView({ bookId }: { bookId: string }) {
     return null;
   };
 
-  const isScreenplay = book.type === 'screenplay';
   const isPoem = book.type === 'poem';
   const activeChapter = chapters?.find(c => c.id === activeChapterId);
 
@@ -402,10 +352,10 @@ export function EditorView({ bookId }: { bookId: string }) {
                 <ChevronLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" /> Kembali ke Studio
             </Link>
             <div className="flex items-center gap-2 mb-1">
-                <div className={cn("p-1.5 rounded-lg", isScreenplay ? "bg-orange-500/10 text-orange-600" : isPoem ? "bg-rose-500/10 text-rose-600" : "bg-primary/10 text-primary")}>
-                    {isScreenplay ? <Clapperboard className="h-3.5 w-3.5" /> : isPoem ? <Feather className="h-3.5 w-3.5" /> : <FileText className="h-3.5 w-3.5" />}
+                <div className={cn("p-1.5 rounded-lg", isPoem ? "bg-rose-500/10 text-rose-600" : "bg-primary/10 text-primary")}>
+                    {isPoem ? <Feather className="h-3.5 w-3.5" /> : <FileText className="h-3.5 w-3.5" />}
                 </div>
-                <p className="text-[10px] uppercase font-black tracking-widest opacity-60">{isScreenplay ? 'Script Studio' : isPoem ? 'Poetry Studio' : 'Novel Studio'}</p>
+                <p className="text-[10px] uppercase font-black tracking-widest opacity-60">{isPoem ? 'Poetry Studio' : 'Novel Studio'}</p>
             </div>
             <h2 className="font-headline text-xl font-bold truncate italic">"{book.title}"</h2>
         </div>
@@ -413,16 +363,13 @@ export function EditorView({ bookId }: { bookId: string }) {
             <div className="grid grid-cols-2 gap-2">
                 <Button variant={activeTab === 'settings' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2" onClick={() => handleTabSwitch('settings')}><Settings className="h-4 w-4" /><span className="text-xs font-bold">Identitas</span></Button>
                 <Button variant={activeTab === 'music' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2" onClick={() => handleTabSwitch('music')}><Headset className="h-4 w-4" /><span className="text-xs font-bold">Musik</span></Button>
-                {isScreenplay && (
-                    <Button variant={activeTab === 'shotlist' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2 mt-1" onClick={() => handleTabSwitch('shotlist')}><ListChecks className="h-4 w-4" /><span className="text-xs font-bold">Shot List</span></Button>
-                )}
-                <Button variant={activeTab === 'collaborators' ? "secondary" : "ghost"} className={cn("w-full justify-start h-11 px-3 rounded-xl gap-2 mt-1", !isScreenplay && "col-span-2")} onClick={() => handleTabSwitch('collaborators')}><Users className="h-4 w-4" /><span className="text-xs font-bold">Kolaborator</span></Button>
+                <Button variant={activeTab === 'collaborators' ? "secondary" : "ghost"} className="col-span-2 w-full justify-start h-11 px-3 rounded-xl gap-2 mt-1" onClick={() => handleTabSwitch('collaborators')}><Users className="h-4 w-4" /><span className="text-xs font-bold">Kolaborator</span></Button>
             </div>
             
             {activeTab === 'editor' && (
                 <div className="space-y-1">
                     <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 px-2 mb-2 flex justify-between items-center">
-                        <span>{isScreenplay ? 'Daftar Scene' : isPoem ? 'Daftar Bait' : 'Daftar Bagian'}</span>
+                        <span>{isPoem ? 'Daftar Bait' : 'Daftar Bagian'}</span>
                         <Badge variant="outline" className="text-[8px] h-4 px-1.5">{chapters?.length || 0}</Badge>
                     </div>
                     {chapters?.map(chapter => (
@@ -453,7 +400,7 @@ export function EditorView({ bookId }: { bookId: string }) {
         </div>
         <div className="p-4 border-t space-y-2">
             <Button variant="outline" className="w-full h-11 rounded-xl border-dashed border-2 font-bold hover:bg-primary/5 hover:text-primary transition-all" onClick={handleAddChapter} disabled={isReviewing || isCompleted || !canEdit}>
-                <PlusCircle className="mr-2 h-4 w-4" /> {isScreenplay ? 'Tambah Scene' : isPoem ? 'Tambah Bait' : 'Tambah Bab'}
+                <PlusCircle className="mr-2 h-4 w-4" /> {isPoem ? 'Tambah Bait' : 'Tambah Bab'}
             </Button>
             {isAuthor && !isCompleted && (
                 <AlertDialog>
@@ -510,7 +457,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                                 {book.title}
                             </h3>
                             <p className="text-[9px] font-bold text-primary uppercase tracking-widest flex items-center gap-1.5">
-                                {activeTab === 'settings' ? 'Pengaturan' : activeTab === 'music' ? 'Musik' : activeTab === 'shotlist' ? 'Shot List' : activeTab === 'collaborators' ? 'Kolaborator' : (activeChapter?.title || "Editor")}
+                                {activeTab === 'settings' ? 'Pengaturan' : activeTab === 'music' ? 'Musik' : activeTab === 'collaborators' ? 'Kolaborator' : (activeChapter?.title || "Editor")}
                                 {chapterForm.formState.isDirty && <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />}
                             </p>
                         </div>
@@ -531,15 +478,33 @@ export function EditorView({ bookId }: { bookId: string }) {
                         <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 text-muted-foreground hover:text-primary" onClick={() => setIsZenMode(true)}>
                             <Maximize2 className="h-4 w-4" />
                         </Button>
-                        {isAuthor && (
+                         {isAuthor && book.status === 'draft' && (
                             <Button 
                                 size="sm" 
                                 className="rounded-full px-6 font-black text-[10px] uppercase tracking-widest h-9 shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95" 
                                 disabled={isSubmittingReview} 
                                 onClick={() => setIsReviewDialogOpen(true)}
                             >
-                                <BookUp className="mr-2 h-3.5 w-3.5" /> Terbitkan
+                                <BookUp className="mr-2 h-3.5 w-3.5" /> Kirim untuk Review
                             </Button>
+                        )}
+                        {isAuthor && book.status === 'published' && !isCompleted && (
+                            <Button
+                                size="sm"
+                                className="rounded-full px-6 font-black text-[10px] uppercase tracking-widest h-9 shadow-lg shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 text-white transition-all hover:scale-105 active:scale-95"
+                                onClick={async () => {
+                                    await saveCurrentChapter();
+                                    toast({ title: "Perubahan Dipublikasikan!", description: "Semua perubahan terbaru Anda kini sudah tayang." });
+                                }}
+                            >
+                                <BookUp className="mr-2 h-3.5 w-3.5" /> Publikasikan Perubahan
+                            </Button>
+                        )}
+                        {book.status === 'pending_review' && (
+                            <Badge variant="outline" className="h-9 px-4 rounded-full border-orange-500/50 text-orange-600 bg-orange-500/10 font-black text-[10px] uppercase tracking-widest">
+                                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin"/>
+                                Dalam Peninjauan
+                            </Badge>
                         )}
                     </div>
                 </div>
@@ -560,10 +525,6 @@ export function EditorView({ bookId }: { bookId: string }) {
                     </motion.div>
                 ) : activeTab === 'music' ? (
                     <div key="music" className="max-w-2xl mx-auto py-12 px-6 h-full"><MusicSidebar bookId={bookId} /></div>
-                ) : activeTab === 'shotlist' ? (
-                    <motion.div key="shotlist" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-5xl mx-auto py-12 px-6">
-                        <ShotListEditor bookId={bookId} />
-                    </motion.div>
                 ) : activeTab === 'collaborators' ? (
                     <motion.div key="collaborators" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-12 px-6">
                         <CollaboratorManager book={book} />
@@ -573,53 +534,14 @@ export function EditorView({ bookId }: { bookId: string }) {
                         {/* Toolbar Area */}
                         {!isZenMode && (
                             <div className="w-full max-w-[850px] flex items-center justify-start md:justify-center gap-1 mb-10 p-2 px-4 bg-background/80 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] shadow-[0_15px_40px_-15px_rgba(59,130,246,0.2)] sticky top-4 z-[120] overflow-x-auto no-scrollbar ring-1 ring-white/20">
-                                {isScreenplay ? (
-                                    <>
-                                        {[
-                                            { type: 'slugline', label: 'Scene', icon: ImageIcon },
-                                            { type: 'action', label: 'Action', icon: Megaphone },
-                                            { type: 'character', label: 'Character', icon: User },
-                                            { type: 'parenthetical', label: 'Parens', icon: () => <span className="font-black text-sm h-5 flex items-center">( )</span> },
-                                            { type: 'dialogue', label: 'Dialogue', icon: MessageCircle },
-                                            { type: 'transition', label: 'Transition', icon: ArrowLeftRight },
-                                        ].map((btn) => {
-                                            const isActive = activeBlockType === btn.type;
-                                            return (
-                                                <Button 
-                                                    key={btn.type}
-                                                    variant="ghost" 
-                                                    onClick={() => screenplayEditorRef.current?.setBlockType(btn.type as any)} 
-                                                    className={cn(
-                                                        "flex items-center gap-1.5 h-auto py-2.5 px-4 rounded-[1.25rem] transition-all group shrink-0 active:scale-95",
-                                                        isActive ? "bg-primary text-white shadow-lg shadow-primary/20" : "hover:bg-primary/5 hover:text-primary"
-                                                    )}
-                                                >
-                                                    <btn.icon className={cn("h-5 w-5 transition-colors", isActive ? "text-white" : "text-muted-foreground group-hover:text-primary")} />
-                                                    <span className={cn("text-[9px] font-black uppercase tracking-widest", isActive ? "text-white" : "opacity-40 group-hover:opacity-100")}>{btn.label}</span>
-                                                </Button>
-                                            )
-                                        })}
-                                        <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
-                                        <Button 
-                                            variant="ghost" 
-                                            onClick={() => handleTabSwitch('shotlist')} 
-                                            className="flex items-center gap-1.5 h-auto py-2.5 px-4 rounded-[1.25rem] hover:bg-orange-500/5 hover:text-orange-600 transition-all group shrink-0 active:scale-95"
-                                        >
-                                            <Video className="h-5 w-5 text-muted-foreground group-hover:text-orange-600" />
-                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-40 group-hover:opacity-100">Shot</span>
-                                        </Button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Button variant="ghost" onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
-                                        <Button variant="ghost" onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
-                                        <Button variant="ghost" onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
-                                        <Button variant="ghost" onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
-                                        <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-primary/40 px-2">{isPoem ? 'Industrial Poetry Mode' : 'Industrial Novel Mode'}</p>
-                                    </>
-                                )}
-
+                                
+                                <Button variant="ghost" onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
+                                <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
+                                <p className="text-[9px] font-black uppercase tracking-widest text-primary/40 px-2">{isPoem ? 'Industrial Poetry Mode' : 'Industrial Novel Mode'}</p>
+                                
                                 <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
                                 
                                 <Popover>
@@ -640,19 +562,7 @@ export function EditorView({ bookId }: { bookId: string }) {
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-1">
-                                            {isScreenplay ? (
-                                                <>
-                                                    <Button variant="ghost" className="justify-start gap-3 h-11 rounded-xl text-xs font-bold" onClick={() => runAiScreenplayDoctor('naturalize_dialogue')}>
-                                                        <MessageCircle className="h-4 w-4 text-primary" /> Naturalize Dialogue
-                                                    </Button>
-                                                    <Button variant="ghost" className="justify-start gap-3 h-11 rounded-xl text-xs font-bold" onClick={() => runAiScreenplayDoctor('summarize')}>
-                                                        <FileText className="h-4 w-4 text-emerald-500" /> Summarize Logline
-                                                    </Button>
-                                                    <Button variant="ghost" className="justify-start gap-3 h-11 rounded-xl text-xs font-bold" onClick={() => runAiScreenplayDoctor('suggest_plot')}>
-                                                        <Sparkles className="h-4 w-4 text-orange-500" /> Suggest Plot Conflict
-                                                    </Button>
-                                                </>
-                                            ) : isPoem ? (
+                                            {isPoem ? (
                                                 <>
                                                     <Button variant="ghost" className="justify-start gap-3 h-11 rounded-xl text-xs font-bold" onClick={() => runAiPoetryAssistant('rhyme_polish')}>
                                                         <Sparkles className="h-4 w-4 text-rose-500" /> Rhyme Polish Bait
@@ -683,78 +593,61 @@ export function EditorView({ bookId }: { bookId: string }) {
                             </div>
                         )}
 
-                        <div className={cn(
-                            "w-full mx-auto",
-                            isScreenplay ? "max-w-[8.5in]" : "max-w-3xl"
-                        )}>
+                        <div className="w-full mx-auto max-w-3xl">
                             <Form {...chapterForm}><form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
                                 <FormField control={chapterForm.control} name="title" render={({ field }) => (
                                     <FormItem className="mb-10">
                                         <FormControl>
                                             <Input 
-                                                placeholder={isScreenplay ? "SCENE HEADING..." : isPoem ? "Judul Bait..." : "Judul Bab..."} 
+                                                placeholder={isPoem ? "Judul Bait..." : "Judul Bab..."} 
                                                 {...field} 
-                                                className={cn(
-                                                    "border-none shadow-none focus-visible:ring-0 h-auto p-0 transition-colors text-center",
-                                                    isScreenplay ? "text-xl font-mono font-black uppercase tracking-widest text-zinc-400 focus:text-zinc-900" : "text-3xl md:text-5xl font-headline font-black"
-                                                )} 
+                                                className="border-none shadow-none focus-visible:ring-0 h-auto p-0 transition-colors text-center text-3xl md:text-5xl font-headline font-black"
                                             />
                                         </FormControl>
                                     </FormItem>
                                 )} />
                                 
-                                {isScreenplay ? (
-                                    <ScreenplayEditor 
-                                        key={activeChapterId || 'screenplay'}
-                                        ref={screenplayEditorRef}
-                                        initialContent={activeChapter.content} 
-                                        onBlockFocus={handleBlockFocus}
-                                        onChange={handleEditorChange}
-                                        isReadOnly={!canEdit}
-                                    />
-                                ) : (
-                                    <div className="bg-white rounded-[2.5rem] shadow-[0_20px_80px_-20px_rgba(0,0,0,0.1)] p-8 md:p-16 border border-zinc-100 min-h-[80vh] relative group/paper">
-                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-                                        <FormField control={chapterForm.control} name="content" render={({ field }) => (
-                                            <FormItem>
-                                                <FormControl>
-                                                    <Textarea 
-                                                        ref={novelTextareaRef}
-                                                        placeholder={isPoem ? "Tuangkan bait-bait indahmu kawan..." : "Mulai tuangkan narasimu kawan..."}
-                                                        className={cn(
-                                                            "min-h-[70vh] border-none shadow-none px-0 focus-visible:ring-0 resize-none no-scrollbar text-lg md:text-2xl font-serif leading-[1.8] text-zinc-800",
-                                                            isPoem && "text-center italic"
-                                                        )}
-                                                        {...field} 
-                                                        readOnly={!canEdit}
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )} />
-                                        
-                                        {!isZenMode && (
-                                            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] hidden md:flex items-center gap-6 px-8 py-3 bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl text-white/60">
-                                                <div className="flex items-center gap-2">
-                                                    <FileText className="h-3 w-3 text-primary" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">{novelStats.words} Kata</span>
-                                                </div>
-                                                <div className="w-px h-4 bg-white/10" />
-                                                <div className="flex items-center gap-2">
-                                                    <Clock className="h-3 w-3 text-emerald-400" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Est. {novelStats.minutes} Menit Baca</span>
-                                                </div>
+                                <div className="bg-white rounded-[2.5rem] shadow-[0_20px_80px_-20px_rgba(0,0,0,0.1)] p-8 md:p-16 border border-zinc-100 min-h-[80vh] relative group/paper">
+                                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
+                                    <FormField control={chapterForm.control} name="content" render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Textarea 
+                                                    ref={novelTextareaRef}
+                                                    placeholder={isPoem ? "Tuangkan bait-bait indahmu kawan..." : "Mulai tuangkan narasimu kawan..."}
+                                                    className={cn(
+                                                        "min-h-[70vh] border-none shadow-none px-0 focus-visible:ring-0 resize-none no-scrollbar text-lg md:text-2xl font-serif leading-[1.8] text-zinc-800",
+                                                        isPoem && "text-center italic"
+                                                    )}
+                                                    {...field} 
+                                                    readOnly={!canEdit}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )} />
+                                    
+                                    {!isZenMode && (
+                                        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] hidden md:flex items-center gap-6 px-8 py-3 bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl text-white/60">
+                                            <div className="flex items-center gap-2">
+                                                <FileText className="h-3 w-3 text-primary" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">{novelStats.words} Kata</span>
                                             </div>
-                                        )}
-                                    </div>
-                                )}
+                                            <div className="w-px h-4 bg-white/10" />
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="h-3 w-3 text-emerald-400" />
+                                                <span className="text-[10px] font-black uppercase tracking-widest">Est. {novelStats.minutes} Menit Baca</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </form></Form>
                         </div>
                     </motion.div>
                 ) : (
                     <div key="empty" className="flex flex-col items-center justify-center h-full opacity-30 p-12 text-center">
-                        <Clapperboard className="h-16 w-16 mb-6" />
+                        <FileText className="h-16 w-16 mb-6" />
                         <h4 className="text-2xl font-headline font-bold">
-                            {isScreenplay ? 'Pilih atau Buat Scene Baru' : isPoem ? 'Pilih atau Buat Bait Baru' : 'Pilih atau Buat Bab Baru'}
+                            {isPoem ? 'Pilih atau Buat Bait Baru' : 'Pilih atau Buat Bab Baru'}
                         </h4>
                         {canEdit && <Button onClick={handleAddChapter} className="mt-6 rounded-full px-8">Buat Sekarang</Button>}
                     </div>
@@ -782,12 +675,14 @@ export function EditorView({ bookId }: { bookId: string }) {
         <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
             <AlertDialogHeader>
                 <div className="mx-auto bg-primary/10 p-4 rounded-2xl w-fit mb-4"><BookUp className="h-8 w-8 text-primary" /></div>
-                <AlertDialogTitle className="font-headline text-2xl font-black text-center">Terbitkan Karya?</AlertDialogTitle>
-                <AlertDialogDescription className="text-center font-medium">Karya Anda akan dikirim ke tim kurasi Elitera sebelum tampil secara resmi di hadapan seluruh pembaca kawan.</AlertDialogDescription>
+                <AlertDialogTitle className="font-headline text-2xl font-black text-center">Kirim untuk Peninjauan?</AlertDialogTitle>
+                <AlertDialogDescription className="text-center font-medium">Karya Anda akan dikirim ke tim kurasi Elitera untuk peninjauan pertama. Setelah disetujui, pembaruan di masa mendatang akan langsung terbit.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-2">
                 <AlertDialogCancel className="rounded-full h-12 border-2 flex-1 font-bold">Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={handleSubmitForReview} className="rounded-full h-12 flex-1 font-black bg-primary shadow-xl shadow-primary/20">Kirim Sekarang</AlertDialogAction>
+                <AlertDialogAction onClick={handleSubmitForReview} className="rounded-full h-12 flex-1 font-black bg-primary shadow-xl shadow-primary/20" disabled={isSubmittingReview}>
+                  {isSubmittingReview ? <Loader2 className="animate-spin" /> : "Ya, Kirim untuk Review"}
+                </AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
