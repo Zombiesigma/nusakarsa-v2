@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppContext } from "@/context/app-context";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { Star, Share2, Bookmark } from "lucide-react";
@@ -18,6 +18,7 @@ export function BookModal() {
   return (
     <Dialog open={modalBookId !== null} onOpenChange={(isOpen) => !isOpen && setModalBookId(null)}>
       <DialogContent className="p-0 max-w-lg w-[90vw] border-none bg-transparent shadow-2xl">
+        <DialogTitle className="sr-only">{book.title}</DialogTitle>
         <div className="bg-card rounded-3xl overflow-hidden">
           <div className="aspect-[4/3] md:aspect-[2/1] relative">
             <Image 
