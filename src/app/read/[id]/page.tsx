@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
@@ -460,8 +459,9 @@ export default function ReadPage() {
             
             <article 
               className={cn(
-                "transition-all duration-500 mx-auto", 
-                cn(fontFamily, "prose dark:prose-invert max-w-lg"),
+                "transition-all duration-500 mx-auto",
+                "prose dark:prose-invert max-w-lg", 
+                fontFamily,
                 isPoem && "text-center italic"
               )} 
               style={{ fontSize: `${fontSize}px`, lineHeight: lineHeight }}
@@ -477,8 +477,11 @@ export default function ReadPage() {
                                 {chapter.title}
                             </h2>
                             
-                            <div className={cn("markdown-content", isPoem && "text-center italic")}>
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <div className="markdown-content">
+                                <ReactMarkdown 
+                                    remarkPlugins={[remarkGfm]}
+                                    components={isPoem ? { p: ({node, ...props}) => <p style={{textIndent: '0'}} {...props} /> } : {}}
+                                >
                                 {chapter.content}
                                 </ReactMarkdown>
                             </div>
