@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -18,13 +19,16 @@ export function Header() {
     <header className="sticky top-0 z-40 glass border-b border-border w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 md:h-20">
-          <div className="flex items-center gap-2">
+          {/* Mobile-only header elements */}
+          <div className="flex items-center gap-2 md:hidden">
             <SidebarTrigger />
-            <span className="font-bold text-lg md:hidden">Nusakarsa</span>
+            <span className="font-bold text-lg">Nusakarsa</span>
           </div>
 
+          {/* Spacer to push user actions to the right on all screen sizes */}
           <div className="flex-1" />
           
+          {/* User actions - always on the right */}
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
                 <>
