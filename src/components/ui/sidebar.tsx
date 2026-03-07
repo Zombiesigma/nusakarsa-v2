@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -98,14 +99,15 @@ const SidebarProvider = React.forwardRef<
     const toggleSidebar = React.useCallback(() => {
       if (isMobile) {
         setOpenMobile((open) => !open)
+      } else {
+        setOpen((open) => !open)
       }
-    }, [isMobile, setOpenMobile])
+    }, [isMobile, setOpen, setOpenMobile])
 
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
-          isMobile &&
           event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
           (event.metaKey || event.ctrlKey)
         ) {
@@ -116,7 +118,7 @@ const SidebarProvider = React.forwardRef<
 
       window.addEventListener("keydown", handleKeyDown)
       return () => window.removeEventListener("keydown", handleKeyDown)
-    }, [isMobile, toggleSidebar])
+    }, [toggleSidebar])
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
@@ -136,27 +138,25 @@ const SidebarProvider = React.forwardRef<
     )
 
     return (
-      <SidebarContext.Provider value={contextValue}>
-        <TooltipProvider delayDuration={0}>
-          <div
-            style={
+      <TooltipProvider delayDuration={0}>
+        <div
+          style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH,
                 "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
                 ...style,
               } as React.CSSProperties
-            }
-            className={cn(
-              "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
-              className
-            )}
-            ref={ref}
-            {...props}
-          >
+          }
+          className={cn(
+            "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
             {children}
-          </div>
-        </TooltipProvider>
-      </SidebarContext.Provider>
+        </div>
+      </TooltipProvider>
     )
   }
 )
@@ -274,7 +274,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-8 w-8 md:hidden", className)}
+      className={cn("h-8 w-8", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
@@ -323,7 +323,7 @@ const SidebarInset = React.forwardRef<
     <main
       ref={ref}
       className={cn(
-        "relative flex min-h-svh flex-col bg-background md:w-[calc(100%_-_var(--sidebar-width-icon))] md:ml-[var(--sidebar-width-icon)]",
+        "relative flex min-h-svh flex-col bg-background",
         className
       )}
       {...props}

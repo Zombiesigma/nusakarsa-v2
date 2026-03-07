@@ -117,10 +117,9 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
           {!isReadPage && <AppSidebar />}
           
           <SidebarInset className={cn(
-            isReadPage && "m-0 rounded-none",
-            !isReadPage && "md:transition-[margin-left] md:duration-200 md:ease-linear",
+            isReadPage ? "m-0 rounded-none" : "md:ml-[var(--sidebar-width-icon)]",
             !isReadPage && "md:peer-data-[state=expanded]:ml-[var(--sidebar-width)]",
-            !isReadPage && "md:peer-data-[state=collapsed]:ml-[var(--sidebar-width-icon)]"
+            !isReadPage && "md:transition-[margin-left] md:duration-200 md:ease-linear"
           )}>
             <ReadingProgressBar />
             <ParticleBackground />
