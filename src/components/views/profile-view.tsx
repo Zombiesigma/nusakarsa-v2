@@ -159,9 +159,9 @@ export function ProfileView() {
             <div className="lg:sticky lg:top-28 space-y-6">
               <Card className="text-center rounded-[2rem] border-none shadow-xl">
                 <CardContent className="p-8">
-                  <Image src={userAvatar} data-ai-hint={userAvatarHint} alt="User Avatar" width={128} height={128} className="w-32 h-32 rounded-full object-cover shadow-lg mx-auto mb-6 border-4 border-card" />
+                  <Image src={userAvatar} data-ai-hint={userAvatarHint} alt="User Avatar" width={128} height={128} className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover shadow-lg mx-auto mb-6 border-4 border-card" />
                   <div className="space-y-2">
-                    <h1 className="font-headline text-3xl font-bold">{user.displayName || 'Pengguna Baru'}</h1>
+                    <h1 className="font-headline text-2xl md:text-3xl font-bold">{user.displayName || 'Pengguna Baru'}</h1>
                     {renderRoleBadge()}
                     <p className="text-sm text-muted-foreground pt-2">{user.email}</p>
                     <p className="text-sm text-muted-foreground/80 font-medium">Anggota Sejak {new Date(user.metadata.creationTime || Date.now()).getFullYear()}</p>
@@ -193,11 +193,13 @@ export function ProfileView() {
 
           <main className="lg:col-span-8 xl:col-span-9">
             <Tabs defaultValue="karya" className="w-full">
-              <TabsList className="bg-muted/50 p-1.5 rounded-full h-auto mb-8">
-                {userData?.role === 'penulis' && <TabsTrigger value="karya" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Karya Diterbitkan</TabsTrigger>}
-                <TabsTrigger value="aktivitas" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Aktivitas</TabsTrigger>
-                <TabsTrigger value="pengaturan" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Pengaturan</TabsTrigger>
-              </TabsList>
+              <div className="w-full overflow-x-auto pb-2 no-scrollbar">
+                <TabsList className="bg-muted/50 p-1.5 rounded-full h-auto mb-8 w-max">
+                  {userData?.role === 'penulis' && <TabsTrigger value="karya" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Karya Diterbitkan</TabsTrigger>}
+                  <TabsTrigger value="aktivitas" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Aktivitas</TabsTrigger>
+                  <TabsTrigger value="pengaturan" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Pengaturan</TabsTrigger>
+                </TabsList>
+              </div>
 
               {userData?.role === 'penulis' && (
                 <TabsContent value="karya">
@@ -218,7 +220,7 @@ export function ProfileView() {
                                 <div className="flex items-center gap-1.5"><Heart className="h-4 w-4"/> {book.favoriteCount.toLocaleString('id-ID')}</div>
                                 <div className="flex items-center gap-1.5"><FileText className="h-4 w-4"/> {book.chapterCount} Bab</div>
                             </div>
-                            <div className="mt-6 flex gap-3">
+                            <div className="mt-6 flex flex-col sm:flex-row gap-3">
                                 <Button asChild className="rounded-xl"><Link href={`/read/${book.id}`}>Baca Sekarang</Link></Button>
                                 <Button asChild variant="outline" className="rounded-xl"><Link href={`/studio/editor/${book.id}`}>Kelola</Link></Button>
                             </div>
