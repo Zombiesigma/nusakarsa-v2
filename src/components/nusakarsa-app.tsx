@@ -57,7 +57,6 @@ const AppSidebar = () => {
                     <span className="font-headline text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">Nusakarsa</span>
                   </div>
                 </Link>
-                <SidebarTrigger className="hidden md:flex" />
               </div>
             </SidebarHeader>
             <SidebarContent className="p-0">
@@ -107,7 +106,7 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
   const isReadPage = pathname.startsWith('/read/');
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <AnimatePresence>
         {!isSplashDone && <SplashScreen />}
       </AnimatePresence>
