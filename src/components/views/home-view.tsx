@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { BookCard } from '../common/book-card';
 import type { Book } from '@/lib/types';
 import { Loader2 } from 'lucide-react';
+import ScrollVelocity from '@/components/effects/scroll-velocity';
 
 const ParallaxHeroBooks = () => {
     const { books, loading } = useAppContext();
@@ -145,7 +146,13 @@ const LoggedOutHomeView = () => {
                 </div>
             </div>
 
-            <div className="py-16 md:py-24">
+            <div className="py-16 md:py-24 space-y-16">
+                 <ScrollVelocity 
+                    texts={['Jelajahi Dunia Literasi', 'Karya Tulis Berkualitas', 'Baca Kapan Saja & Dimana Saja']}
+                    velocity={25}
+                    className="font-headline italic text-foreground/10"
+                />
+
                 <div className="px-4 sm:px-6 lg:px-8">
                     <RevealWrapper>
                         <div className="flex items-end justify-between mb-12">
