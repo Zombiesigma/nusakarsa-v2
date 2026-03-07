@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -111,8 +110,15 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg-alt p-4">
-        <div className="absolute top-4 left-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-bg-alt p-4">
+      <div
+        className="absolute inset-0 bg-contain bg-center opacity-5 dark:opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: "url('https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp')",
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+        <div className="absolute top-4 left-4 z-10">
             <Button variant="ghost" asChild>
                 <Link href="/">
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -120,7 +126,7 @@ export default function RegisterPage() {
                 </Link>
             </Button>
         </div>
-        <Card className="w-full max-w-sm border-none shadow-2xl">
+        <Card className="w-full max-w-sm border-none shadow-2xl bg-card/90 backdrop-blur-xl">
             <CardHeader className="text-center">
             <CardTitle className="text-2xl font-headline">Buat Akun Baru</CardTitle>
             <CardDescription>Daftar dan mulai petualangan literasimu</CardDescription>
