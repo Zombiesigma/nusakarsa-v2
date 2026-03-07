@@ -14,31 +14,24 @@ export function SplashScreen() {
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1, transition: { delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
-        className="relative w-24 h-24"
+        className="flex flex-col items-center text-center"
       >
-        <Image
-          src="https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp"
-          alt="Nusakarsa Logo"
-          fill
-          className="object-contain"
-          priority
-        />
+        <div className="relative w-24 h-24">
+          <Image
+            src="https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp"
+            alt="Nusakarsa Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+        <h1 className="font-headline text-4xl font-bold tracking-tight mt-4">
+            Nusakarsa
+        </h1>
+        <p className="text-muted-foreground tracking-wide mt-1">
+            Membuka Semesta dalam Kata
+        </p>
       </motion.div>
-      
-      <motion.h1
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1, transition: { delay: 0.5, duration: 0.7, ease: 'circOut' } }}
-          className="font-headline text-4xl font-bold tracking-tight mt-4"
-      >
-          Nusakarsa
-      </motion.h1>
-      <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1, transition: { delay: 0.7, duration: 0.7, ease: 'circOut' } }}
-          className="text-muted-foreground tracking-wide mt-1"
-      >
-          Membuka Semesta dalam Kata
-      </motion.p>
       
       <motion.div
           initial={{ scaleX: 0 }}
