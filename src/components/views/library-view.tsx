@@ -63,7 +63,7 @@ export function LibraryView() {
 
   return (
     <section id="page-library" className="page-section pt-28 md:pt-36">
-      <div className="max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 space-y-16">
+      <div className="px-4 sm:px-6 lg:px-8 pb-24 space-y-16">
         <div>
           <div className="flex items-center gap-3 mb-6">
             <Library className="w-8 h-8 text-primary" />
