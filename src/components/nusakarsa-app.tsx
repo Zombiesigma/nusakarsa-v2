@@ -23,7 +23,8 @@ import {
   SidebarMenuButton,
   SidebarInset, 
   useSidebar,
-  SidebarProvider
+  SidebarProvider,
+  SidebarTrigger
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +45,7 @@ const AppSidebar = () => {
         <Sidebar>
             <SidebarHeader>
               <div className="flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-3 group cursor-pointer">
+                <Link href="/" className="flex items-center gap-3 group cursor-pointer" onClick={handleLinkClick}>
                   <div className="relative w-10 h-10">
                     <Image 
                       src="https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp" 
@@ -57,6 +58,7 @@ const AppSidebar = () => {
                     <span className="font-headline text-2xl font-bold tracking-tight group-hover:text-primary transition-colors">Nusakarsa</span>
                   </div>
                 </Link>
+                <SidebarTrigger className="hidden md:flex" />
               </div>
             </SidebarHeader>
             <SidebarContent className="p-0">
