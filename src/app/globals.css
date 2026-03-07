@@ -185,8 +185,20 @@
       .header { padding: 0 1rem; }
       .sidebar-overlay.open { display: block; }
   }
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 50;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
 
-  /* Components */
+  .page-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Nav items (unchanged) */
   .nav-item {
       display: flex;
       align-items: center;
@@ -235,19 +247,6 @@
   }
   .sidebar:hover .nav-item {
     padding: 12px 16px;
-  }
-
-  .mobile-bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 50;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-  }
-
-  .page-section {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
 
