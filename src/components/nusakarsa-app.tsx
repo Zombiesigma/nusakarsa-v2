@@ -118,7 +118,7 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
           <AppSidebar />
           
           <SidebarInset className={cn(
-            "transition-[margin-left] duration-200 ease-linear",
+            "transition-all duration-200 ease-linear",
             isReadPage ? "md:ml-0" : "md:ml-[var(--sidebar-width-icon)] peer-data-[state=expanded]:ml-[var(--sidebar-width)]"
           )}>
             <ReadingProgressBar />

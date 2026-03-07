@@ -29,7 +29,7 @@ const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
-const SIDEBAR_WIDTH_ICON = "4rem"
+const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 type SidebarContext = {
@@ -78,22 +78,25 @@ const SidebarProvider = React.forwardRef<
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
-     const [open, setOpen] = React.useState(() => {
+    const [open, setOpen] = React.useState(defaultOpen)
+
+    // On the first render on the client, `isMobile` is undefined, so `!!isMobile` is false.
+    // In `useEffect`, it gets set. This causes a re-render.
+    // If any rendering logic depends on `isMobile`, it will cause a mismatch.
+    React.useEffect(() => {
       if (typeof window === "undefined") {
-        return defaultOpen
+        return
       }
+
       const cookie = document.cookie
         .split("; ")
         .find((row) => row.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
         ?.split("=")[1]
 
       if (cookie) {
-        return cookie === "true"
+        setOpen(cookie === "true")
       }
-
-      return defaultOpen
-    })
-
+    }, [])
 
     const setOpenState = React.useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
