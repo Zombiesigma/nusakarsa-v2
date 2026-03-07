@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useMemo } from 'react';
@@ -116,7 +115,7 @@ const LoggedOutHomeView = () => {
     return (
         <>
             <div className="hero-bg relative pt-32 md:pt-40 pb-20 md:pb-32" id="heroSection">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div className="text-center lg:text-left">
                             <div className="opacity-0 animate-fade-up inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-6">
@@ -147,7 +146,7 @@ const LoggedOutHomeView = () => {
             </div>
 
             <div className="py-16 md:py-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
                     <RevealWrapper>
                         <div className="flex items-end justify-between mb-12">
                             <div>
@@ -191,7 +190,7 @@ const LoggedInHomeView = () => {
     }, [books]);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-36 space-y-16">
+        <div className="max-w-7xl px-4 sm:px-6 lg:px-8 pb-24 pt-28 md:pt-36 space-y-16">
             <h1 className="font-headline text-5xl font-bold">Selamat Datang, {user?.displayName || 'Kawan'}!</h1>
             
             <div>
