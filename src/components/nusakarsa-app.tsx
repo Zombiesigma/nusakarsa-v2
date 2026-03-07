@@ -8,14 +8,13 @@ import { AnimatePresence } from 'framer-motion';
 import { Home, Search, Library, User, PenSquare, ShieldCheck, Sun, Moon } from 'lucide-react';
 
 import { useAppContext } from "@/context/app-context";
-import { BookModal } from "./common/book-modal";
-import { ParticleBackground } from "./effects/particle-background";
-import { ReadingProgressBar } from "./effects/reading-progress-bar";
-import { SplashScreen } from './splash-screen';
-import { Header } from "./layout/header";
-import { MobileBottomNav } from "./layout/mobile-bottom-nav";
+import { BookModal } from "@/components/common/book-modal";
+import { ParticleBackground } from "@/components/effects/particle-background";
+import { ReadingProgressBar } from "@/components/effects/reading-progress-bar";
+import { SplashScreen } from '@/components/splash-screen';
+import { Header } from "@/components/layout/header";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { 
-  SidebarProvider, 
   Sidebar, 
   SidebarHeader, 
   SidebarContent, 
@@ -23,14 +22,14 @@ import {
   SidebarMenu, 
   SidebarMenuButton,
   SidebarInset, 
-  SidebarTrigger,
-  useSidebar
-} from './ui/sidebar';
+  useSidebar,
+  SidebarProvider
+} from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
 
 const AppSidebar = () => {
-    const { theme, toggleTheme, isLoggedIn, userData, setMenuOpen } = useAppContext();
+    const { theme, toggleTheme, isLoggedIn, userData } = useAppContext();
     const pathname = usePathname();
     const { setOpenMobile } = useSidebar();
 
@@ -113,28 +112,27 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
       
       {isSplashDone && (
-        <div className={cn("relative")}>
-          {!isReadPage && <AppSidebar />}
+        <>
+          <AppSidebar />
           
           <SidebarInset className={cn(
-            isReadPage ? "m-0 rounded-none" : "md:ml-[var(--sidebar-width-icon)]",
-            !isReadPage && "md:peer-data-[state=expanded]:ml-[var(--sidebar-width)]",
-            !isReadPage && "md:transition-[margin-left] md:duration-200 md:ease-linear"
+            "transition-[margin-left] duration-200 ease-linear",
+            isReadPage ? "md:ml-0" : "md:ml-[var(--sidebar-width-icon)] peer-data-[state=expanded]:ml-[var(--sidebar-width)]"
           )}>
             <ReadingProgressBar />
             <ParticleBackground />
             
-            {!isReadPage && <Header />}
+            <Header />
             
             <main>
               {children}
             </main>
 
-            {isLoggedIn && !isReadPage && <MobileBottomNav />}
+            {isLoggedIn && <MobileBottomNav />}
 
             {modalBookId !== null && <BookModal />}
           </SidebarInset>
-        </div>
+        </>
       )}
     </SidebarProvider>
   );
