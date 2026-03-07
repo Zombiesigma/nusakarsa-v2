@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useAppContext } from "@/context/app-context";
 import { Sheet, SheetContent, SheetOverlay, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search, PenSquare, ShieldCheck } from "lucide-react";
+import { Sun, Moon, HelpCircle, LogIn, LogOut, User, Library, Home, Search, PenSquare, ShieldCheck, Info } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from '@/lib/utils';
 import { getAuth, signOut } from 'firebase/auth';
@@ -68,7 +68,7 @@ export function MobileSideMenu() {
                     )}
 
                     <div className="px-6 py-3 mt-4">
-                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Preferensi</p>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Preferensi & Info</p>
                     </div>
                     <div className="flex items-center justify-between px-6 py-4 hover:bg-bg-alt/50 transition-colors cursor-pointer" onClick={toggleTheme}>
                          <div className="flex items-center gap-3.5 text-foreground">
@@ -80,6 +80,7 @@ export function MobileSideMenu() {
                         </div>
                     </div>
                     
+                    <MenuItem icon={<Info className="w-5 h-5"/>} label="Tentang Kami" href="/about" active={pathname === '/about'} />
                     <MenuItem icon={<HelpCircle className="w-5 h-5"/>} label="Bantuan" href="#" />
                 </div>
                 

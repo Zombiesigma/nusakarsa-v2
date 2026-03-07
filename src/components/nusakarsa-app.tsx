@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence } from 'framer-motion';
-import { Home, Search, Library, User, PenSquare, ShieldCheck, Sun, Moon } from 'lucide-react';
+import { Home, Search, Library, User, PenSquare, ShieldCheck, Sun, Moon, Info } from 'lucide-react';
 
 import { useAppContext } from "@/context/app-context";
 import { BookModal } from "@/components/common/book-modal";
@@ -92,10 +92,15 @@ const AppSidebar = () => {
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
-                <SidebarMenuButton onClick={toggleTheme} tooltip={theme === 'light' ? 'Mode Gelap' : 'Mode Terang'}>
-                    {theme === 'light' ? <Sun /> : <Moon />}
-                    <span className="capitalize">{theme} Mode</span>
-                </SidebarMenuButton>
+                <SidebarMenu className="w-full">
+                    <SidebarMenuButton asChild tooltip="Tentang Kami" isActive={pathname.startsWith('/about')} onClick={handleLinkClick}>
+                        <Link href="/about"><Info /><span>Tentang Kami</span></Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton onClick={toggleTheme} tooltip={theme === 'light' ? 'Mode Gelap' : 'Mode Terang'}>
+                        {theme === 'light' ? <Sun /> : <Moon />}
+                        <span className="capitalize">{theme} Mode</span>
+                    </SidebarMenuButton>
+                </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
     );

@@ -101,6 +101,24 @@
       "description": "User avatar placeholder",
       "imageUrl": "https://picsum.photos/seed/99/128/128",
       "imageHint": "abstract person"
+    },
+    {
+      "id": "dev-1",
+      "description": "Developer 1 Avatar",
+      "imageUrl": "https://picsum.photos/seed/101/200/200",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "dev-2",
+      "description": "Developer 2 Avatar",
+      "imageUrl": "https://picsum.photos/seed/102/200/200",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "dev-3",
+      "description": "Developer 3 Avatar",
+      "imageUrl": "https://picsum.photos/seed/103/200/200",
+      "imageHint": "person portrait"
     }
   ]
 }
