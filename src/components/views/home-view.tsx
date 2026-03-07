@@ -16,7 +16,7 @@ const ParallaxHeroBooks = () => {
     const { books, loading } = useAppContext();
 
     const heroBooks = useMemo(() => {
-        return books.filter(b => b.status === 'published').slice(0, 3);
+        return books.filter(b => b.status === 'published').slice(0, 5);
     }, [books]);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const ParallaxHeroBooks = () => {
 
     if (loading && heroBooks.length === 0) {
         return (
-            <div className="relative h-[450px] md:h-[550px] flex items-center justify-center">
+            <div className="relative h-[500px] md:h-[600px] flex items-center justify-center">
                 <Loader2 className="w-12 h-12 animate-spin text-primary" />
             </div>
         );
@@ -54,20 +54,35 @@ const ParallaxHeroBooks = () => {
     if (heroBooks.length === 0) return null;
 
     return (
-        <div className="relative h-[450px] md:h-[550px] opacity-0 animate-fade-up [animation-delay:0.3s]">
+        <div className="relative h-[500px] md:h-[600px] opacity-0 animate-fade-up [animation-delay:0.3s]">
+             {/* Book 1 - Centerpiece */}
             {heroBooks[0] && (
-                <div className="book-parallax absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 md:w-64 animate-float" data-depth="0.3">
+                <div className="book-parallax absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 md:w-60 animate-float z-20" style={{animationDelay: '0.2s'}} data-depth="0.1">
                     <BookCard bookId={heroBooks[0].id} isPriority />
                 </div>
             )}
+            {/* Book 2 - Top Left */}
             {heroBooks[1] && (
-                <div className="book-parallax absolute top-8 left-0 w-36 md:w-44 animate-float-alt" data-depth="0.6">
+                <div className="book-parallax absolute top-0 left-[15%] w-36 md:w-40 animate-float-alt z-10" data-depth="0.4">
                     <BookCard bookId={heroBooks[1].id} isPriority />
                 </div>
             )}
+             {/* Book 3 - Bottom Right */}
             {heroBooks[2] && (
-                <div className="book-parallax absolute bottom-8 right-0 w-40 md:w-48 animate-float" data-depth="0.5">
+                <div className="book-parallax absolute bottom-0 right-[15%] w-40 md:w-48 animate-float z-10" style={{animationDelay: '0.5s'}} data-depth="0.5">
                     <BookCard bookId={heroBooks[2].id} isPriority />
+                </div>
+            )}
+            {/* Book 4 - Top Right */}
+            {heroBooks[3] && (
+                <div className="book-parallax absolute top-12 right-0 w-32 md:w-36 animate-float-alt z-0 opacity-80" data-depth="0.7">
+                    <BookCard bookId={heroBooks[3].id} />
+                </div>
+            )}
+            {/* Book 5 - Bottom Left */}
+            {heroBooks[4] && (
+                <div className="book-parallax absolute bottom-12 left-0 w-32 md:w-36 animate-float z-0 opacity-80" style={{animationDelay: '0.3s'}} data-depth="0.6">
+                    <BookCard bookId={heroBooks[4].id} />
                 </div>
             )}
         </div>
