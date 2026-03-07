@@ -101,54 +101,6 @@ export function ProfileView() {
       </Badge>
     );
   };
-
-  const renderStats = () => {
-    if (userData?.role === 'penulis') {
-      return (
-        <Card className="rounded-[2rem] border-none shadow-xl bg-indigo-950 text-white">
-          <CardHeader>
-            <CardTitle className="text-sm font-black uppercase tracking-widest text-indigo-300/60">Statistik Industri</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-white/10 rounded-xl"><BookOpen className="h-5 w-5 text-indigo-300" /></div>
-              <div>
-                <p className="text-2xl font-black">{writerStats.totalWorks}</p>
-                <p className="text-xs font-bold text-indigo-300/60">Total Karya</p>
-              </div>
-            </div>
-             <div className="flex items-start gap-4">
-              <div className="p-3 bg-white/10 rounded-xl"><BarChart3 className="h-5 w-5 text-indigo-300" /></div>
-              <div>
-                <p className="text-2xl font-black">{writerStats.totalViews.toLocaleString('id-ID')}</p>
-                <p className="text-xs font-bold text-indigo-300/60">Total Pembaca</p>
-              </div>
-            </div>
-             <div className="flex items-start gap-4">
-              <div className="p-3 bg-white/10 rounded-xl"><Star className="h-5 w-5 text-indigo-300" /></div>
-              <div>
-                <p className="text-2xl font-black">{writerStats.totalFavorites.toLocaleString('id-ID')}</p>
-                <p className="text-xs font-bold text-indigo-300/60">Total Favorit</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      );
-    }
-    // Placeholder for other roles
-    return (
-      <Card className="rounded-[2rem]">
-          <CardHeader>
-            <CardTitle className="text-sm font-bold text-muted-foreground">Aktivitas Saya</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 text-sm"><BookOpen className="h-4 w-4 text-primary" /> <strong>16</strong> Buku Dibaca</div>
-            <div className="flex items-center gap-3 text-sm"><Star className="h-4 w-4 text-gold" /> <strong>4.6</strong> Rata-rata Rating</div>
-            <div className="flex items-center gap-3 text-sm"><BarChart3 className="h-4 w-4 text-teal" /> <strong>14</strong> Hari Reading Streak</div>
-          </CardContent>
-        </Card>
-    );
-  };
   
   return (
     <section id="page-profile" className="page-section pt-28 md:pt-36">
@@ -168,8 +120,6 @@ export function ProfileView() {
                   </div>
                 </CardContent>
               </Card>
-
-              {renderStats()}
 
               <div className="space-y-2">
                 {userData?.role === 'penulis' && (
@@ -192,12 +142,50 @@ export function ProfileView() {
           </aside>
 
           <main className="lg:col-span-8 xl:col-span-9">
+            {userData?.role === 'penulis' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                  <Card className="rounded-[2rem] p-6 border-none shadow-xl bg-card">
+                      <div className="flex items-center gap-4">
+                          <div className="p-3 bg-primary/10 text-primary rounded-xl">
+                              <BookOpen className="h-5 w-5" />
+                          </div>
+                          <div>
+                              <p className="text-3xl font-black">{writerStats.totalWorks}</p>
+                              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Total Karya</p>
+                          </div>
+                      </div>
+                  </Card>
+                  <Card className="rounded-[2rem] p-6 border-none shadow-xl bg-card">
+                      <div className="flex items-center gap-4">
+                          <div className="p-3 bg-teal/10 text-teal rounded-xl">
+                              <BarChart3 className="h-5 w-5" />
+                          </div>
+                          <div>
+                              <p className="text-3xl font-black">{writerStats.totalViews.toLocaleString('id-ID')}</p>
+                              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Total Pembaca</p>
+                          </div>
+                      </div>
+                  </Card>
+                  <Card className="rounded-[2rem] p-6 border-none shadow-xl bg-card">
+                      <div className="flex items-center gap-4">
+                          <div className="p-3 bg-gold/10 text-gold rounded-xl">
+                              <Star className="h-5 w-5" />
+                          </div>
+                          <div>
+                              <p className="text-3xl font-black">{writerStats.totalFavorites.toLocaleString('id-ID')}</p>
+                              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Total Favorit</p>
+                          </div>
+                      </div>
+                  </Card>
+              </div>
+            )}
+
             <Tabs defaultValue="karya" className="w-full">
               <div className="w-full overflow-x-auto pb-2 no-scrollbar">
                 <TabsList className="bg-muted/50 p-1.5 rounded-full h-auto mb-8 w-max">
-                  {userData?.role === 'penulis' && <TabsTrigger value="karya" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Karya Diterbitkan</TabsTrigger>}
-                  <TabsTrigger value="aktivitas" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Aktivitas</TabsTrigger>
-                  <TabsTrigger value="pengaturan" className="rounded-full px-6 py-2 text-sm font-bold transition-all">Pengaturan</TabsTrigger>
+                  {userData?.role === 'penulis' && <TabsTrigger value="karya" className="rounded-full px-6 py-2 text-sm font-bold transition-all flex items-center gap-2"><BookOpen className="h-4 w-4" />Karya Diterbitkan</TabsTrigger>}
+                  <TabsTrigger value="aktivitas" className="rounded-full px-6 py-2 text-sm font-bold transition-all flex items-center gap-2"><Heart className="h-4 w-4" />Aktivitas</TabsTrigger>
+                  <TabsTrigger value="pengaturan" className="rounded-full px-6 py-2 text-sm font-bold transition-all flex items-center gap-2"><Settings className="h-4 w-4" />Pengaturan</TabsTrigger>
                 </TabsList>
               </div>
 
@@ -207,7 +195,7 @@ export function ProfileView() {
                     {myPublishedBooks.length > 0 ? myPublishedBooks.map(book => (
                       <Card key={book.id} className="rounded-[2rem] overflow-hidden shadow-lg border-none">
                         <div className="flex flex-col md:flex-row">
-                          <div className="md:w-40 shrink-0">
+                          <div className="md:w-40 shrink-0 relative bg-muted">
                             <Image src={book.coverUrl} alt={book.title} width={160} height={240} className="w-full h-full object-cover" />
                           </div>
                           <div className="p-6 flex-1 flex flex-col justify-between">
