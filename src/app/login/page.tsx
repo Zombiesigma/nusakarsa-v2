@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-bg-alt p-4">
        <div
-        className="absolute inset-0 bg-contain bg-center opacity-5 dark:opacity-[0.02] pointer-events-none"
+        className="absolute inset-0 bg-contain bg-center opacity-10 dark:opacity-5 pointer-events-none"
         style={{
           backgroundImage: "url('https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp')",
           backgroundRepeat: 'no-repeat',
