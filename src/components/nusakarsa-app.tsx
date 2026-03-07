@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -112,10 +113,15 @@ export function NusakarsaApp({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
       
       {isSplashDone && (
-        <div className={cn("relative", !isReadPage && "md:flex")}>
+        <div className={cn("relative")}>
           {!isReadPage && <AppSidebar />}
           
-          <SidebarInset className={cn(isReadPage && "m-0 rounded-none")}>
+          <SidebarInset className={cn(
+            isReadPage && "m-0 rounded-none",
+            !isReadPage && "md:transition-[margin-left] md:duration-200 md:ease-linear",
+            !isReadPage && "md:peer-data-[state=expanded]:ml-[var(--sidebar-width)]",
+            !isReadPage && "md:peer-data-[state=collapsed]:ml-[var(--sidebar-width-icon)]"
+          )}>
             <ReadingProgressBar />
             <ParticleBackground />
             
