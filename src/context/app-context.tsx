@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react';
@@ -18,8 +17,6 @@ type Theme = 'light' | 'dark';
 interface AppContextType {
   theme: Theme;
   toggleTheme: () => void;
-  isMenuOpen: boolean;
-  setMenuOpen: (isOpen: boolean) => void;
   modalBookId: string | null;
   setModalBookId: (id: string | null) => void;
   
@@ -43,13 +40,13 @@ interface AppContextType {
   userData: DocumentData | null;
   loading: boolean; // Add a loading state
   isSplashDone: boolean;
+  setMenuOpen: (isOpen: boolean) => void; // Dummy for compatibility
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>('light');
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const [modalBookId, setModalBookId] = useState<string | null>(null);
   const [isSplashDone, setIsSplashDone] = useState(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
@@ -131,12 +128,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
   
   useEffect(() => {
-    if (isMenuOpen || modalBookId !== null) {
+    if (modalBookId !== null) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
-  }, [isMenuOpen, modalBookId]);
+  }, [modalBookId]);
 
   const toggleTheme = useCallback(() => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -262,8 +259,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const value = {
     theme,
     toggleTheme,
-    isMenuOpen,
-    setMenuOpen,
     modalBookId,
     setModalBookId,
     books: books,
@@ -278,6 +273,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     userData,
     loading,
     isSplashDone,
+    setMenuOpen: () => {}, // Dummy function for compatibility
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
