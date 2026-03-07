@@ -63,7 +63,7 @@ const SidebarProvider = React.forwardRef<
 >(
   (
     {
-      defaultOpen = false,
+      defaultOpen = true,
       open: openProp,
       onOpenChange: setOpenProp,
       className,
@@ -78,15 +78,30 @@ const SidebarProvider = React.forwardRef<
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
-    const [_open, _setOpen] = React.useState(defaultOpen)
-    const open = openProp ?? _open
-    const setOpen = React.useCallback(
+     const [open, setOpen] = React.useState(() => {
+      if (typeof window === "undefined") {
+        return defaultOpen
+      }
+      const cookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
+        ?.split("=")[1]
+
+      if (cookie) {
+        return cookie === "true"
+      }
+
+      return defaultOpen
+    })
+
+
+    const setOpenState = React.useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
         const openState = typeof value === "function" ? value(open) : value
         if (setOpenProp) {
           setOpenProp(openState)
         } else {
-          _setOpen(openState)
+          setOpen(openState)
         }
 
         // This sets the cookie to keep the sidebar state.
@@ -100,9 +115,9 @@ const SidebarProvider = React.forwardRef<
       if (isMobile) {
         setOpenMobile((open) => !open)
       } else {
-        setOpen((open) => !open)
+        setOpenState((open) => !open)
       }
-    }, [isMobile, setOpen, setOpenMobile])
+    }, [isMobile, setOpenState, setOpenMobile])
 
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
@@ -128,13 +143,13 @@ const SidebarProvider = React.forwardRef<
       () => ({
         state,
         open,
-        setOpen,
+        setOpen: setOpenState,
         isMobile,
         openMobile,
         setOpenMobile,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+      [state, open, setOpenState, isMobile, openMobile, setOpenMobile, toggleSidebar]
     )
 
     return (
@@ -268,7 +283,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile } = useSidebar()
 
   return (
     <Button
@@ -276,7 +291,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-8 w-8", className)}
+      className={cn("h-8 w-8", isMobile ? "flex": "hidden md:flex", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
