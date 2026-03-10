@@ -94,7 +94,7 @@
       cursor: url('/cursor/cursor.svg'), auto;
     }
     a, button {
-      cursor: url('/cursor/cursor.svg'), pointer;
+      cursor: url('/cursor/cursor.svg'), auto;
     }
   }
 }
