@@ -4,11 +4,13 @@ import { useState, useMemo, useEffect } from 'react';
 import { useFirestore, useUser } from '@/firebase';
 import { collection, query, orderBy, doc, getDoc, getDocs } from 'firebase/firestore';
 import type { Book } from '@/lib/types';
-import { Loader2, Library, X, ArrowRight, BookOpen, Sparkles, Heart } from 'lucide-react';
+import { Loader2, Library, X, ArrowRight, BookOpen, Sparkles, Heart, Eye, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 // Palette warna punggung buku yang organik
 const SPINE_COLORS = [
@@ -148,81 +150,108 @@ export default function LibraryPage() {
       {/* Immersive Modal View */}
       <AnimatePresence>
         {selectedBook && (
-          <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 md:p-10 overflow-hidden">
-            <motion.div 
+          <div
+            className="fixed inset-0 z-[400] flex items-center justify-center p-4"
+            onClick={() => setSelectedBook(null)}
+          >
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/95 backdrop-blur-md"
-              onClick={() => setSelectedBook(null)}
-            />
-            
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative w-full max-w-4xl flex items-center justify-center z-[410]"
+              className="absolute inset-0"
             >
-              {/* Close Button UI */}
-              <button 
-                onClick={() => setSelectedBook(null)}
-                className="absolute top-4 right-4 md:top-6 md:right-6 text-white/40 hover:text-white transition-all bg-white/10 rounded-full p-2.5 border border-white/10 z-[420] active:scale-90"
-              >
-                <X className="h-5 w-5 md:h-6 md:w-6" />
-              </button>
+              {/* Blurred background */}
+              <Image
+                src={selectedBook.coverUrl}
+                alt={`Latar belakang ${selectedBook.title}`}
+                fill
+                className="object-cover blur-3xl scale-125 brightness-50"
+              />
+              <div className="absolute inset-0 bg-black/70" />
+            </motion.div>
 
-              <div className="w-full bg-[#fdfbf7] rounded-[2rem] md:rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden border border-white/10">
-                
-                {/* Left Side: Cover Image (Static) */}
-                <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto relative shrink-0">
-                    <img 
-                        src={selectedBook.coverUrl} 
-                        className="w-full h-full object-cover" 
-                        alt={selectedBook.title} 
+            {/* Main modal content */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="relative z-10 w-full max-w-4xl bg-card/50 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="grid md:grid-cols-12">
+                {/* Cover on the left */}
+                <div className="md:col-span-4">
+                  <div className="relative aspect-[2/3] m-8 md:m-0 rounded-[2rem] overflow-hidden shadow-2xl shadow-black/40">
+                    <Image
+                      src={selectedBook.coverUrl}
+                      alt={selectedBook.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 80vw, 30vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+                  </div>
                 </div>
-
-                {/* Right Side: Narrative Details */}
-                <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-white/50 backdrop-blur-sm shadow-inner">
-                  <div className="space-y-6 md:space-y-8 max-w-lg">
+                
+                {/* Details on the right */}
+                <div className="md:col-span-8 p-8 md:p-12 flex flex-col justify-between">
+                  <div className="space-y-6">
                     <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-5 w-5 text-primary/40" />
-                        <span className="text-primary font-black uppercase text-[8px] md:text-[10px] tracking-[0.4em] opacity-60">
-                            Mahakarya Pilihan
-                        </span>
-                      </div>
-                      <h2 className="text-3xl md:text-5xl font-headline font-black text-zinc-900 italic leading-tight tracking-tight">
+                      <Badge variant="secondary" className="bg-primary/10 text-primary border-none font-black tracking-widest uppercase text-[9px] shadow-sm">
+                        {selectedBook.genre}
+                      </Badge>
+                      <h2 className="font-headline text-4xl font-black tracking-tight text-foreground italic">
                         {selectedBook.title}
                       </h2>
-                      <p className="text-zinc-400 font-bold uppercase text-[10px] md:text-xs tracking-widest">
-                        Oleh {selectedBook.authorName}
+                      <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+                        OLEH {selectedBook.authorName}
                       </p>
                     </div>
-                    
-                    <div className="h-1 w-16 bg-primary/20" />
 
-                    <div className="max-h-[35vh] overflow-y-auto pr-4 custom-scrollbar">
-                        <p className="text-zinc-600 text-sm md:text-lg leading-relaxed italic font-serif opacity-90">
-                        "{selectedBook.synopsis}"
-                        </p>
+                    <div className="grid grid-cols-3 gap-4 text-center border-y border-border/50 py-4">
+                      {[
+                        { label: 'Dilihat', value: selectedBook.viewCount, icon: Eye },
+                        { label: 'Disukai', value: selectedBook.favoriteCount, icon: Heart },
+                        { label: 'Bab', value: selectedBook.chapterCount, icon: Layers },
+                      ].map((stat, i) => (
+                        <div key={i} className="flex flex-col items-center">
+                          <stat.icon className="h-5 w-5 text-primary/60 mb-1.5" />
+                          <span className="font-black text-lg tracking-tighter">
+                            {new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(stat.value)}
+                          </span>
+                          <span className="text-[9px] uppercase font-bold text-muted-foreground/50 tracking-widest">{stat.label}</span>
+                        </div>
+                      ))}
                     </div>
 
-                    <div className="pt-4 md:pt-6">
-                        <Button asChild size="lg" className="rounded-full px-8 md:px-12 h-14 md:h-16 font-black uppercase text-[10px] md:text-xs tracking-[0.2em] shadow-2xl shadow-primary/30 active:scale-95 transition-all w-full md:w-auto">
-                            <Link href={`/books/${selectedBook.id}/read`}>
-                                Mulai Membaca <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                        </Button>
-                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed italic line-clamp-4">
+                      {selectedBook.synopsis}
+                    </p>
                   </div>
-                  
-                  <div className="absolute bottom-8 right-12 hidden lg:flex opacity-10 select-none">
-                    <span className="text-[10px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital Literacy</span>
+
+                  <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                    <Button asChild className="flex-1 h-14 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95">
+                      <Link href={`/books/${selectedBook.id}/read`}>
+                        <BookOpen className="mr-2 h-5 w-5" />
+                        Mulai Baca
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="flex-1 h-14 rounded-2xl font-black text-sm uppercase tracking-widest border-2 hover:bg-primary/5 hover:text-primary transition-all active:scale-95">
+                      <Link href={`/books/${selectedBook.id}`}>
+                        Lihat Detail <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
+
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedBook(null)}
+                className="absolute -top-4 -right-4 md:top-6 md:right-6 h-12 w-12 rounded-full bg-background border shadow-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 hover:rotate-90 transition-all z-20"
+              >
+                <X className="h-6 w-6" />
+              </button>
             </motion.div>
           </div>
         )}
