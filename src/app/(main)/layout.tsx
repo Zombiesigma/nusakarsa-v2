@@ -14,7 +14,8 @@ export default function MainAppLayout({
 }) {
   const pathname = usePathname();
   
-  const isImmersiveRoute = pathname?.includes('/read') || pathname?.includes('/edit');
+  const isImmersiveRoute = pathname?.includes('/read') ||
+                           pathname?.includes('/edit');
 
   return (
     <ProtectedLayout>
@@ -32,8 +33,8 @@ export default function MainAppLayout({
             !isImmersiveRoute && "pb-24 md:pb-0"
           )}>
             <div className={cn(
-              "relative mx-auto w-full",
-              isImmersiveRoute ? "h-full" : "container px-6 py-10 md:px-12 md:py-12 md:max-w-none"
+              "relative mx-auto w-full h-full",
+              !isImmersiveRoute && "container py-10 md:py-12"
             )}>
               {children}
             </div>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useFirestore, useCollection, useUser } from '@/firebase';
@@ -6,7 +5,7 @@ import { collection, query, where } from 'firebase/firestore';
 import { useMemo } from 'react';
 import type { Book } from '@/lib/types';
 import { BookCarousel } from '@/components/BookCarousel';
-import { Sparkles, Leaf } from 'lucide-react';
+import { Leaf, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
@@ -33,7 +32,7 @@ export default function HomePage() {
   }, [rawBooks]);
 
   return (
-    <div className="relative space-y-12 w-full max-w-7xl mx-auto pb-20">
+    <div className="relative space-y-12 w-full pb-20">
       <header className="space-y-4">
         <motion.h1 
             initial={{ opacity: 0, x: -20 }}
@@ -58,7 +57,7 @@ export default function HomePage() {
       <div className="text-center opacity-10 select-none grayscale py-20">
           <div className="flex items-center justify-center gap-3">
               <Leaf className="h-5 w-5 text-primary" />
-              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital Ecosystem</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital</span>
           </div>
       </div>
     </div>
