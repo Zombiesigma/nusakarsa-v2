@@ -60,9 +60,6 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
   if (isLoading || !user || !showChildren) {
     return (
       <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black overflow-hidden">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0 opacity-30">
-          <source src="/animasi.webm" type="video/webm" />
-        </video>
         <div className="absolute inset-0 bg-black/50 z-10" />
         
         <div className="relative flex flex-col items-center z-20">
