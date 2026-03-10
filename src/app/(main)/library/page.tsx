@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -151,7 +152,7 @@ export default function LibraryPage() {
       <AnimatePresence>
         {selectedBook && (
           <div
-            className="fixed inset-0 z-[400] flex items-center justify-center p-4"
+            className="fixed inset-0 z-[400] flex items-start md:items-center justify-center p-4 pt-16 md:pt-4 overflow-y-auto"
             onClick={() => setSelectedBook(null)}
           >
             <motion.div
@@ -176,7 +177,7 @@ export default function LibraryPage() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 w-full max-w-4xl bg-card/50 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-2xl"
+              className="relative z-10 w-full max-w-4xl bg-card/50 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-2xl my-auto"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="grid md:grid-cols-12">
@@ -248,7 +249,7 @@ export default function LibraryPage() {
               {/* Close button */}
               <button
                 onClick={() => setSelectedBook(null)}
-                className="absolute -top-4 -right-4 md:top-6 md:right-6 h-12 w-12 rounded-full bg-background border shadow-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 hover:rotate-90 transition-all z-20"
+                className="absolute top-4 right-4 h-12 w-12 rounded-full bg-background/80 backdrop-blur-md border shadow-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:scale-110 hover:rotate-90 transition-all z-20"
               >
                 <X className="h-6 w-6" />
               </button>
