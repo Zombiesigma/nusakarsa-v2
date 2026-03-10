@@ -148,7 +148,7 @@ export default function LibraryPage() {
       {/* Immersive Modal View */}
       <AnimatePresence>
         {selectedBook && (
-          <div className="fixed inset-0 z-[400] flex items-center justify-center p-4 md:p-10 overflow-hidden">
+          <div className="fixed inset-0 z-[400] flex items-start md:items-center justify-center p-4 pt-12 md:p-10 overflow-y-auto">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -161,17 +161,17 @@ export default function LibraryPage() {
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative w-full max-w-4xl flex items-center justify-center z-[410]"
+              className="relative w-full max-w-4xl flex items-center justify-center z-[410] my-auto"
             >
               {/* Close Button UI */}
               <button 
                 onClick={() => setSelectedBook(null)}
-                className="absolute top-4 right-4 md:top-6 md:right-6 text-white/40 hover:text-white transition-all bg-white/10 rounded-full p-2.5 border border-white/10 z-[420] active:scale-90"
+                className="absolute -top-8 right-0 md:top-6 md:right-6 text-white/40 hover:text-white transition-all bg-white/10 rounded-full p-2.5 border border-white/10 z-[420] active:scale-90"
               >
                 <X className="h-5 w-5 md:h-6 md:w-6" />
               </button>
 
-              <div className="w-full bg-[#fdfbf7] rounded-[2rem] md:rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden border border-white/10">
+              <div className="w-full bg-[#fdfbf7] dark:bg-zinc-900 rounded-[2rem] md:rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] flex flex-col md:flex-row overflow-hidden border border-white/10">
                 
                 {/* Left Side: Cover Image (Static) */}
                 <div className="w-full md:w-2/5 aspect-[3/4] md:aspect-auto relative shrink-0">
@@ -184,7 +184,7 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Right Side: Narrative Details */}
-                <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-white/50 backdrop-blur-sm shadow-inner">
+                <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-white/50 dark:bg-zinc-800/20 backdrop-blur-sm shadow-inner">
                   <div className="space-y-6 md:space-y-8 max-w-lg">
                     <div className="space-y-3">
                       <div className="flex items-center gap-3">
@@ -193,18 +193,18 @@ export default function LibraryPage() {
                             Mahakarya Pilihan
                         </span>
                       </div>
-                      <h2 className="text-3xl md:text-5xl font-headline font-black text-zinc-900 italic leading-tight tracking-tight">
+                      <h2 className="text-3xl md:text-5xl font-headline font-black text-zinc-900 dark:text-white italic leading-tight tracking-tight">
                         {selectedBook.title}
                       </h2>
-                      <p className="text-zinc-400 font-bold uppercase text-[10px] md:text-xs tracking-widest">
+                      <p className="text-zinc-400 dark:text-zinc-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">
                         Oleh {selectedBook.authorName}
                       </p>
                     </div>
                     
                     <div className="h-1 w-16 bg-primary/20" />
 
-                    <div className="max-h-[35vh] overflow-y-auto pr-4 custom-scrollbar">
-                        <p className="text-zinc-600 text-sm md:text-lg leading-relaxed italic font-serif opacity-90">
+                    <div className="max-h-[25vh] md:max-h-[35vh] overflow-y-auto pr-4 custom-scrollbar">
+                        <p className="text-zinc-600 dark:text-zinc-300 text-sm md:text-lg leading-relaxed italic font-serif opacity-90">
                         "{selectedBook.synopsis}"
                         </p>
                     </div>
@@ -247,6 +247,9 @@ export default function LibraryPage() {
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(0, 0, 0, 0.05);
           border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
         }
       `}</style>
     </div>
