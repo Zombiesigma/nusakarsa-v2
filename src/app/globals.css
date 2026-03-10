@@ -88,6 +88,15 @@
     user-drag: none;
     pointer-events: none;
   }
+
+  @media (min-width: 768px) {
+    html {
+      cursor: url('/cursor/cursor.cur'), auto;
+    }
+    a, button {
+      cursor: inherit;
+    }
+  }
 }
 
 @layer utilities {
