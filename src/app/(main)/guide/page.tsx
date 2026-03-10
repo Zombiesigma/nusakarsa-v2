@@ -84,7 +84,7 @@ export default function GuidePage() {
                 Pusat <span className="text-primary italic underline decoration-primary/20">Bantuan</span> NusaKarsa
             </h1>
             <p className="text-muted-foreground font-medium max-w-2xl mx-auto text-sm md:text-lg leading-relaxed px-2">
-                Panduan lengkap untuk menavigasi ekosistem literasi digital modern—dari teks puitis hingga karya tulis lainnya.
+                Panduan lengkap untuk menavigasi platform literasi digital modern—dari teks puitis hingga karya tulis lainnya.
             </p>
         </div>
       </motion.section>

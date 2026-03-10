@@ -74,7 +74,7 @@ export default function AboutPage() {
       <section className="space-y-12">
         <div className="flex items-center gap-4 px-4">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 flex items-center gap-3 whitespace-nowrap">
-                <Globe className="h-4 w-4 text-primary" /> Fondasi Ekosistem
+                <Globe className="h-4 w-4 text-primary" /> Fondasi Platform
             </h2>
             <div className="h-px bg-border/50 flex-1" />
         </div>
@@ -158,7 +158,7 @@ export default function AboutPage() {
       <div className="text-center space-y-6 opacity-40 select-none grayscale pb-16">
           <div className="flex items-center justify-center gap-3">
               <ShieldCheck className="h-5 w-5 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Literacy Ecosystem</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Literacy</span>
           </div>
       </div>
     </div>

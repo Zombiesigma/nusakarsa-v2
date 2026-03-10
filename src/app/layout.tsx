@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(productionUrl),
   title: {
-    default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
+    default: 'Nusakarsa - Platform Daya Cipta Bangsa',
     template: '%s | Nusakarsa',
   },
   description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: {
-      default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
+      default: 'Nusakarsa - Platform Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
     description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
    twitter: {
     card: 'summary',
     title: {
-      default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
+      default: 'Nusakarsa - Platform Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
     description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
