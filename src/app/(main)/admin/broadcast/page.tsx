@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowLeft, Send, Megaphone, Info, Sparkles } from 'lucide-react';
+import { Loader2, ArrowLeft, Send, Megaphone, Info } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const broadcastSchema = z.object({
@@ -214,7 +214,7 @@ export default function BroadcastPage() {
         <div className="lg:col-span-5 space-y-6">
             <Card className="border-none shadow-lg rounded-[2rem] bg-indigo-950 text-white p-6 md:p-8 space-y-6">
                 <div className="flex items-center gap-3 text-indigo-400">
-                    <Sparkles className="h-5 w-5" />
+                    <Info className="h-5 w-5" />
                     <span className="text-[9px] font-black uppercase tracking-[0.2em]">Tips Siaran</span>
                 </div>
                 <div className="space-y-4">

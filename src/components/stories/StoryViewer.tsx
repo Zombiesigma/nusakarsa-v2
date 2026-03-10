@@ -234,7 +234,7 @@ export function StoryViewer({ stories, initialAuthorId, isOpen, onClose }: Story
         onPointerDownOutside={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => {
             e.preventDefault();
-            document.body.style.pointerEvents = '';
+            document.body.style.pointerEvents = 'auto';
         }}
       >
         <DialogTitle className="sr-only">Melihat Cerita {currentGroup.authorName}</DialogTitle>

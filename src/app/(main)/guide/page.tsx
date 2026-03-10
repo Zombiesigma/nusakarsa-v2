@@ -12,7 +12,6 @@ import {
   BookOpen, 
   PenTool, 
   Users, 
-  Sparkles, 
   ShieldCheck, 
   HelpCircle,
   MessageCircle,

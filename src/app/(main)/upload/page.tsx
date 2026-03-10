@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Sparkles, AlertTriangle, BookUser, Upload, FileImage, Globe, Users, ArrowRight, PenTool, FileText, Type, File as FileIcon, Feather } from "lucide-react";
+import { Loader2, AlertTriangle, BookUser, Upload, FileImage, Globe, Users, ArrowRight, PenTool, FileText, Type, File as FileIcon, Feather } from "lucide-react";
 import type { User as AppUser } from '@/lib/types';
 import { uploadBookCover, uploadBookFile } from '@/lib/uploader';
 import { extractBookContent } from '../../actions/book-processor';
@@ -522,7 +522,7 @@ export default function CreateBookPage() {
                 {isSubmitting ? (
                     <><Loader2 className="mr-3 h-6 w-6 animate-spin" /> {isExtracting ? 'Mengekstrak Konten...' : 'Menyimpan...'}</>
                 ) : (
-                    <><Sparkles className="mr-3 h-6 w-6" /> {creationMethod === 'upload' ? 'Impor & Lanjutkan' : 'Buat & Mulai Menulis'} <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-1" /></>
+                    <>{creationMethod === 'upload' ? 'Impor & Lanjutkan' : 'Buat & Mulai Menulis'} <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-1" /></>
                 )}
             </Button>
           </div>

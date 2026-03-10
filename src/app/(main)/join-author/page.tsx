@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { BookUser, Loader2, Send, Info, Users, BookOpen, Star, Sparkles, ChevronRight, PenTool, CheckCircle2, Clock, Trophy, Crown, Medal, ArrowRight, ShieldCheck, MapPin, Smartphone } from "lucide-react";
+import { BookUser, Loader2, Send, Info, Users, BookOpen, Star, ChevronRight, PenTool, CheckCircle2, Clock, Trophy, Crown, Medal, ArrowRight, ShieldCheck, MapPin, Smartphone } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -213,7 +213,7 @@ export default function JoinAuthorPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-4 md:mb-6">
-                            <Sparkles className="h-3 w-3 md:h-3.5 md:w-3.5" /> Jajaran Penulis Elitera
+                            Jajaran Penulis Elitera
                         </div>
                         <h1 className="text-3xl md:text-6xl font-headline font-black text-foreground tracking-tight leading-tight">
                             Temui Para <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Penulis</span> Kalcer
@@ -485,7 +485,7 @@ export default function JoinAuthorPage() {
                                 <Link href="/"><BookOpen className="mr-2 h-4 w-4" /> Jelajahi Buku Lain</Link>
                             </Button>
                             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 md:px-10 h-14 font-black border-2 transition-all hover:bg-muted/50 text-xs md:text-sm">
-                                <Link href="/ai"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Tanya Elitera AI</Link>
+                                <Link href="/ai"><Info className="mr-2 h-4 w-4 text-primary" /> Tanya Nusakarsa AI</Link>
                             </Button>
                         </CardFooter>
                     </Card>

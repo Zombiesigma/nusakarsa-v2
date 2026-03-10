@@ -7,7 +7,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   SheetFooter,
   SheetClose
 } from '@/components/ui/sheet';
@@ -26,7 +25,6 @@ import {
   Shield,
   User as UserIcon,
   HelpCircle,
-  Sparkles,
   Info,
   LayoutGrid,
   BookUser
@@ -48,6 +46,7 @@ import { doc } from 'firebase/firestore';
 import type { User as AppUser } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { Bell } from 'lucide-react';
 
 export function UserNav() {
   const { user, isLoading } = useUser();
@@ -213,7 +212,7 @@ export function UserNav() {
               <div className="space-y-1 mb-6">
                 <p className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Akses Cepat</p>
                 <NavLink href={`/profile/${userProfile?.username?.toLowerCase() || ''}`} icon={UserIcon} label="Profil Utama" description="Lihat jejak karyamu" />
-                <NavLink href="/notifications" icon={Sparkles} label="Kabar Terbaru" description="Aktivitas dan interaksi" />
+                <NavLink href="/notifications" icon={Bell} label="Kabar Terbaru" description="Aktivitas dan interaksi" />
               </div>
 
               <div className="space-y-1 mb-6">
@@ -262,7 +261,6 @@ export function UserNav() {
 
           <SheetFooter className="p-6 border-t bg-muted/5 flex flex-col items-center gap-2 mt-auto">
             <div className="flex items-center gap-2 opacity-20 select-none grayscale">
-                <Sparkles className="h-3 w-3" />
                 <span className="text-[8px] font-black uppercase tracking-[0.4em]">Nusakarsa v1.0</span>
             </div>
           </SheetFooter>

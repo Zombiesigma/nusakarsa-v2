@@ -23,7 +23,6 @@ import {
   Layers, 
   Heart, 
   Share2, 
-  Sparkles, 
   Clapperboard, 
   CheckCircle2, 
   Music2, 
@@ -303,9 +302,6 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
         {/* Synopsis Section - full width di bawah grid */}
         <section className="space-y-6 pt-8 md:pt-12">
             <div className="flex items-center gap-4 px-2 md:px-0">
-                <div className="p-2 rounded-xl bg-orange-500/10 text-orange-600">
-                    <Sparkles className="h-4 w-4" />
-                </div>
                 <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Sinopsis Karya</h2>
                 <div className="h-px bg-border/50 flex-1" />
             </div>
@@ -382,7 +378,6 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
       {/* Footer Branding */}
       <div className="text-center opacity-20 select-none grayscale py-16">
           <div className="flex items-center justify-center gap-3">
-              <Sparkles className="h-4 w-4 text-primary" />
               <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Sastra</span>
           </div>
       </div>

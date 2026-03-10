@@ -20,7 +20,6 @@ import {
   BookUp, 
   GripVertical, 
   Settings, 
-  Sparkles, 
   ChevronLeft, 
   Menu, 
   Maximize2, 
@@ -472,7 +471,7 @@ export default function EditBookPage() {
                         <Form {...settingsForm}><form onSubmit={settingsForm.handleSubmit(onSettingsSubmit)} className="space-y-10">
                             <FormField control={settingsForm.control} name="title" render={({ field }) => ( <FormItem><FormLabel className="font-bold">Judul Karya</FormLabel><FormControl><Input {...field} className="h-12 rounded-xl" /></FormControl><FormMessage /></FormItem>)} />
                             <FormField control={settingsForm.control} name="synopsis" render={({ field }) => ( <FormItem><FormLabel className="font-bold">Sinopsis</FormLabel><FormControl><Textarea rows={8} {...field} className="rounded-2xl" /></FormControl><FormMessage /></FormItem>)} />
-                            <div className="flex justify-end"><Button type="submit" size="lg" className="rounded-full px-10 h-14 font-black shadow-xl" disabled={isSavingSettings || !canEdit}><Sparkles className="mr-2 h-5 w-5" /> Simpan Perubahan</Button></div>
+                            <div className="flex justify-end"><Button type="submit" size="lg" className="rounded-full px-10 h-14 font-black shadow-xl" disabled={isSavingSettings || !canEdit}>Simpan Perubahan</Button></div>
                         </form></Form>
                     </motion.div>
                 ) : activeTab === 'music' ? (
