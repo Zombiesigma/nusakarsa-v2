@@ -159,10 +159,10 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
   const hasSoundtrack = book.playlist && book.playlist.length > 0;
 
   return (
-    <div className="relative max-w-lg mx-auto pb-32 px-4">
-      {/* Decorative background blobs */}
-      <div className="absolute top-0 right-[-10%] w-64 h-64 bg-primary/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
-      <div className="absolute bottom-1/2 left-[-10%] w-64 h-64 bg-accent/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+    <div className="relative max-w-lg mx-auto pb-32 px-4 md:max-w-7xl md:px-8 lg:px-12">
+      {/* Decorative background blobs - disesuaikan untuk desktop */}
+      <div className="absolute top-0 right-[-10%] w-64 h-64 bg-primary/10 rounded-full blur-[100px] -z-10 pointer-events-none md:w-96 md:h-96 md:right-0" />
+      <div className="absolute bottom-1/2 left-[-10%] w-64 h-64 bg-accent/5 rounded-full blur-[100px] -z-10 pointer-events-none md:w-96 md:h-96 md:left-0" />
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
@@ -170,130 +170,138 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="space-y-10 py-6"
       >
-        {/* Cover Section */}
-        <div className="relative aspect-[2/3] w-full shadow-[0_30px_80px_-15px_rgba(0,0,0,0.3)] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-white/10 group">
-            <Image 
-                src={book.coverUrl} 
-                alt={book.title} 
-                fill 
-                className="object-cover transition-transform duration-700 group-hover:scale-105" 
-                priority 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-            
-            <div className="absolute top-6 left-6 flex flex-col gap-2">
-                <Badge className="bg-primary/90 backdrop-blur-md text-white border-none uppercase text-[9px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-xl">
-                    {book.genre}
-                </Badge>
-                {book.isCompleted && (
-                    <Badge className="bg-emerald-500/90 backdrop-blur-md text-white border-none uppercase text-[9px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-xl">
-                        <CheckCircle2 className="h-3 w-3 mr-1.5" /> Tamat
-                    </Badge>
-                )}
-            </div>
-
-            {hasSoundtrack && (
-                <div className="absolute top-6 right-6">
-                    <div className="bg-indigo-600/90 backdrop-blur-md text-white px-4 py-1.5 rounded-full flex items-center gap-2 border border-white/20 shadow-2xl animate-pulse">
-                        <Music2 className="h-3.5 w-3.5" />
-                        <span className="text-[9px] font-black uppercase tracking-widest">Soundtrack Aktif</span>
-                    </div>
-                </div>
-            )}
-        </div>
-
-        {/* Info Section */}
-        <div className="space-y-8 px-2">
-            <div className="space-y-3">
-                <h1 className="text-4xl md:text-5xl font-headline font-black leading-[1.1] tracking-tight italic">
-                    {book.title}
-                </h1>
+        {/* Layout grid untuk desktop: cover (kiri) dan info (kanan) */}
+        <div className="md:grid md:grid-cols-2 md:gap-8 lg:gap-12 md:items-start">
+          {/* Bagian Cover - kiri */}
+          <div className="space-y-6 md:sticky md:top-8">
+            <div className="relative aspect-[2/3] w-full shadow-[0_30px_80px_-15px_rgba(0,0,0,0.3)] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-white/10 group">
+                <Image 
+                    src={book.coverUrl} 
+                    alt={book.title} 
+                    fill 
+                    className="object-cover transition-transform duration-700 group-hover:scale-105" 
+                    priority 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 
-                <div className="flex items-center gap-2">
-                    <div className="h-1 w-12 bg-primary rounded-full" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Nusakarsa</p>
+                <div className="absolute top-6 left-6 flex flex-col gap-2">
+                    <Badge className="bg-primary/90 backdrop-blur-md text-white border-none uppercase text-[9px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-xl">
+                        {book.genre}
+                    </Badge>
+                    {book.isCompleted && (
+                        <Badge className="bg-emerald-500/90 backdrop-blur-md text-white border-none uppercase text-[9px] font-black px-4 py-1.5 rounded-full tracking-widest shadow-xl">
+                            <CheckCircle2 className="h-3 w-3 mr-1.5" /> Tamat
+                        </Badge>
+                    )}
                 </div>
-            </div>
-            
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <Link href={`/profile/${book.authorUsername}`} className="flex items-center gap-4 bg-card/50 backdrop-blur-sm p-2.5 pr-8 rounded-full border shadow-xl hover:shadow-2xl hover:border-primary/20 transition-all group shrink-0">
-                    <div className="relative">
-                        <Avatar className="h-12 w-12 border-2 border-background shadow-md group-hover:scale-105 transition-transform">
-                            <AvatarImage src={book.authorAvatarUrl} className="object-cover" />
-                            <AvatarFallback className="bg-primary/5 text-primary font-black">{book.authorName.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="absolute -bottom-0.5 -right-0.5 bg-primary p-1 rounded-full border-2 border-background">
-                            <CheckCircle2 className="h-2 w-2 text-white" />
+
+                {hasSoundtrack && (
+                    <div className="absolute top-6 right-6">
+                        <div className="bg-indigo-600/90 backdrop-blur-md text-white px-4 py-1.5 rounded-full flex items-center gap-2 border border-white/20 shadow-2xl animate-pulse">
+                            <Music2 className="h-3.5 w-3.5" />
+                            <span className="text-[9px] font-black uppercase tracking-widest">Soundtrack Aktif</span>
                         </div>
                     </div>
-                    <div className="text-left">
-                        <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Arsitek Narasi</p>
-                        <p className="font-black text-base">{book.authorName}</p>
-                    </div>
-                </Link>
+                )}
+            </div>
+          </div>
 
-                {isAuthor && (
-                    <Button variant="outline" className="rounded-full border-2 h-14 px-8 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg hover:bg-primary hover:text-white hover:border-primary transition-all active:scale-95" asChild>
-                        <Link href={`/books/${book.id}/edit`}>
-                            <PenTool className="mr-2.5 h-4 w-4" /> Edit Karya
+          {/* Bagian Info & Aksi - kanan */}
+          <div className="space-y-8 md:space-y-10">
+            {/* Info Section */}
+            <div className="space-y-8 px-2 md:px-0">
+                <div className="space-y-3">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-black leading-[1.1] tracking-tight italic">
+                        {book.title}
+                    </h1>
+                    
+                    <div className="flex items-center gap-2">
+                        <div className="h-1 w-12 bg-primary rounded-full" />
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Nusakarsa</p>
+                    </div>
+                </div>
+                
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                    <Link href={`/profile/${book.authorUsername}`} className="flex items-center gap-4 bg-card/50 backdrop-blur-sm p-2.5 pr-8 rounded-full border shadow-xl hover:shadow-2xl hover:border-primary/20 transition-all group shrink-0">
+                        <div className="relative">
+                            <Avatar className="h-12 w-12 border-2 border-background shadow-md group-hover:scale-105 transition-transform">
+                                <AvatarImage src={book.authorAvatarUrl} className="object-cover" />
+                                <AvatarFallback className="bg-primary/5 text-primary font-black">{book.authorName.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="absolute -bottom-0.5 -right-0.5 bg-primary p-1 rounded-full border-2 border-background">
+                                <CheckCircle2 className="h-2 w-2 text-white" />
+                            </div>
+                        </div>
+                        <div className="text-left">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Arsitek Narasi</p>
+                            <p className="font-black text-base">{book.authorName}</p>
+                        </div>
+                    </Link>
+
+                    {isAuthor && (
+                        <Button variant="outline" className="rounded-full border-2 h-14 px-8 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg hover:bg-primary hover:text-white hover:border-primary transition-all active:scale-95" asChild>
+                            <Link href={`/books/${book.id}/edit`}>
+                                <PenTool className="mr-2.5 h-4 w-4" /> Edit Karya
+                            </Link>
+                        </Button>
+                    )}
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { label: 'Jejak Baca', value: book.viewCount, icon: Eye, color: 'text-primary' },
+                        { label: 'Apresiasi', value: book.favoriteCount, icon: Heart, color: 'text-rose-500' },
+                        { label: 'Total Bab', value: book.chapterCount, icon: Layers, color: 'text-indigo-500' }
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-muted/30 backdrop-blur-sm p-5 rounded-[2rem] border border-white/5 shadow-inner group">
+                            <div className="flex flex-col items-center text-center gap-1">
+                                <div className={cn("p-2 rounded-xl bg-white/50 mb-1 transition-transform group-hover:scale-110", stat.color)}>
+                                    <stat.icon className="h-4 w-4" />
+                                </div>
+                                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{stat.label}</p>
+                                <p className="font-black text-xl tracking-tighter">
+                                    {isMounted ? new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(stat.value) : '...'}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Primary Actions */}
+            <div className="space-y-4 px-2 md:px-0">
+                <div className="grid grid-cols-5 gap-3">
+                    <Button className="col-span-4 h-16 rounded-[1.5rem] md:rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all" asChild>
+                        <Link href={`/books/${book.id}/read`}>
+                            {book.type === 'screenplay' ? <Clapperboard className="mr-3 h-5 w-5" /> : <BookOpen className="mr-3 h-5 w-5" />}
+                            Mulai {book.type === 'screenplay' ? 'Naskah' : 'Membaca'}
                         </Link>
                     </Button>
-                )}
-            </div>
+                    <Button variant="outline" className="h-16 rounded-[1.5rem] md:rounded-[2rem] border-2 shadow-xl hover:bg-primary/5 hover:text-primary transition-all active:scale-[0.98]" onClick={() => setIsShareDialogOpen(true)}>
+                        <Share2 className="h-6 w-6" />
+                    </Button>
+                </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-3 gap-3">
-                {[
-                    { label: 'Jejak Baca', value: book.viewCount, icon: Eye, color: 'text-primary' },
-                    { label: 'Apresiasi', value: book.favoriteCount, icon: Heart, color: 'text-rose-500' },
-                    { label: 'Total Bab', value: book.chapterCount, icon: Layers, color: 'text-indigo-500' }
-                ].map((stat, i) => (
-                    <div key={i} className="bg-muted/30 backdrop-blur-sm p-5 rounded-[2rem] border border-white/5 shadow-inner group">
-                        <div className="flex flex-col items-center text-center gap-1">
-                            <div className={cn("p-2 rounded-xl bg-white/50 mb-1 transition-transform group-hover:scale-110", stat.color)}>
-                                <stat.icon className="h-4 w-4" />
-                            </div>
-                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{stat.label}</p>
-                            <p className="font-black text-xl tracking-tighter">
-                                {isMounted ? new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(stat.value) : '...'}
-                            </p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-
-        {/* Primary Actions */}
-        <div className="space-y-4">
-            <div className="grid grid-cols-5 gap-3">
-                <Button className="col-span-4 h-16 rounded-[1.5rem] md:rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all" asChild>
-                    <Link href={`/books/${book.id}/read`}>
-                        {book.type === 'screenplay' ? <Clapperboard className="mr-3 h-5 w-5" /> : <BookOpen className="mr-3 h-5 w-5" />}
-                        Mulai {book.type === 'screenplay' ? 'Naskah' : 'Membaca'}
-                    </Link>
-                </Button>
-                <Button variant="outline" className="h-16 rounded-[1.5rem] md:rounded-[2rem] border-2 shadow-xl hover:bg-primary/5 hover:text-primary transition-all active:scale-[0.98]" onClick={() => setIsShareDialogOpen(true)}>
-                    <Share2 className="h-6 w-6" />
+                <Button 
+                    variant="ghost" 
+                    className={cn(
+                        "w-full h-14 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-500",
+                        isFavorite ? "text-rose-500 bg-rose-500/5 hover:bg-rose-500/10" : "bg-muted/50 hover:bg-muted/80 text-muted-foreground"
+                    )}
+                    onClick={handleToggleFavorite}
+                    disabled={isTogglingFavorite}
+                >
+                    <Heart className={cn("mr-2.5 h-4 w-4 transition-transform duration-500", isFavorite && "fill-current scale-110")} />
+                    {isFavorite ? 'Mahakarya Favorit' : 'Simpan ke Favorit'}
                 </Button>
             </div>
-
-            <Button 
-                variant="ghost" 
-                className={cn(
-                    "w-full h-14 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] transition-all duration-500",
-                    isFavorite ? "text-rose-500 bg-rose-500/5 hover:bg-rose-500/10" : "bg-muted/50 hover:bg-muted/80 text-muted-foreground"
-                )}
-                onClick={handleToggleFavorite}
-                disabled={isTogglingFavorite}
-            >
-                <Heart className={cn("mr-2.5 h-4 w-4 transition-transform duration-500", isFavorite && "fill-current scale-110")} />
-                {isFavorite ? 'Mahakarya Favorit' : 'Simpan ke Favorit'}
-            </Button>
+          </div>
         </div>
 
-        {/* Synopsis Section */}
-        <section className="space-y-6">
-            <div className="flex items-center gap-4 px-2">
+        {/* Synopsis Section - full width di bawah grid */}
+        <section className="space-y-6 pt-8 md:pt-12">
+            <div className="flex items-center gap-4 px-2 md:px-0">
                 <div className="p-2 rounded-xl bg-orange-500/10 text-orange-600">
                     <Sparkles className="h-4 w-4" />
                 </div>
@@ -310,7 +318,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
 
         {/* Comments Section */}
         <section className="space-y-10 pt-8">
-            <div className="flex items-center justify-between px-2">
+            <div className="flex items-center justify-between px-2 md:px-0">
                 <div className="flex items-center gap-4">
                     <div className="p-2.5 rounded-2xl bg-indigo-500/10 text-indigo-600">
                         <MessageCircle className="h-5 w-5" />
@@ -324,7 +332,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
             </div>
 
             {currentUser && (
-                <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="space-y-4 px-2">
+                <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className="space-y-4 px-2 md:px-0">
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-[2rem] blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
                         <Textarea 
@@ -345,7 +353,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
                 </motion.div>
             )}
 
-            <div className="space-y-8 px-2">
+            <div className="space-y-8 px-2 md:px-0">
                 <AnimatePresence mode="popLayout">
                     {comments?.map((comment, idx) => (
                         <BookCommentItem 
@@ -383,16 +391,19 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
 
 function BookDetailsSkeleton() {
     return (
-        <div className="max-w-lg mx-auto p-6 space-y-10 animate-pulse">
-            <Skeleton className="aspect-[2/3] w-full rounded-[2.5rem]" />
-            <div className="space-y-4">
-                <Skeleton className="h-12 w-3/4 rounded-full" />
-                <Skeleton className="h-6 w-1/2 rounded-full" />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-                <Skeleton className="h-24 rounded-[2rem]" />
-                <Skeleton className="h-24 rounded-[2rem]" />
-                <Skeleton className="h-24 rounded-[2rem]" />
+        <div className="max-w-lg mx-auto p-6 space-y-10 animate-pulse md:max-w-7xl md:px-8">
+            {/* Skeleton disesuaikan untuk desktop */}
+            <div className="md:grid md:grid-cols-2 md:gap-8">
+                <Skeleton className="aspect-[2/3] w-full rounded-[2.5rem] md:rounded-[3rem]" />
+                <div className="space-y-6">
+                    <Skeleton className="h-12 w-3/4 rounded-full" />
+                    <Skeleton className="h-6 w-1/2 rounded-full" />
+                    <div className="grid grid-cols-3 gap-4">
+                        <Skeleton className="h-24 rounded-[2rem]" />
+                        <Skeleton className="h-24 rounded-[2rem]" />
+                        <Skeleton className="h-24 rounded-[2rem]" />
+                    </div>
+                </div>
             </div>
             <Skeleton className="h-64 w-full rounded-[2.5rem]" />
         </div>
