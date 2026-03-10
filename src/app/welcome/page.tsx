@@ -194,15 +194,6 @@ export default function WelcomePage() {
                     </ul>
                   </div>
                   <div className="col-span-2 md:col-span-1 space-y-8">
-                    <div className="p-8 rounded-[2.5rem] bg-primary/5 border border-primary/10 shadow-inner relative overflow-hidden group">
-                      <Sparkles className="absolute -top-4 -right-4 h-20 w-20 text-primary/10 group-hover:scale-150 transition-transform duration-1000" />
-                      <p className="text-sm font-black uppercase tracking-widest text-primary mb-4 flex items-center gap-2">
-                        <Heart className="h-4 w-4 fill-current" /> Kontribusi
-                      </p>
-                      <p className="text-base font-bold leading-relaxed text-muted-foreground/80 italic">
-                        Mari bersama merawat platform literasi bangsa.
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -214,7 +205,7 @@ export default function WelcomePage() {
                 </p>
               </div>
             </div>
-          </div>
+        </div>
       </footer>
     </div>
   );
