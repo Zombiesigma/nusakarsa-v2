@@ -33,7 +33,7 @@ export default function MainAppLayout({
             !isImmersiveRoute && "pb-24 md:pb-0"
           )}>
             <div className={cn(
-              "relative mx-auto w-full h-full",
+              "relative mx-auto w-full",
               !isImmersiveRoute && "container py-10 md:py-12"
             )}>
               {children}
