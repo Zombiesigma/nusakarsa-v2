@@ -5,7 +5,7 @@ import { collection, query, where } from 'firebase/firestore';
 import { useMemo } from 'react';
 import type { Book } from '@/lib/types';
 import { BookCarousel } from '@/components/BookCarousel';
-import { Leaf, Sparkles } from 'lucide-react';
+import { Zap, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
@@ -32,7 +32,7 @@ export default function HomePage() {
   }, [rawBooks]);
 
   return (
-    <div className="relative space-y-12 w-full pb-20">
+    <div className="relative space-y-12 w-full">
       <header className="space-y-4">
         <motion.h1 
             initial={{ opacity: 0, x: -20 }}
@@ -47,7 +47,7 @@ export default function HomePage() {
       <section className="space-y-10 pt-8">
         <div className="flex items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-headline font-black tracking-tight flex items-center gap-3">
-                <Sparkles className="h-6 w-6 text-primary" /> Rilisan <span className="text-primary italic">Terbaru</span>
+                <Zap className="h-6 w-6 text-primary" /> Rilisan <span className="text-primary italic">Terbaru</span>
             </h2>
             <div className="h-px bg-border/50 flex-1" />
         </div>
@@ -55,9 +55,9 @@ export default function HomePage() {
       </section>
 
       <div className="text-center opacity-10 select-none grayscale py-20">
-          <div className="flex items-center justify-center gap-3">
-              <Leaf className="h-5 w-5 text-primary" />
-              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital</span>
+          <div className="flex flex-col items-center justify-center gap-0">
+              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Digital</span>
           </div>
       </div>
     </div>
