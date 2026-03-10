@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Header } from '@/components/layout/Header';
@@ -15,8 +14,8 @@ export default function MainAppLayout({
 }) {
   const pathname = usePathname();
   
-  const isImmersiveRoute = pathname?.includes('/read') ||
-                           pathname?.includes('/edit');
+  const isImmersiveRoute = pathname?.includes('/read') || pathname?.includes('/edit');
+  const isHomePage = pathname === '/';
 
   return (
     <ProtectedLayout>
@@ -35,7 +34,8 @@ export default function MainAppLayout({
           )}>
             <div className={cn(
               "relative mx-auto w-full",
-              isImmersiveRoute ? "h-full" : "container px-6 py-10 md:px-12 md:py-12 md:max-w-none"
+              isImmersiveRoute ? "h-full" : 
+              isHomePage ? "" : "container px-6 py-10 md:px-12 md:py-12"
             )}>
               {children}
             </div>

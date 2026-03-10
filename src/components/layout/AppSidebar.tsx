@@ -120,7 +120,7 @@ export function AppSidebar() {
                             {active && (
                               <motion.div
                                 layoutId="rail-glow"
-                                className="absolute inset-0 bg-primary shadow-[0_10px_25px_rgba(var(--primary),0.4)] rounded-[1.75rem] -z-10"
+                                className="absolute inset-0 bg-primary shadow-[0_10px_25px_rgba(var(--primary-hsl),0.4)] rounded-[1.75rem] -z-10"
                                 initial={false}
                                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                               />
