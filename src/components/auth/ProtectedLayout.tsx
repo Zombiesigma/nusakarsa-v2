@@ -59,11 +59,13 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
 
   if (isLoading || !user || !showChildren) {
     return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-background overflow-hidden">
-        <div className="absolute top-[-15%] left-[-15%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-15%] right-[-15%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black overflow-hidden">
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0 opacity-30">
+          <source src="/animasi.webm" type="video/webm" />
+        </video>
+        <div className="absolute inset-0 bg-black/50 z-10" />
         
-        <div className="relative flex flex-col items-center">
+        <div className="relative flex flex-col items-center z-20">
             <motion.div
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -83,7 +85,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
                 className="space-y-6 text-center"
             >
                 <div className="space-y-1">
-                    <h1 className="text-5xl md:text-6xl font-headline font-black tracking-tight text-foreground">
+                    <h1 className="text-5xl md:text-6xl font-headline font-black tracking-tight text-white">
                         Nusakarsa
                     </h1>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
@@ -109,7 +111,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5 }}
-                className="absolute bottom-16 flex items-center gap-2 text-muted-foreground/30 select-none"
+                className="absolute bottom-16 flex items-center gap-2 text-white/30 select-none"
             >
                 <Leaf className="w-3 h-3" />
                 <span className="text-[9px] font-black uppercase tracking-[0.2em]">Melestarikan Akar Kreativitas</span>
