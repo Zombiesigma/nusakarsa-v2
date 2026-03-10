@@ -177,13 +177,13 @@ export default function LibraryPage() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 w-full max-w-4xl bg-card/50 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-2xl my-auto"
+              className="relative z-10 w-full max-w-lg md:max-w-4xl my-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="grid md:grid-cols-12">
-                {/* Cover on the left */}
-                <div className="md:col-span-4">
-                  <div className="relative aspect-[2/3] m-8 md:m-0 rounded-[2rem] overflow-hidden shadow-2xl shadow-black/40">
+              <div className="flex flex-col md:flex-row bg-card/50 backdrop-blur-2xl rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden">
+                {/* Left Page (Cover) */}
+                <div className="md:w-1/2 p-8 flex items-center justify-center bg-black/5">
+                  <div className="relative aspect-[2/3] w-full max-w-[300px] rounded-2xl overflow-hidden shadow-2xl shadow-black/40">
                     <Image
                       src={selectedBook.coverUrl}
                       alt={selectedBook.title}
@@ -194,14 +194,14 @@ export default function LibraryPage() {
                   </div>
                 </div>
                 
-                {/* Details on the right */}
-                <div className="md:col-span-8 p-8 md:p-12 flex flex-col justify-between">
-                  <div className="space-y-6">
+                {/* Right Page (Details) */}
+                <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-between">
+                   <div className="space-y-6">
                     <div className="space-y-3">
                       <Badge variant="secondary" className="bg-primary/10 text-primary border-none font-black tracking-widest uppercase text-[9px] shadow-sm">
                         {selectedBook.genre}
                       </Badge>
-                      <h2 className="font-headline text-4xl font-black tracking-tight text-foreground italic">
+                      <h2 className="font-headline text-3xl md:text-4xl font-black tracking-tight text-foreground italic">
                         {selectedBook.title}
                       </h2>
                       <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
@@ -225,7 +225,7 @@ export default function LibraryPage() {
                       ))}
                     </div>
 
-                    <p className="text-sm text-muted-foreground leading-relaxed italic line-clamp-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed italic line-clamp-4 md:line-clamp-5">
                       {selectedBook.synopsis}
                     </p>
                   </div>
