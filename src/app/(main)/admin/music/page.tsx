@@ -105,7 +105,7 @@ export default function AdminMusicPage() {
         </Button>
         <div>
           <h1 className="text-2xl md:text-4xl font-headline font-black tracking-tight">Perpustakaan <span className="text-primary italic">Musik</span></h1>
-          <p className="text-xs md:text-sm text-muted-foreground font-medium">Kelola musik latar untuk pembaca Elitera.</p>
+          <p className="text-xs md:text-sm text-muted-foreground font-medium">Kelola musik latar untuk pembaca Nusakarsa.</p>
         </div>
       </div>
 
@@ -141,7 +141,7 @@ export default function AdminMusicPage() {
                                     <FormItem>
                                         <FormLabel className="text-[10px] font-black uppercase tracking-widest ml-1">Artis / Komposer</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="cth: Elitera Symphony" {...field} className="h-12 rounded-xl bg-muted/30 border-none px-5" />
+                                            <Input placeholder="cth: Nusakarsa Symphony" {...field} className="h-12 rounded-xl bg-muted/30 border-none px-5" />
                                         </FormControl>
                                         <FormMessage className="text-[10px]" />
                                     </FormItem>

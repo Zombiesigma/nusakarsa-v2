@@ -15,7 +15,7 @@ import {
 import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 /**
- * @fileOverview Layanan Autentikasi Elitera yang Tangguh.
+ * @fileOverview Layanan Autentikasi Nusakarsa yang Tangguh.
  * Menggunakan inisialisasi malas (lazy injection) untuk mencegah galat network-request-failed.
  */
 
@@ -38,7 +38,7 @@ async function createUserProfile(user: User, customPhotoURL?: string) {
       photoURL: customPhotoURL || user.photoURL || `https://api.dicebear.com/8.x/identicon/svg?seed=${user.uid}`,
       role: 'pembaca',
       username: normalizedUsername,
-      bio: 'Pengguna baru Elitera',
+      bio: 'Pengguna baru Nusakarsa',
       followers: 0,
       following: 0,
       status: 'online',

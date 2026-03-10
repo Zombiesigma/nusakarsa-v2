@@ -115,7 +115,7 @@ export async function generateBookPdf(bookId: string): Promise<string> {
     });
   }
 
-  const footerText = `Diterbitkan secara digital melalui ELITERA • ${new Date().getFullYear()}`;
+  const footerText = `Diterbitkan secara digital melalui NUSAKARSA • ${new Date().getFullYear()}`;
   page.drawText(footerText, {
     x: (width - fontRegular.widthOfTextAtSize(footerText, 9)) / 2,
     y: 60,
@@ -134,7 +134,7 @@ export async function generateBookPdf(bookId: string): Promise<string> {
     const isPoem = book.type === 'poem';
     const currentMargin = isScreenplay ? LEFT_MARGIN : MARGIN;
 
-    page.drawText('ELITERA DIGITAL LITERACY', { x: currentMargin, y: height - 40, size: 7, font: fontBold, color: rgb(0.7, 0.7, 0.7) });
+    page.drawText('NUSAKARSA DIGITAL LITERACY', { x: currentMargin, y: height - 40, size: 7, font: fontBold, color: rgb(0.7, 0.7, 0.7) });
     page.drawText(book.title.toUpperCase(), { x: width - MARGIN - fontRegular.widthOfTextAtSize(book.title.toUpperCase(), 7), y: height - 40, size: 7, font: fontRegular, color: rgb(0.7, 0.7, 0.7) });
 
     const chapterTitleX = (isScreenplay || isPoem) ? (width - (isPoem ? fontSerifBold : fontMonoBold).widthOfTextAtSize(chapter.title.toUpperCase(), 16)) / 2 : MARGIN;
@@ -391,7 +391,7 @@ async function uploadPdfToGithub(buffer: Buffer, fileName: string, folderPath: s
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Accept': 'application/vnd.github.v3+json',
-      'User-Agent': 'Elitera-App',
+      'User-Agent': 'Nusakarsa-App',
     },
     body: JSON.stringify({
       message: `Automatic PDF Generation for ${fileName}`,

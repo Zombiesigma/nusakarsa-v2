@@ -111,7 +111,7 @@ export default function RegisterPage() {
       toast({
         variant: 'success',
         title: 'Selamat Datang',
-        description: 'Anda telah berhasil bergabung dengan Elitera!',
+        description: 'Anda telah berhasil bergabung dengan Nusakarsa!',
       });
       router.push('/');
     }
@@ -146,7 +146,7 @@ export default function RegisterPage() {
 
         <Card className="border-none shadow-2xl bg-card/50 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
           <CardHeader className="sr-only">
-            <CardTitle>Buat Akun Elitera</CardTitle>
+            <CardTitle>Buat Akun Nusakarsa</CardTitle>
             <CardDescription>Lengkapi informasi diri Anda</CardDescription>
           </CardHeader>
           <CardContent className="p-6 sm:p-8 pt-8 sm:pt-10">

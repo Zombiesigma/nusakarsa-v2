@@ -1,5 +1,5 @@
 /**
- * @fileOverview Utilitas unggahan file Elitera yang ultra-resilient dan terstruktur.
+ * @fileOverview Utilitas unggahan file Nusakarsa yang ultra-resilient dan terstruktur.
  * Menggunakan GitHub sebagai Storage Utama dengan hirarki folder yang rapi kawan.
  */
 

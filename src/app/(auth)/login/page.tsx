@@ -97,7 +97,7 @@ export default function LoginPage() {
       toast({
         variant: 'success',
         title: 'Berhasil Masuk',
-        description: 'Selamat menjelajahi semesta Elitera!',
+        description: 'Selamat menjelajahi semesta Nusakarsa!',
       });
       router.push('/');
     }
