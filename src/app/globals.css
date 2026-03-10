@@ -89,10 +89,8 @@
     pointer-events: none;
   }
 
-  @media (min-width: 768px) {
-    html, body, a, button {
-      cursor: url('/cursor/cursor.svg'), auto !important;
-    }
+  html, body, a, button {
+    cursor: url('/cursor/cursor.svg'), auto !important;
   }
 }
 
