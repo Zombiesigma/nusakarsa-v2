@@ -3,7 +3,6 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
-import { ProtectionProvider } from '@/components/ProtectionProvider';
 
 const productionUrl = 'https://www.nusakarsa.my.id/';
 const brandIcon = 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp';
@@ -81,9 +80,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <FirebaseClientProvider>
           <FirebaseErrorListener />
-          <ProtectionProvider>
-            {children}
-          </ProtectionProvider>
+          {children}
         </FirebaseClientProvider>
         <Toaster />
       </body>
