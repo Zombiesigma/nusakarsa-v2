@@ -64,11 +64,9 @@
     scrollbar-width: none !important;
   }
 
-  html {
+  html, body {
     @apply scroll-smooth;
-    cursor: url('/cursor/cursor.svg') 16 16,
-            url('/cursor/cursor.cur') 16 16,
-            auto;
+    cursor: url('/cursor/cursor.svg'), url('/cursor/cursor.cur'), auto;
   }
 
   body {
@@ -77,7 +75,7 @@
   }
 
   a, button, [role="button"] {
-    cursor: inherit;
+    cursor: url('/cursor/cursor.svg'), url('/cursor/cursor.cur'), pointer;
   }
 
   input, textarea, [contenteditable="true"] {
