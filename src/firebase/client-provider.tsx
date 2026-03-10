@@ -1,19 +1,21 @@
-
 'use client';
 
-import React, { ReactNode, useMemo } from 'react';
-import { initializeFirebase, FirebaseProvider } from '.';
+import { FirebaseProvider } from './provider';
+import { initializeFirebase } from './init';
 
-interface FirebaseClientProviderProps {
-  children: ReactNode;
-}
-
-export const FirebaseClientProvider = ({ children }: FirebaseClientProviderProps) => {
-  const { firebaseApp, auth, firestore } = useMemo(() => initializeFirebase(), []);
-
+/**
+ * FirebaseClientProvider membungkus aplikasi dengan konteks Firebase
+ * yang diinisialisasi sekali di sisi klien.
+ */
+export function FirebaseClientProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { firebaseApp, auth, firestore } = initializeFirebase();
   return (
-    <FirebaseProvider firebaseApp={firebaseApp} auth={auth} firestore={firestore}>
+    <FirebaseProvider value={{ firebaseApp, auth, firestore }}>
       {children}
     </FirebaseProvider>
   );
-};
+}

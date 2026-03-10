@@ -1,54 +1,73 @@
-import { Timestamp } from "firebase/firestore";
+
+import type { Timestamp } from 'firebase/firestore';
 
 export type User = {
+  id: string;
   uid: string;
-  email: string;
-  displayName: string;
-  photoURL: string;
   username: string;
   bio: string;
-  role: 'admin' | 'penulis' | 'pembaca';
-  followers: string[];
-  following: string[];
-  phoneNumber?: string;
-  domicile?: string;
-  createdAt?: Timestamp;
-};
-
-export type Chapter = {
-  id: string;
-  title: string;
-  content: string; // For novels/poems, it's markdown.
-  order: number;
-  createdAt: Timestamp;
+  role: 'penulis' | 'pembaca' | 'admin';
+  followers: number;
+  following: number;
+  photoURL: string;
+  displayName: string;
+  email: string;
+  phoneNumber?: string; 
+  domicile?: string;    
+  status?: 'online' | 'offline';
+  lastSeen?: Timestamp;
+  notificationPreferences?: {
+    onNewFollower?: boolean;
+    onBookComment?: boolean;
+    onBookFavorite?: boolean;
+  };
 };
 
 export type MusicTrack = {
+  id?: string;
   name: string;
   artist: string;
   image: string;
-  id: string;
+  url?: string;
   source: 'youtube' | 'internal';
+};
+
+export type ScreenplayBlock = {
+  id: string;
+  type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
+  text: string;
+};
+
+export type Shot = {
+  id: string;
+  number: string;
+  scene: string;
+  type: 'WS' | 'MS' | 'CU' | 'ECU' | string;
+  angle: string;
+  movement: string;
+  description: string;
 };
 
 export type Book = {
   id: string;
   title: string;
-  authorId: string;
-  authorName: string;
-  authorPhotoUrl: string;
-  type: 'book' | 'poem';
   genre: string;
+  type: 'book' | 'screenplay' | 'poem';
   synopsis: string;
   coverUrl: string;
-  status: 'draft' | 'pending_review' | 'published';
-  visibility: 'public' | 'followers_only';
-  isCompleted: boolean;
+  fileUrl?: string; 
+  shotListUrl?: string; 
   viewCount: number;
   favoriteCount: number;
   chapterCount: number;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  authorId: string;
+  authorName: string;
+  authorUsername: string;
+  authorAvatarUrl: string;
+  status: 'draft' | 'pending_review' | 'published' | 'rejected';
+  isCompleted?: boolean;
+  visibility: 'public' | 'followers_only';
+  playlist?: MusicTrack[];
   collaboratorUids?: string[];
   collaborators?: {
     uid: string;
@@ -56,81 +75,89 @@ export type Book = {
     photoURL: string;
     username: string;
   }[];
-  fileUrl?: string;
-  playlist?: MusicTrack[];
+  createdAt: Timestamp;
 };
 
-export type Reel = {
-  id: string;
-  authorId: string;
-  videoUrl: string;
-  caption: string;
-  bookId?: string;
-  likes: number;
-  commentCount: number;
-  createdAt: Timestamp;
-}
+export type Chapter = {
+    id: string;
+    title: string;
+    content: string; 
+    order: number;
+    createdAt: Timestamp;
+};
 
-export type Story = {
+export type CollaborationInvitation = {
   id: string;
-  authorId: string;
-  authorName: string;
-  authorAvatarUrl: string;
-  content?: string;
-  mediaUrl?: string;
-  mediaType?: 'image' | 'video';
+  bookId: string;
+  bookTitle: string;
+  ownerId: string;
+  ownerName: string;
+  collaboratorId: string;
+  status: 'pending' | 'accepted' | 'rejected';
   createdAt: Timestamp;
-}
+};
+
+export type Music = {
+  id: string;
+  title: string;
+  artist: string;
+  url: string;
+  createdAt: Timestamp;
+};
+
+export type Comment = {
+  id: string;
+  text: string;
+  userId: string;
+  userName: string;
+  username: string;
+  userAvatarUrl: string;
+  likeCount: number;
+  replyCount: number;
+  createdAt: Timestamp;
+};
+
+export type BookCommentLike = {
+  id: string;
+  userId: string;
+  likedAt: Timestamp;
+};
 
 export type AuthorRequest = {
   id: string;
   userId: string;
   name: string;
-  status: 'pending' | 'approved' | 'rejected';
-  phoneNumber: string;
-  domicile: string;
+  email: string;
+  phoneNumber: string; 
+  domicile: string;    
   portfolio?: string;
-  createdAt: Timestamp;
-}
-
-export type CollaborationInvitation = {
-    id: string;
-    bookId: string;
-    bookTitle: string;
-    ownerId: string;
-    ownerName: string;
-    collaboratorId: string;
-    collaboratorEmail: string;
-    status: 'pending' | 'accepted' | 'rejected';
-    createdAt: Timestamp;
-}
+  motivation: string;
+  status: 'pending' | 'approved' | 'rejected';
+  requestedAt: Timestamp;
+};
 
 export type Notification = {
-    id: string;
-    type: 'follow' | 'comment' | 'collaboration' | 'system' | 'broadcast';
-    text: string;
-    link: string;
-    actor: {
-        uid: string;
-        displayName: string;
-        photoURL: string;
-    };
-    read: boolean;
-    createdAt: Timestamp;
-}
-
-export type Music = {
-  id:string;
-  title: string;
-  artist: string;
-  youtubeId: string;
+  id: string;
+  type: 'comment' | 'follow' | 'favorite' | 'author_request' | 'broadcast';
+  text: string;
+  link: string;
+  actor: {
+    uid: string;
+    displayName: string;
+    photoURL: string;
+  };
+  read: boolean;
   createdAt: Timestamp;
 };
 
-export type Shot = {
-  id: string;
-  number: number;
-  scene: number;
-  type: string;
-  description: string;
+export type Favorite = {
+    id: string; 
+    userId: string;
+    addedAt: Timestamp;
+};
+
+export type Follow = {
+    id: string; 
+    userId: string;
+    followedAt: Timestamp;
 };

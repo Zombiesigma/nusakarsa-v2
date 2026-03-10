@@ -1,6 +1,3 @@
-
-'use client';
-
 export type SecurityRuleContext = {
   path: string;
   operation: 'get' | 'list' | 'create' | 'update' | 'delete';
@@ -9,10 +6,13 @@ export type SecurityRuleContext = {
 
 export class FirestorePermissionError extends Error {
   constructor(public context: SecurityRuleContext) {
-    const message = `FirestoreError: Missing or insufficient permissions: The following request was denied by Firestore Security Rules:\n${JSON.stringify(context, null, 2)}`;
-    super(message);
+    super(
+      `FirestoreError: Missing or insufficient permissions: The following request was denied by Firestore Security Rules:\n${JSON.stringify(
+        context,
+        null,
+        2
+      )}`
+    );
     this.name = 'FirestorePermissionError';
-    // This is to make the error visible in the Next.js overlay
-    this.cause = context;
   }
 }

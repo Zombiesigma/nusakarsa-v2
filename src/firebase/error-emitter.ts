@@ -1,26 +1,19 @@
+import { EventEmitter } from 'events';
 
-// This is a simple event emitter to avoid using the 'events' module in the browser.
-type Listener = (event: any) => void;
+import { FirestorePermissionError } from './errors';
 
-class EventEmitter {
-  private listeners: { [event: string]: Listener[] } = {};
+type Events = {
+  'permission-error': (error: FirestorePermissionError) => void;
+};
 
-  on(event: string, listener: Listener): void {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
-    }
-    this.listeners[event].push(listener);
+class ErrorEmitter extends EventEmitter {
+  emit<T extends keyof Events>(event: T, ...args: Parameters<Events[T]>) {
+    return super.emit(event, ...args);
   }
 
-  off(event: string, listener: Listener): void {
-    if (!this.listeners[event]) return;
-    this.listeners[event] = this.listeners[event].filter(l => l !== listener);
-  }
-
-  emit(event: string, data: any): void {
-    if (!this.listeners[event]) return;
-    this.listeners[event].forEach(listener => listener(data));
+  on<T extends keyof Events>(event: T, listener: Events[T]) {
+    return super.on(event, listener);
   }
 }
 
-export const errorEmitter = new EventEmitter();
+export const errorEmitter = new ErrorEmitter();
