@@ -17,14 +17,14 @@ import {
   Trash2, 
   Check, 
   X, 
+  Sparkles, 
   LayoutGrid, 
   ArrowRight,
   Eye,
   Heart,
   AlertCircle,
   Briefcase,
-  AlertTriangle,
-  Mail
+  AlertTriangle
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -175,7 +175,7 @@ export default function StudioPage() {
             <LayoutGrid className="h-3 w-3" /> Workspace Penulis
           </div>
           <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-none">
-            Studio <span className="text-primary italic">NusaKarsa</span>
+            Studio <span className="text-primary italic">Nusakarsa</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-3 font-medium">Kelola mahakarya dan jaringan kolaborasi Anda.</p>
         </motion.div>
@@ -242,7 +242,7 @@ export default function StudioPage() {
                                     <CardContent className="p-6 space-y-4">
                                         <div>
                                             <h3 className="font-headline text-lg font-black truncate italic">"{book.title}"</h3>
-                                            <p className="text-[10px] font-black uppercase text-primary tracking-widest mt-1">{book.genre} • {book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
+                                            <p className="text-[10px] font-black uppercase text-primary tracking-widest mt-1">{book.genre} • {book.type === 'screenplay' ? 'Naskah Film' : book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
                                         </div>
                                         <div className="space-y-2">
                                             <Button className="w-full rounded-2xl h-12 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20 transition-all active:scale-95" asChild>
@@ -306,7 +306,7 @@ export default function StudioPage() {
                                     <CardContent className="p-6 space-y-4">
                                         <div>
                                             <h3 className="font-headline text-lg font-black truncate italic">"{book.title}"</h3>
-                                            <p className="text-[10px] font-black uppercase text-indigo-600 tracking-widest mt-1">Tim Kolaborasi • {book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
+                                            <p className="text-[10px] font-black uppercase text-indigo-600 tracking-widest mt-1">Tim Kolaborasi • {book.type === 'screenplay' ? 'Naskah' : book.type === 'poem' ? 'Puisi' : 'Buku'}</p>
                                         </div>
                                         <Button className="w-full rounded-2xl h-12 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-indigo-500/20 bg-indigo-600 hover:bg-indigo-700 transition-all active:scale-95" asChild>
                                             <Link href={`/books/${book.id}/edit`}>
@@ -335,7 +335,7 @@ export default function StudioPage() {
                         <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
                     ) : invitations?.length === 0 ? (
                         <div className="py-20 text-center bg-indigo-50/50 rounded-[2.5rem] border-2 border-dashed border-indigo-100 opacity-40">
-                            <Mail className="h-12 w-12 mx-auto mb-4 text-indigo-300" />
+                            <Sparkles className="h-12 w-12 mx-auto mb-4 text-indigo-300" />
                             <p className="font-bold text-sm text-indigo-900">Hening. Tidak ada undangan baru.</p>
                         </div>
                     ) : (
@@ -390,7 +390,7 @@ export default function StudioPage() {
                 <div className="mx-auto bg-rose-50 p-4 rounded-2xl w-fit mb-4"><AlertTriangle className="h-8 w-8 text-rose-500" /></div>
                 <AlertDialogTitle className="font-headline text-2xl font-black text-center">Lenyapkan Karya?</AlertDialogTitle>
                 <AlertDialogDescription className="text-center font-medium leading-relaxed">
-                    Tindakan ini permanen. Seluruh bab, apresiasi, dan sejarah narasi dari karya ini akan hilang selamanya dari semesta NusaKarsa.
+                    Tindakan ini permanen. Seluruh bab, apresiasi, dan sejarah narasi dari karya ini akan hilang selamanya dari semesta Elitera.
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-3">

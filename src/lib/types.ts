@@ -32,14 +32,31 @@ export type MusicTrack = {
   source: 'youtube' | 'internal';
 };
 
+export type ScreenplayBlock = {
+  id: string;
+  type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
+  text: string;
+};
+
+export type Shot = {
+  id: string;
+  number: string;
+  scene: string;
+  type: 'WS' | 'MS' | 'CU' | 'ECU' | string;
+  angle: string;
+  movement: string;
+  description: string;
+};
+
 export type Book = {
   id: string;
   title: string;
   genre: string;
-  type: 'book' | 'poem';
+  type: 'book' | 'screenplay' | 'poem';
   synopsis: string;
   coverUrl: string;
   fileUrl?: string; 
+  shotListUrl?: string; 
   viewCount: number;
   favoriteCount: number;
   chapterCount: number;
@@ -143,20 +160,4 @@ export type Follow = {
     id: string; 
     userId: string;
     followedAt: Timestamp;
-};
-
-export type ScreenplayBlock = {
-    id: string;
-    type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
-    text: string;
-};
-
-export type Shot = {
-    id: string;
-    number: string;
-    scene: string;
-    type: string;
-    angle: string;
-    movement: string;
-    description: string;
 };

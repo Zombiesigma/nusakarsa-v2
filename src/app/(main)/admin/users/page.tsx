@@ -99,7 +99,7 @@ function UserListPageContent() {
                     <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-none">
                         Daftar <span className="text-primary italic">Pujangga</span>
                     </h1>
-                    <p className="text-sm text-muted-foreground mt-3 font-medium">Monitoring hak akses anggota Nusakarsa.</p>
+                    <p className="text-sm text-muted-foreground mt-3 font-medium">Monitoring hak akses anggota Elitera.</p>
                 </motion.div>
 
                 <div className="relative w-full md:w-80 group">

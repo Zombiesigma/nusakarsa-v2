@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, ArrowLeft, Send, Megaphone, Info } from 'lucide-react';
+import { Loader2, ArrowLeft, Send, Megaphone, Info, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const broadcastSchema = z.object({
@@ -79,7 +79,7 @@ export default function BroadcastPage() {
         link: values.link || '/',
         actor: {
           uid: currentUser.uid,
-          displayName: 'Sistem Nusakarsa',
+          displayName: 'Sistem Elitera',
           photoURL: 'https://raw.githubusercontent.com/Zombiesigma/elitera-asset/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg',
         },
         read: false,
@@ -120,7 +120,7 @@ export default function BroadcastPage() {
         </Button>
         <div>
           <h1 className="text-2xl md:text-4xl font-headline font-black tracking-tight">Kirim <span className="text-primary italic">Siaran</span></h1>
-          <p className="text-xs md:text-sm text-muted-foreground font-medium">Buat pengumuman resmi komunitas Nusakarsa.</p>
+          <p className="text-xs md:text-sm text-muted-foreground font-medium">Buat pengumuman resmi komunitas Elitera.</p>
         </div>
       </div>
 
@@ -170,7 +170,7 @@ export default function BroadcastPage() {
                                         <FormLabel className="font-black text-[10px] uppercase tracking-widest ml-1">Isi Pesan Notifikasi</FormLabel>
                                         <FormControl>
                                             <Textarea 
-                                                placeholder="Contoh: Kami telah memperbarui fitur Nusakarsa AI!" 
+                                                placeholder="Contoh: Kami telah memperbarui fitur Elitera AI!" 
                                                 {...field} 
                                                 rows={5} 
                                                 className="rounded-xl md:rounded-2xl bg-muted/30 border-none focus-visible:ring-primary/20 py-4 px-4 md:px-5 font-medium resize-none text-sm leading-relaxed"
@@ -214,7 +214,7 @@ export default function BroadcastPage() {
         <div className="lg:col-span-5 space-y-6">
             <Card className="border-none shadow-lg rounded-[2rem] bg-indigo-950 text-white p-6 md:p-8 space-y-6">
                 <div className="flex items-center gap-3 text-indigo-400">
-                    <Info className="h-5 w-5" />
+                    <Sparkles className="h-5 w-5" />
                     <span className="text-[9px] font-black uppercase tracking-[0.2em]">Tips Siaran</span>
                 </div>
                 <div className="space-y-4">

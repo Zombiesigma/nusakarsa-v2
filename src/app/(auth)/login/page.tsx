@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { signInWithEmail, signInWithGoogle, sendPasswordReset } from '@/firebase/auth/service';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2, Mail, Lock, Chrome, Eye, EyeOff, ChevronLeft, KeyRound } from 'lucide-react';
+import { Loader2, Mail, Lock, Sparkles, Chrome, Eye, EyeOff, ChevronLeft, KeyRound } from 'lucide-react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -97,7 +97,7 @@ export default function LoginPage() {
       toast({
         variant: 'success',
         title: 'Berhasil Masuk',
-        description: 'Selamat menjelajahi semesta Nusakarsa!',
+        description: 'Selamat menjelajahi semesta Elitera!',
       });
       router.push('/');
     }
@@ -219,6 +219,7 @@ export default function LoginPage() {
                   className="w-full h-12 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all active:scale-95 group mt-2" 
                   loading={isLoading}
                 >
+                  <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:rotate-12" /> 
                   {isLoading ? 'Mengakses...' : 'Masuk Sekarang'}
                 </Button>
               </form>

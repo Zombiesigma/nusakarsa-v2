@@ -13,6 +13,7 @@ import {
   User, 
   Plus,
   Library,
+  Sparkles,
   Bell,
   Settings,
   HelpCircle,
@@ -120,7 +121,7 @@ export function AppSidebar() {
                             {active && (
                               <motion.div
                                 layoutId="rail-glow"
-                                className="absolute inset-0 bg-primary shadow-[0_10px_25px_rgba(var(--primary-hsl),0.4)] rounded-[1.75rem] -z-10"
+                                className="absolute inset-0 bg-primary shadow-[0_10px_25px_rgba(var(--primary),0.4)] rounded-[1.75rem] -z-10"
                                 initial={false}
                                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                               />
@@ -182,6 +183,7 @@ export function AppSidebar() {
         </TooltipProvider>
         
         <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-20">
+            <Sparkles className="h-2.5 w-2.5 text-primary animate-pulse" />
         </div>
       </div>
     </aside>

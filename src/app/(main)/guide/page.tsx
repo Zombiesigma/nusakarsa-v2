@@ -12,11 +12,14 @@ import {
   BookOpen, 
   PenTool, 
   Users, 
+  Sparkles, 
   ShieldCheck, 
   HelpCircle,
   MessageCircle,
+  Clapperboard,
   Share2,
   Zap,
+  Video,
   Maximize2
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -48,6 +51,28 @@ export default function GuidePage() {
       ]
     },
     {
+      id: "screenplay",
+      icon: Clapperboard,
+      title: "Penulisan Naskah Film",
+      description: "Alat profesional untuk penulis skenario masa depan.",
+      color: "text-orange-500",
+      bg: "bg-orange-500/5",
+      content: [
+        {
+          q: "Apa itu Industrial Screenplay Editor?",
+          a: "Ini adalah editor khusus yang mematuhi standar industri film. Gunakan Toolbar di bagian atas untuk memasukkan elemen seperti SLUGLINE, ACTION, CHARACTER, dan DIALOGUE secara otomatis."
+        },
+        {
+          q: "Shortcut Cerdas: Tombol Tab",
+          a: "Saat menulis naskah, tekan tombol **Tab** pada keyboard Anda untuk berpindah secara otomatis ke posisi penulisan Nama Karakter."
+        },
+        {
+          q: "Zen Mode: Fokus Tanpa Gangguan",
+          a: "Klik ikon 'Maximize' di pojok kanan atas editor untuk mengaktifkan Zen Mode. Seluruh elemen antarmuka akan disembunyikan."
+        }
+      ]
+    },
+    {
       id: "author",
       icon: PenTool,
       title: "Karir Sebagai Penulis",
@@ -61,7 +86,7 @@ export default function GuidePage() {
         },
         { 
           q: "Export ke PDF Profesional", 
-          a: "Setelah karya Anda disetujui untuk terbit, sistem NusaKarsa akan menghasilkan file PDF dengan format premium yang siap dibagikan." 
+          a: "Setelah karya Anda disetujui untuk terbit, sistem Nusakarsa akan menghasilkan file PDF dengan format premium yang siap dibagikan." 
         }
       ]
     }
@@ -81,19 +106,19 @@ export default function GuidePage() {
         </div>
         <div className="space-y-3">
             <h1 className="text-3xl md:text-6xl font-headline font-black tracking-tight leading-tight">
-                Pusat <span className="text-primary italic underline decoration-primary/20">Bantuan</span> NusaKarsa
+                Pusat <span className="text-primary italic underline decoration-primary/20">Bantuan</span> Nusakarsa
             </h1>
             <p className="text-muted-foreground font-medium max-w-2xl mx-auto text-sm md:text-lg leading-relaxed px-2">
-                Panduan lengkap untuk menavigasi platform literasi digital modern—dari teks puitis hingga karya tulis lainnya.
+                Panduan lengkap untuk menavigasi ekosistem literasi digital modern—dari teks puitis hingga naskah film industri.
             </p>
         </div>
       </motion.section>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 px-4">
         {[
+            { icon: Clapperboard, label: "Naskah Pro", color: "text-orange-500", bg: "bg-orange-500/5" },
             { icon: Maximize2, label: "Zen Mode", color: "text-indigo-500", bg: "bg-indigo-500/5" },
-            { icon: ShieldCheck, label: "Eksport PDF", color: "text-emerald-500", bg: "bg-emerald-500/5" },
-            { icon: Zap, label: "AI Helper", color: "text-orange-500", bg: "bg-orange-500/5" },
+            { icon: ShieldCheck, label: "Eksport PDF", color: "text-emerald-500", bg: "bg-emerald-500/5" }
         ].map((item, i) => (
             <Card key={i} className="border-none shadow-xl bg-card/50 backdrop-blur-sm rounded-[1.5rem] p-4 md:p-6 flex flex-col items-center gap-3 group">
                 <div className={cn("p-3 rounded-xl md:rounded-2xl", item.bg, item.color)}>

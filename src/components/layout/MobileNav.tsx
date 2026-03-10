@@ -26,8 +26,8 @@ export function MobileNav() {
   const navItems = [
     { href: '/', icon: Home, label: 'Beranda' },
     { href: '/search', icon: Search, label: 'Cari' },
-    ...(canUpload ? [{ href: '/upload', icon: PlusSquare, label: 'Unggah' }] : []),
     { href: '/library', icon: Library, label: 'Pustaka' },
+    ...(canUpload ? [{ href: '/upload', icon: PlusSquare, label: 'Unggah' }] : []),
     { href: '/profile', icon: User, label: 'Profil' },
   ];
 

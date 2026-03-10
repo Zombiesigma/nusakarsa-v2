@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Header } from '@/components/layout/Header';
@@ -34,7 +35,7 @@ export default function MainAppLayout({
           )}>
             <div className={cn(
               "relative mx-auto w-full",
-              !isImmersiveRoute && "container py-10 md:py-12"
+              isImmersiveRoute ? "h-full" : "container px-6 py-10 md:px-12 md:py-12 md:max-w-none"
             )}>
               {children}
             </div>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
-import { Globe, PenTool, Cpu, Zap, ShieldCheck } from 'lucide-react';
+import { Globe, PenTool, Cpu, Zap, Sparkles, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import ProfileCard from '@/components/ProfileCard';
@@ -74,14 +74,14 @@ export default function AboutPage() {
       <section className="space-y-12">
         <div className="flex items-center gap-4 px-4">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 flex items-center gap-3 whitespace-nowrap">
-                <Globe className="h-4 w-4 text-primary" /> Fondasi Platform
+                <Globe className="h-4 w-4 text-primary" /> Fondasi Ekosistem
             </h2>
             <div className="h-px bg-border/50 flex-1" />
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
             {[
-                { icon: Zap, title: "Teknologi Terdepan", desc: "Menggunakan infrastruktur cloud modern untuk memastikan setiap detik pengalaman sastra Anda terasa magis dan aman.", color: "text-emerald-500" },
+                { icon: Sparkles, title: "Teknologi Terdepan", desc: "Menggunakan infrastruktur cloud modern untuk memastikan setiap detik pengalaman sastra Anda terasa magis dan aman.", color: "text-emerald-500" },
                 { icon: Zap, title: "Inspirasi Tanpa Batas", desc: "Kami membangun antarmuka yang bebas gangguan agar kreativitas Anda dapat mengalir dengan murni dari hati.", color: "text-orange-500" }
             ].map((item, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -158,7 +158,7 @@ export default function AboutPage() {
       <div className="text-center space-y-6 opacity-40 select-none grayscale pb-16">
           <div className="flex items-center justify-center gap-3">
               <ShieldCheck className="h-5 w-5 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Literacy</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Literacy Ecosystem</span>
           </div>
       </div>
     </div>

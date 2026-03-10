@@ -44,7 +44,7 @@ export default function VerifyEmailPage() {
           clearInterval(interval);
           toast({
               title: "Verifikasi Berhasil!",
-              description: "Email Anda telah diverifikasi. Selamat datang di Nusakarsa!"
+              description: "Email Anda telah diverifikasi. Selamat datang di Elitera!"
           });
           router.push('/');
         }

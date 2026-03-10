@@ -51,26 +51,8 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
       }
     }, 2 * 60 * 1000);
 
-    const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-             updateDoc(userStatusRef, {
-                status: 'offline',
-                lastSeen: serverTimestamp(),
-            }).catch(err => console.warn("Failed to set offline status:", err));
-        } else {
-             updateDoc(userStatusRef, {
-                status: 'online',
-                lastSeen: serverTimestamp(),
-            }).catch(err => console.warn("Failed to set online status:", err));
-        }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
     return () => {
       clearInterval(intervalId);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      // Don't set to offline on unmount, as it can happen on page navigation
     };
   }, [firestore, user]);
 
@@ -105,7 +87,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
                         Nusakarsa
                     </h1>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
-                        Platform Daya Cipta Bangsa
+                        Ekosistem Daya Cipta Bangsa
                     </p>
                 </div>
                 

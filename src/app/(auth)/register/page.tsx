@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { signUpWithEmail, signInWithGoogle } from '@/firebase/auth/service';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2, Upload, User as UserIcon, Mail, Lock, Chrome, PenTool, Eye, EyeOff, ChevronLeft } from 'lucide-react';
+import { Loader2, Upload, User as UserIcon, Mail, Lock, Sparkles, Chrome, PenTool, Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { uploadProfilePhoto } from '@/lib/uploader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -111,7 +111,7 @@ export default function RegisterPage() {
       toast({
         variant: 'success',
         title: 'Selamat Datang',
-        description: 'Anda telah berhasil bergabung dengan Nusakarsa!',
+        description: 'Anda telah berhasil bergabung dengan Elitera!',
       });
       router.push('/');
     }
@@ -146,7 +146,7 @@ export default function RegisterPage() {
 
         <Card className="border-none shadow-2xl bg-card/50 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden">
           <CardHeader className="sr-only">
-            <CardTitle>Buat Akun Nusakarsa</CardTitle>
+            <CardTitle>Buat Akun Elitera</CardTitle>
             <CardDescription>Lengkapi informasi diri Anda</CardDescription>
           </CardHeader>
           <CardContent className="p-6 sm:p-8 pt-8 sm:pt-10">
@@ -243,6 +243,7 @@ export default function RegisterPage() {
                   className="w-full h-12 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all active:scale-95 group mt-2" 
                   loading={isLoading}
                 >
+                  <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:rotate-12" /> 
                   {isLoading ? 'Memproses...' : 'Buat Akun Gratis'}
                 </Button>
               </form>

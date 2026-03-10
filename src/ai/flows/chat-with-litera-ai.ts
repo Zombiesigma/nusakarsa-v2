@@ -2,6 +2,6 @@
 /**
  * @fileOverview Flow dinonaktifkan.
  */
-export async function chatWithNusaKarsaAI() {
+export async function chatWithEliteraAI() {
   return { response: "Sistem AI sedang beristirahat." };
 }

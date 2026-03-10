@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
+import { ProtectionProvider } from '@/components/ProtectionProvider';
 
 const productionUrl = 'https://www.nusakarsa.my.id/';
 const brandIcon = 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp';
@@ -17,7 +18,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(productionUrl),
   title: {
-    default: 'Nusakarsa - Platform Daya Cipta Bangsa',
+    default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
     template: '%s | Nusakarsa',
   },
   description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: {
-      default: 'Nusakarsa - Platform Daya Cipta Bangsa',
+      default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
     description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
    twitter: {
     card: 'summary',
     title: {
-      default: 'Nusakarsa - Platform Daya Cipta Bangsa',
+      default: 'Nusakarsa - Ekosistem Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
     description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
@@ -80,7 +81,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <FirebaseClientProvider>
           <FirebaseErrorListener />
-          {children}
+          <ProtectionProvider>
+            {children}
+          </ProtectionProvider>
         </FirebaseClientProvider>
         <Toaster />
       </body>

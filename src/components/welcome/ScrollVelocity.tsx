@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useRef, useLayoutEffect, useState, FC } from 'react';
+import { useRef, useLayoutEffect, useState } from 'react';
 import {
   motion,
   useScroll,
@@ -44,7 +45,7 @@ interface VelocityTextProps {
   scrollerStyle?: React.CSSProperties;
 }
 
-const VelocityText: FC<VelocityTextProps> = ({
+function VelocityText({
   children,
   baseVelocity = 100,
   scrollContainerRef,
@@ -57,7 +58,7 @@ const VelocityText: FC<VelocityTextProps> = ({
   scrollerClassName,
   parallaxStyle,
   scrollerStyle
-}) => {
+}: VelocityTextProps) {
   const baseX = useMotionValue(0);
   const scrollOptions = scrollContainerRef ? { container: scrollContainerRef } : {};
   const { scrollY } = useScroll(scrollOptions);
@@ -119,24 +120,9 @@ const VelocityText: FC<VelocityTextProps> = ({
   );
 }
 
-interface ScrollVelocityProps {
-  scrollContainerRef?: React.RefObject<HTMLElement | null>;
-  texts: string[];
-  velocity?: number;
-  className?: string;
-  damping?: number;
-  stiffness?: number;
-  numCopies?: number;
-  velocityMapping?: { input: number[]; output: number[] };
-  parallaxClassName?: string;
-  scrollerClassName?: string;
-  parallaxStyle?: React.CSSProperties;
-  scrollerStyle?: React.CSSProperties;
-}
-
-const ScrollVelocity: FC<ScrollVelocityProps> = ({
+export const ScrollVelocity = ({
   scrollContainerRef,
-  texts = [],
+  texts = [] as string[],
   velocity = 100,
   className = '',
   damping = 50,
@@ -147,7 +133,7 @@ const ScrollVelocity: FC<ScrollVelocityProps> = ({
   scrollerClassName = 'scroller',
   parallaxStyle,
   scrollerStyle
-}) => {
+}: any) => {
   return (
     <section className="py-4 md:py-8">
       {texts.map((text: string, index: number) => (

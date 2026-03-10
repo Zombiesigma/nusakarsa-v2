@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -22,6 +23,8 @@ import {
   Layers, 
   Heart, 
   Share2, 
+  Sparkles, 
+  Clapperboard, 
   CheckCircle2, 
   Music2, 
   Info,
@@ -215,7 +218,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
                     
                     <div className="flex items-center gap-2">
                         <div className="h-1 w-12 bg-primary rounded-full" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Nusakarsa</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Elitera</p>
                     </div>
                 </div>
                 
@@ -272,8 +275,8 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
                 <div className="grid grid-cols-5 gap-3">
                     <Button className="col-span-4 h-16 rounded-[1.5rem] md:rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all" asChild>
                         <Link href={`/books/${book.id}/read`}>
-                           <BookOpen className="mr-3 h-5 w-5" />
-                            Mulai Membaca
+                            {book.type === 'screenplay' ? <Clapperboard className="mr-3 h-5 w-5" /> : <BookOpen className="mr-3 h-5 w-5" />}
+                            Mulai {book.type === 'screenplay' ? 'Naskah' : 'Membaca'}
                         </Link>
                     </Button>
                     <Button variant="outline" className="h-16 rounded-[1.5rem] md:rounded-[2rem] border-2 shadow-xl hover:bg-primary/5 hover:text-primary transition-all active:scale-[0.98]" onClick={() => setIsShareDialogOpen(true)}>
@@ -301,7 +304,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
         <section className="space-y-6 pt-8 md:pt-12">
             <div className="flex items-center gap-4 px-2 md:px-0">
                 <div className="p-2 rounded-xl bg-orange-500/10 text-orange-600">
-                    <Info className="h-4 w-4" />
+                    <Sparkles className="h-4 w-4" />
                 </div>
                 <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Sinopsis Karya</h2>
                 <div className="h-px bg-border/50 flex-1" />
@@ -379,7 +382,8 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
       {/* Footer Branding */}
       <div className="text-center opacity-20 select-none grayscale py-16">
           <div className="flex items-center justify-center gap-3">
-              <span className="text-[10px] font-black uppercase tracking-[0.5em]">NusaKarsa Digital Sastra</span>
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Elitera Digital Sastra</span>
           </div>
       </div>
     </div>

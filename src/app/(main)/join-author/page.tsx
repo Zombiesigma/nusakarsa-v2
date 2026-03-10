@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { BookUser, Loader2, Send, Info, Users, BookOpen, Star, ChevronRight, PenTool, CheckCircle2, Clock, Trophy, Crown, Medal, ArrowRight, ShieldCheck, MapPin, Smartphone, MessageCircle } from "lucide-react";
+import { BookUser, Loader2, Send, Info, Users, BookOpen, Star, Sparkles, ChevronRight, PenTool, CheckCircle2, Clock, Trophy, Crown, Medal, ArrowRight, ShieldCheck, MapPin, Smartphone } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -213,7 +213,7 @@ export default function JoinAuthorPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-4 md:mb-6">
-                            Jajaran Penulis Nusakarsa
+                            <Sparkles className="h-3 w-3 md:h-3.5 md:w-3.5" /> Jajaran Penulis Elitera
                         </div>
                         <h1 className="text-3xl md:text-6xl font-headline font-black text-foreground tracking-tight leading-tight">
                             Temui Para <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Penulis</span> Kalcer
@@ -365,7 +365,7 @@ export default function JoinAuthorPage() {
                                                 <div className="my-6 md:my-8 w-12 h-1 bg-primary/10 rounded-full group-hover:w-24 transition-all duration-700 ease-out" />
 
                                                 <p className="text-xs md:text-base text-muted-foreground/80 leading-relaxed italic line-clamp-3 mb-8 px-2 md:px-4 font-medium min-h-[3rem] md:min-h-[4.5rem]">
-                                                    {author.bio || `Seorang penjelajah kata di Nusakarsa yang percaya bahwa setiap cerita memiliki keajaibannya sendiri.`}
+                                                    {author.bio || `Seorang penjelajah kata di Elitera yang percaya bahwa setiap cerita memiliki keajaibannya sendiri.`}
                                                 </p>
                                                 
                                                 <div className="mt-auto pt-6 md:pt-8 border-t border-border/50 grid grid-cols-3 gap-4 w-full relative">
@@ -407,7 +407,7 @@ export default function JoinAuthorPage() {
                         <div className="p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-primary/5 border border-primary/10 max-w-2xl mx-auto shadow-inner">
                             <h4 className="text-2xl md:text-3xl font-headline font-black mb-2 md:mb-3">Siap Menjadi Bagian Dari Mereka?</h4>
                             <p className="text-muted-foreground font-medium text-sm md:text-base leading-relaxed mb-8 md:mb-10">
-                                Bergabunglah bersama para pujangga di atas dan mulai bangun duniamu sendiri. Jadilah inspirasi bagi ribuan pembaca Nusakarsa.
+                                Bergabunglah bersama para pujangga di atas dan mulai bangun duniamu sendiri. Jadilah inspirasi bagi ribuan pembaca Elitera.
                             </p>
                             <Button 
                                 onClick={() => setApplicationStatus('not_applied')}
@@ -485,7 +485,7 @@ export default function JoinAuthorPage() {
                                 <Link href="/"><BookOpen className="mr-2 h-4 w-4" /> Jelajahi Buku Lain</Link>
                             </Button>
                             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 md:px-10 h-14 font-black border-2 transition-all hover:bg-muted/50 text-xs md:text-sm">
-                                <Link href="/ai"><MessageCircle className="mr-2 h-4 w-4 text-primary" /> Tanya Nusakarsa AI</Link>
+                                <Link href="/ai"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Tanya Elitera AI</Link>
                             </Button>
                         </CardFooter>
                     </Card>
@@ -510,7 +510,7 @@ export default function JoinAuthorPage() {
                         Mulai Perjalanan <br/> <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Sastramu</span> Anda
                     </h1>
                     <p className="mt-4 md:mt-6 text-base md:text-lg text-muted-foreground leading-relaxed font-medium">
-                        Bergabunglah dengan komunitas pujangga modern dan mulai bagikan dunia imajinasi Anda kepada pembaca global di Nusakarsa.
+                        Bergabunglah dengan komunitas pujangga modern dan mulai bagikan dunia imajinasi Anda kepada pembaca global di Elitera.
                     </p>
                 </motion.div>
             </div>
@@ -645,7 +645,7 @@ export default function JoinAuthorPage() {
                                     name="motivation"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="font-black text-[10px] md:text-xs uppercase tracking-widest ml-1">Apa visi Anda bergabung di Nusakarsa?</FormLabel>
+                                            <FormLabel className="font-black text-[10px] md:text-xs uppercase tracking-widest ml-1">Apa visi Anda bergabung di Elitera?</FormLabel>
                                             <FormControl>
                                                 <Textarea 
                                                     placeholder="Ceritakan gairah menulis Anda dan apa yang ingin Anda capai..." 
