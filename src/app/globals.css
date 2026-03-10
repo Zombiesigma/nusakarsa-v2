@@ -94,7 +94,7 @@
       cursor: url('/cursor/cursor.cur'), auto;
     }
     a, button {
-      cursor: inherit;
+      cursor: url('/cursor/cursor.cur'), pointer;
     }
   }
 }
