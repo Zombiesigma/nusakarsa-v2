@@ -3,12 +3,11 @@
 import { PDFDocument as PDFLib, StandardFonts, rgb } from 'pdf-lib';
 import { initializeFirebase } from '@/firebase';
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
-import type { Book, Chapter, Shot, ScreenplayBlock, User } from '@/lib/types';
+import type { Book, Chapter, User } from '@/lib/types';
 
 const PAGE_WIDTH = 595.28; 
 const PAGE_HEIGHT = 841.89; 
 const MARGIN = 72; 
-const LEFT_MARGIN = 108; 
 
 /**
  * Membersihkan string untuk digunakan sebagai nama folder kawan.
@@ -44,8 +43,6 @@ export async function generateBookPdf(bookId: string): Promise<string> {
   const fontSerifRegular = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const fontSerifItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
   const fontMono = await pdfDoc.embedFont(StandardFonts.Courier);
-  const fontMonoBold = await pdfDoc.embedFont(StandardFonts.CourierBold);
-  const fontMonoItalic = await pdfDoc.embedFont(StandardFonts.CourierOblique);
 
   let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   const { width, height } = page.getSize();
@@ -130,88 +127,25 @@ export async function generateBookPdf(bookId: string): Promise<string> {
     page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
     pageCount++;
 
-    const isScreenplay = book.type === 'screenplay';
     const isPoem = book.type === 'poem';
-    const currentMargin = isScreenplay ? LEFT_MARGIN : MARGIN;
+    const currentMargin = MARGIN;
 
     page.drawText('NUSAKARSA DIGITAL LITERACY', { x: currentMargin, y: height - 40, size: 7, font: fontBold, color: rgb(0.7, 0.7, 0.7) });
     page.drawText(book.title.toUpperCase(), { x: width - MARGIN - fontRegular.widthOfTextAtSize(book.title.toUpperCase(), 7), y: height - 40, size: 7, font: fontRegular, color: rgb(0.7, 0.7, 0.7) });
 
-    const chapterTitleX = (isScreenplay || isPoem) ? (width - (isPoem ? fontSerifBold : fontMonoBold).widthOfTextAtSize(chapter.title.toUpperCase(), 16)) / 2 : MARGIN;
-    page.drawText(isScreenplay || isPoem ? chapter.title.toUpperCase() : chapter.title, {
+    const chapterTitleX = isPoem ? (width - fontSerifBold.widthOfTextAtSize(chapter.title.toUpperCase(), 16)) / 2 : MARGIN;
+    page.drawText(isPoem ? chapter.title.toUpperCase() : chapter.title, {
       x: chapterTitleX,
       y: height - 90,
-      size: (isScreenplay || isPoem) ? 16 : 22,
-      font: isScreenplay ? fontMonoBold : isPoem ? fontSerifBold : fontSerifBold,
+      size: isPoem ? 16 : 22,
+      font: isPoem ? fontSerifBold : fontSerifBold,
       color: rgb(0.1, 0.1, 0.1),
     });
 
     let currentY = height - 130;
     const contentWidth = width - currentMargin - MARGIN;
 
-    if (isScreenplay) {
-      try {
-        if (chapter.content.trim().startsWith('[') && chapter.content.trim().endsWith(']')) {
-          const blocks: ScreenplayBlock[] = JSON.parse(chapter.content);
-          let lastCharacterInScene: string | null = null;
-
-          for (const block of blocks) {
-            let x = currentMargin;
-            let font = fontMono;
-            let size = 12;
-            let wrapWidth = contentWidth;
-            let displayText = block.text;
-
-            switch (block.type) {
-              case 'slugline':
-                font = fontMonoBold;
-                currentY -= 20;
-                lastCharacterInScene = null;
-                break;
-              case 'character':
-                font = fontMonoBold;
-                x = currentMargin + 158; 
-                wrapWidth = contentWidth - 250;
-                currentY -= 15;
-                const cleanName = block.text.trim().toUpperCase();
-                if (lastCharacterInScene === cleanName && cleanName !== "") {
-                    displayText = `${cleanName} (CONT'D)`;
-                } else {
-                    lastCharacterInScene = cleanName;
-                }
-                break;
-              case 'parenthetical':
-                font = fontMonoItalic;
-                x = currentMargin + 115; 
-                wrapWidth = contentWidth - 200;
-                break;
-              case 'dialogue':
-                x = currentMargin + 72; 
-                wrapWidth = contentWidth - 144;
-                break;
-              case 'transition':
-                font = fontMonoBold;
-                x = width - MARGIN - fontMonoBold.widthOfTextAtSize(block.text.toUpperCase(), size);
-                currentY -= 15;
-                break;
-            }
-
-            const cleanText = block.type === 'parenthetical' ? `(${displayText})` : displayText;
-            const wrappedLines = wrapText(cleanText, wrapWidth, font, size);
-            for (const wLine of wrappedLines) {
-              if (currentY < 70) {
-                page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-                pageCount++;
-                addFooter(page, pageCount, fontRegular, width);
-                currentY = height - 60;
-              }
-              page.drawText(wLine, { x, y: currentY, size, font });
-              currentY -= 14;
-            }
-          }
-        }
-      } catch (e) {}
-    } else if (isPoem) {
+    if (isPoem) {
       const paras = chapter.content.split('\n');
       for (const para of paras) {
         if (!para.trim()) {
@@ -259,7 +193,6 @@ export async function generateBookPdf(bookId: string): Promise<string> {
   
   const typeMap: Record<string, string> = {
     'book': 'books',
-    'screenplay': 'naskah',
     'poem': 'puisi'
   };
   const typeFolder = typeMap[book.type] || 'books';
@@ -268,96 +201,6 @@ export async function generateBookPdf(bookId: string): Promise<string> {
   return await uploadPdf(pdfBuffer, safeFileName, folderPath);
 }
 
-export async function generateShotListPdf(bookId: string): Promise<string> {
-  const { firestore } = initializeFirebase();
-  if (!firestore) throw new Error('Firestore not initialized');
-
-  const bookRef = doc(firestore, 'books', bookId);
-  const bookSnap = await getDoc(bookRef);
-  if (!bookSnap.exists()) throw new Error('Book not found');
-  const book = bookSnap.data() as Book;
-
-  const shotsQuery = query(collection(firestore, 'books', bookId, 'shotList'), orderBy('number', 'asc'));
-  const shotsSnap = await getDocs(shotsQuery);
-  const shotList = shotsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Shot));
-
-  const pdfDoc = await PDFLib.create();
-  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-  let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-  const { width, height } = page.getSize();
-
-  page.drawText('SHOT LIST PRODUKSI', {
-    x: (width - fontBold.widthOfTextAtSize('SHOT LIST PRODUKSI', 20)) / 2,
-    y: height - 60,
-    size: 20,
-    font: fontBold,
-    color: rgb(0.96, 0.26, 0.21), 
-  });
-
-  page.drawText(`Karya: ${book.title.toUpperCase()}`, {
-    x: (width - fontRegular.widthOfTextAtSize(`Karya: ${book.title.toUpperCase()}`, 12)) / 2,
-    y: height - 85,
-    size: 12,
-    font: fontRegular,
-    color: rgb(0.3, 0.3, 0.3),
-  });
-
-  let currentY = height - 130;
-  const colWidths = [40, 40, 60, 80, 80, 150];
-  const startX = (width - colWidths.reduce((a, b) => a + b, 0)) / 2;
-
-  const headers = ['#', 'SC', 'TYPE', 'ANGLE', 'MOVE', 'DESCRIPTION'];
-  let currentX = startX;
-  
-  page.drawRectangle({
-      x: startX, y: currentY - 5, width: colWidths.reduce((a,b)=>a+b, 0), height: 20,
-      color: rgb(0.95, 0.95, 0.95)
-  });
-
-  for (let i = 0; i < headers.length; i++) {
-      page.drawText(headers[i], { x: currentX + 5, y: currentY, size: 9, font: fontBold });
-      currentX += colWidths[i];
-  }
-  currentY -= 25;
-
-  let pageCount = 1;
-  for (const shot of shotList) {
-      if (currentY < 60) {
-          page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
-          pageCount++;
-          addFooter(page, pageCount, fontRegular, width);
-          currentY = height - 60;
-      }
-
-      currentX = startX;
-      const rowData = [shot.number, shot.scene, shot.type, shot.angle, shot.movement, shot.description];
-      
-      for (let i = 0; i < rowData.length; i++) {
-          const val = rowData[i] || "-";
-          const wrapped = wrapText(val, colWidths[i] - 10, fontRegular, 8);
-          page.drawText(wrapped[0] || "-", { x: currentX + 5, y: currentY, size: 8, font: fontRegular });
-          currentX += colWidths[i];
-      }
-      
-      page.drawLine({
-          start: { x: startX, y: currentY - 5 },
-          end: { x: startX + colWidths.reduce((a,b)=>a+b, 0), y: currentY - 5 },
-          thickness: 0.5,
-          color: rgb(0.8, 0.8, 0.8)
-      });
-      
-      currentY -= 20;
-  }
-  addFooter(page, pageCount, fontRegular, width);
-
-  const pdfBytes = await pdfDoc.save();
-  const safeFileName = `shot_list_${sanitizePath(book.title)}.pdf`;
-  const folderPath = `naskah/${sanitizePath(book.title)}`;
-
-  return await uploadPdf(Buffer.from(pdfBytes), safeFileName, folderPath);
-}
 
 async function uploadPdf(buffer: Buffer, fileName: string, folderPath: string): Promise<string> {
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;

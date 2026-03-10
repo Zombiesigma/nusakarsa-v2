@@ -32,31 +32,14 @@ export type MusicTrack = {
   source: 'youtube' | 'internal';
 };
 
-export type ScreenplayBlock = {
-  id: string;
-  type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
-  text: string;
-};
-
-export type Shot = {
-  id: string;
-  number: string;
-  scene: string;
-  type: 'WS' | 'MS' | 'CU' | 'ECU' | string;
-  angle: string;
-  movement: string;
-  description: string;
-};
-
 export type Book = {
   id: string;
   title: string;
   genre: string;
-  type: 'book' | 'screenplay' | 'poem';
+  type: 'book' | 'poem';
   synopsis: string;
   coverUrl: string;
   fileUrl?: string; 
-  shotListUrl?: string; 
   viewCount: number;
   favoriteCount: number;
   chapterCount: number;

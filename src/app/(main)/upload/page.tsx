@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils';
 const formSchema = z.object({
   title: z.string().min(3, { message: "Judul minimal 3 karakter." }).max(100, { message: "Judul maksimal 100 karakter."}),
   genre: z.string({ required_error: "Genre harus dipilih."}),
-  type: z.enum(['book', 'screenplay', 'poem'], { required_error: "Pilih tipe karya." }),
+  type: z.enum(['book', 'poem'], { required_error: "Pilih tipe karya." }),
   synopsis: z.string().min(10, { message: "Sinopsis minimal 10 karakter." }).max(1000, { message: "Sinopsis maksimal 1000 karakter."}),
   visibility: z.enum(['public', 'followers_only'], { required_error: "Pilih visibilitas karya Anda." }),
 });
@@ -182,7 +182,7 @@ export default function CreateBookPage() {
       if (extractedText) {
         const chaptersCol = collection(firestore, 'books', bookDocRef.id, 'chapters');
         batch.set(doc(chaptersCol), {
-            title: values.type === 'screenplay' ? "BAGIAN 1" : values.type === 'poem' ? "BAIT 1" : "Bab 1",
+            title: values.type === 'poem' ? "BAIT 1" : "Bab 1",
             content: extractedText,
             order: 1,
             createdAt: serverTimestamp()
@@ -393,7 +393,6 @@ export default function CreateBookPage() {
                                         </FormControl>
                                         <SelectContent className="rounded-xl">
                                             <SelectItem value="book">Novel / Buku</SelectItem>
-                                            <SelectItem value="screenplay">Naskah Film</SelectItem>
                                             <SelectItem value="poem">Koleksi Puisi</SelectItem>
                                         </SelectContent>
                                     </Select>
