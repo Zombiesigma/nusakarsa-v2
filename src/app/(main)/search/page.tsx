@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link';
-import { Loader2, Search, Users, BookOpen, Sparkles, Filter, TrendingUp, ArrowLeft, X } from 'lucide-react';
+import { Loader2, Search, Users, BookOpen, Filter, TrendingUp, ArrowLeft, X } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
@@ -118,7 +118,7 @@ function SearchPageContent() {
             className="space-y-4"
         >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
-                <Sparkles className="h-3.5 w-3.5 animate-pulse" /> Hasil Eksplorasi
+                Hasil Eksplorasi
             </div>
             <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-none">
                 Jejak untuk "<span className="text-primary italic">{q}</span>"

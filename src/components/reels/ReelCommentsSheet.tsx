@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, MessageSquare, Send, Sparkles, MessageCircle } from 'lucide-react';
+import { Loader2, MessageSquare, Send, MessageCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
@@ -131,7 +131,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
                 </SheetDescription>
             </div>
             <div className="bg-primary/5 p-3 rounded-2xl hidden sm:block">
-                <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+                <Zap className="h-5 w-5 text-primary animate-pulse" />
             </div>
           </div>
         </SheetHeader>
@@ -175,7 +175,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
 
         <div className="p-6 pb-10 border-t bg-background/95 backdrop-blur-xl relative z-10 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
             <form onSubmit={handleSendComment} className="flex items-center gap-3 relative max-w-4xl mx-auto group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/10 to-primary/20 rounded-[1.5rem] blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-[1.5rem] blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
                 <Input 
                     value={commentText} 
                     onChange={(e) => setCommentText(e.target.value)} 
@@ -186,7 +186,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
                 <Button 
                     type="submit" 
                     size="icon" 
-                    className="relative h-14 w-14 rounded-2xl bg-primary shadow-xl shadow-primary/30 transition-all active:scale-90"
+                    className="relative h-14 w-14 rounded-2xl bg-primary shadow-xl shadow-primary/30 transition-all active:scale-90 shrink-0"
                     disabled={isSubmitting || !commentText.trim()}
                 >
                     {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}

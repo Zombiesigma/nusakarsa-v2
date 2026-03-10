@@ -6,7 +6,6 @@ import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { 
   Leaf, 
-  Sparkles, 
   BookOpen, 
   PenTool, 
   ArrowRight, 
@@ -142,7 +141,7 @@ export default function WelcomePage() {
             {[
               { icon: BookOpen, title: "Literasi Digital", desc: "Arsip narasi tanpa batas." },
               { icon: PenTool, title: "Studio Penulis", desc: "Editor naskah industri pro." },
-              { icon: Sparkles, title: "Karsa Estetik", desc: "Ruang apresiasi puitis." }
+              { icon: Zap, title: "Karsa Estetik", desc: "Ruang apresiasi puitis." }
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center gap-3 group">
                 <div className="p-4 rounded-2xl bg-muted/50 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500 shadow-inner group-hover:shadow-primary/5">

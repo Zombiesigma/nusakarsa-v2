@@ -13,7 +13,6 @@ import {
   User, 
   Plus,
   Library,
-  Sparkles,
   Bell,
   Settings,
   HelpCircle,
@@ -183,7 +182,6 @@ export function AppSidebar() {
         </TooltipProvider>
         
         <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-20">
-            <Sparkles className="h-2.5 w-2.5 text-primary animate-pulse" />
         </div>
       </div>
     </aside>

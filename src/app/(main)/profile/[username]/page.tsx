@@ -1,4 +1,3 @@
-
 'use client';
 
 import { notFound, useParams, useRouter } from 'next/navigation';
@@ -17,7 +16,6 @@ import {
   Edit, 
   Loader2, 
   UserMinus, 
-  Sparkles, 
   CheckCircle2, 
   X,
   BookOpen,
@@ -213,7 +211,7 @@ export default function ProfilePage() {
                         onClick={() => setSheetState({ open: true, type: 'following' })} 
                         className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-primary/5 rounded-2xl transition-all p-2"
                     >
-                        <div className="p-2 rounded-xl bg-indigo-500/5 text-indigo-600 mb-1"><Sparkles className="h-4 w-4" /></div>
+                        <div className="p-2 rounded-xl bg-indigo-500/5 text-indigo-600 mb-1"><UserPlus className="h-4 w-4" /></div>
                         <p className="font-black text-2xl md:text-4xl tracking-tighter">{user.following || 0}</p>
                         <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] opacity-40">Mengikuti</p>
                     </button>

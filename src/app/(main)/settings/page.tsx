@@ -33,7 +33,6 @@ import {
   Monitor, 
   Moon, 
   Sun, 
-  Sparkles, 
   ChevronRight,
   Zap,
   Camera,

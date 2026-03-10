@@ -12,7 +12,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Loader2, MessageCircle, Clock, Sparkles } from 'lucide-react';
+import { Loader2, MessageCircle, Clock, Zap } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { Separator } from '@/components/ui/separator';
@@ -58,7 +58,7 @@ export function StoryCommentsSheet({ storyId, isOpen, onOpenChange }: StoryComme
         <SheetHeader className="px-8 pt-6 pb-6 text-left shrink-0">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-                <div className="flex items-center gap-2 text-primary">
+                <div className="flex items-center gap-3 text-primary">
                     <MessageCircle className="h-6 w-6" />
                     <SheetTitle className="text-2xl font-headline font-black tracking-tight">Apresiasi Momen</SheetTitle>
                 </div>
@@ -67,7 +67,7 @@ export function StoryCommentsSheet({ storyId, isOpen, onOpenChange }: StoryComme
                 </SheetDescription>
             </div>
             <div className="bg-primary/5 p-3 rounded-2xl">
-                <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+                <Zap className="h-5 w-5 text-primary animate-pulse" />
             </div>
           </div>
         </SheetHeader>
@@ -121,14 +121,14 @@ export function StoryCommentsSheet({ storyId, isOpen, onOpenChange }: StoryComme
                     >
                     <Avatar className="h-12 w-12 border-2 border-background shrink-0 shadow-lg transition-transform active:scale-90">
                         <AvatarImage src={comment.userAvatarUrl} className="object-cover" />
-                        <AvatarFallback className="bg-primary/5 text-primary font-black">
+                        <AvatarFallback className="bg-primary/5 text-primary font-bold">
                             {comment.userName?.charAt(0) || 'U'}
                         </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0 space-y-1.5 pt-1">
                         <div className="flex items-center justify-between gap-2">
-                            <p className="font-black text-sm truncate text-foreground/90">{comment.userName}</p>
-                            <div className="flex items-center gap-1 text-[9px] text-muted-foreground font-black uppercase tracking-widest shrink-0 opacity-60">
+                            <p className="font-bold text-sm truncate text-foreground/90">{comment.userName}</p>
+                            <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-medium uppercase tracking-tighter shrink-0 opacity-60">
                                 <Clock className="h-3 w-3" />
                                 {comment.createdAt ? formatDistanceToNow(comment.createdAt.toDate(), { locale: id, addSuffix: true }) : 'Baru saja'}
                             </div>

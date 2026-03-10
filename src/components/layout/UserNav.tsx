@@ -26,7 +26,7 @@ import {
   Shield,
   User as UserIcon,
   HelpCircle,
-  Sparkles,
+  Zap,
   Info,
   LayoutGrid,
   BookUser
@@ -66,7 +66,7 @@ export function UserNav() {
     }
   }, [isSheetOpen, isLogoutAlertOpen]);
 
-  const userProfileRef = (firestore && user) ? doc(firestore, 'users', user.uid) : null;
+  const userProfileRef = (user && firestore) ? doc(firestore, 'users', user.uid) : null;
   const { data: userProfile } = useDoc<AppUser>(userProfileRef);
   
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
@@ -213,7 +213,7 @@ export function UserNav() {
               <div className="space-y-1 mb-6">
                 <p className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Akses Cepat</p>
                 <NavLink href={`/profile/${userProfile?.username?.toLowerCase() || ''}`} icon={UserIcon} label="Profil Utama" description="Lihat jejak karyamu" />
-                <NavLink href="/notifications" icon={Sparkles} label="Kabar Terbaru" description="Aktivitas dan interaksi" />
+                <NavLink href="/notifications" icon={Zap} label="Kabar Terbaru" description="Aktivitas dan interaksi" />
               </div>
 
               <div className="space-y-1 mb-6">
@@ -262,7 +262,7 @@ export function UserNav() {
 
           <SheetFooter className="p-6 border-t bg-muted/5 flex flex-col items-center gap-2 mt-auto">
             <div className="flex items-center gap-2 opacity-20 select-none grayscale">
-                <Sparkles className="h-3 w-3" />
+                <Zap className="h-3 w-3" />
                 <span className="text-[8px] font-black uppercase tracking-[0.4em]">Nusakarsa Ecosystem v1.0</span>
             </div>
           </SheetFooter>

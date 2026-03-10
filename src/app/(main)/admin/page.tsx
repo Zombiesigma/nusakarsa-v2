@@ -36,7 +36,6 @@ import {
   ShieldAlert,
   FileText,
   Music2,
-  Sparkles,
   Smartphone,
   MapPin
 } from "lucide-react";

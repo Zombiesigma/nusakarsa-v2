@@ -17,14 +17,14 @@ import {
   Trash2, 
   Check, 
   X, 
-  Sparkles, 
   LayoutGrid, 
   ArrowRight,
   Eye,
   Heart,
   AlertCircle,
   Briefcase,
-  AlertTriangle
+  AlertTriangle,
+  Mail
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -335,7 +335,7 @@ export default function StudioPage() {
                         <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
                     ) : invitations?.length === 0 ? (
                         <div className="py-20 text-center bg-indigo-50/50 rounded-[2.5rem] border-2 border-dashed border-indigo-100 opacity-40">
-                            <Sparkles className="h-12 w-12 mx-auto mb-4 text-indigo-300" />
+                            <Mail className="h-12 w-12 mx-auto mb-4 text-indigo-300" />
                             <p className="font-bold text-sm text-indigo-900">Hening. Tidak ada undangan baru.</p>
                         </div>
                     ) : (

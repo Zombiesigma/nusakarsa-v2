@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { signUpWithEmail, signInWithGoogle } from '@/firebase/auth/service';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Loader2, Upload, User as UserIcon, Mail, Lock, Sparkles, Chrome, PenTool, Eye, EyeOff, ChevronLeft } from 'lucide-react';
+import { Loader2, Upload, User as UserIcon, Mail, Lock, Chrome, PenTool, Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { uploadProfilePhoto } from '@/lib/uploader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -243,7 +243,6 @@ export default function RegisterPage() {
                   className="w-full h-12 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all active:scale-95 group mt-2" 
                   loading={isLoading}
                 >
-                  <Sparkles className="mr-2 h-4 w-4 transition-transform group-hover:rotate-12" /> 
                   {isLoading ? 'Memproses...' : 'Buat Akun Gratis'}
                 </Button>
               </form>
