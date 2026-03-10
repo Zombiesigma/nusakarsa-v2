@@ -53,9 +53,6 @@
   * {
     @apply border-border;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    user-select: none !important;
-    -webkit-user-select: none !important;
   }
   
   ::-webkit-scrollbar {
@@ -69,28 +66,22 @@
 
   html {
     @apply scroll-smooth;
+    cursor: url('/cursor/cursor.svg'), auto;
   }
+
   body {
     @apply bg-background text-foreground antialiased min-h-screen overflow-x-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  a, button, [role="button"] {
+    cursor: inherit;
+  }
+
   input, textarea, [contenteditable="true"] {
     user-select: text !important;
     -webkit-user-select: text !important;
-  }
-
-  img {
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-    pointer-events: none;
-  }
-
-  html, body, a, button {
-    cursor: url('/cursor/cursor.svg'), auto !important;
+    cursor: text;
   }
 }
 
