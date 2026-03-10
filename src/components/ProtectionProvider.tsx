@@ -1,15 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import dynamic from 'next/dynamic';
-
-/**
- * Menggunakan dynamic import untuk TargetCursor di sini,
- * karena ProtectionProvider adalah Client Component yang aman untuk ssr: false.
- */
-const TargetCursor = dynamic(() => import('@/components/ui/TargetCursor'), { 
-  ssr: false 
-});
 
 /**
  * ProtectionProvider memberikan lapisan keamanan tambahan untuk mencegah 
@@ -54,15 +45,5 @@ export function ProtectionProvider({ children }: { children: React.ReactNode }) 
     };
   }, []);
 
-  return (
-    <>
-      <TargetCursor 
-        spinDuration={3}
-        hideDefaultCursor={true}
-        parallaxOn={true}
-        hoverDuration={0.2}
-      />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
