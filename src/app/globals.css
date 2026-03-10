@@ -91,10 +91,10 @@
 
   @media (min-width: 768px) {
     html {
-      cursor: url('/cursor/cursor.cur'), auto;
+      cursor: url('/cursor/cursor.svg'), auto;
     }
     a, button {
-      cursor: url('/cursor/cursor.cur'), pointer;
+      cursor: url('/cursor/cursor.svg'), pointer;
     }
   }
 }
