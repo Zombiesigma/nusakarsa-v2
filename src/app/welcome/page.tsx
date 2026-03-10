@@ -15,7 +15,8 @@ import {
   Twitter, 
   Github, 
   Globe, 
-  Heart
+  Heart,
+  Zap
 } from 'lucide-react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import GridMotion from '@/components/welcome/GridMotion';
