@@ -132,88 +132,86 @@ export default function ProfilePage() {
             <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent/20 blur-[100px] rounded-full" />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-10 md:gap-16 px-6 md:px-16 -mt-16 md:-mt-24 relative z-10">
-            {/* LEFT COLUMN: Profile Sidebar */}
-            <aside className="w-full lg:w-[320px] shrink-0 space-y-8">
-                <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-                    <div className="relative mb-6 p-1.5 rounded-full bg-background ring-8 ring-background shadow-2xl">
-                        <Avatar className="h-32 w-32 md:h-48 md:w-48 border-4 border-background shadow-inner cursor-pointer" onClick={() => setIsPhotoPreviewOpen(true)}>
-                            <AvatarImage src={user.photoURL} className="object-cover" />
-                            <AvatarFallback className="bg-primary/10 text-primary text-4xl md:text-6xl font-black italic">{user.displayName[0]}</AvatarFallback>
-                        </Avatar>
-                        {(user.role === 'penulis' || user.role === 'admin') && (
-                            <div className="absolute -bottom-1 -right-1 bg-primary text-white p-2.5 rounded-full shadow-2xl ring-4 ring-background">
-                                <CheckCircle2 className="h-6 w-6" />
+        <div className="flex flex-col gap-16 px-6 md:px-16 -mt-24 relative z-10 items-center">
+            {/* PROFILE SECTION */}
+            <div className="w-full max-w-2xl text-center">
+                <div className="relative mb-6 p-1.5 rounded-full bg-background ring-8 ring-background shadow-2xl inline-block">
+                    <Avatar className="h-32 w-32 md:h-48 md:w-48 border-4 border-background shadow-inner cursor-pointer" onClick={() => setIsPhotoPreviewOpen(true)}>
+                        <AvatarImage src={user.photoURL} className="object-cover" />
+                        <AvatarFallback className="bg-primary/10 text-primary text-4xl md:text-6xl font-black italic">{user.displayName[0]}</AvatarFallback>
+                    </Avatar>
+                    {(user.role === 'penulis' || user.role === 'admin') && (
+                        <div className="absolute bottom-1 right-1 bg-primary text-white p-2.5 rounded-full shadow-2xl ring-4 ring-background">
+                            <CheckCircle2 className="h-6 w-6" />
+                        </div>
+                    )}
+                </div>
+
+                <div className="space-y-2">
+                    <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-tight">{user.displayName}</h1>
+                    <p className="text-xs md:text-sm font-black text-primary uppercase tracking-[0.3em] opacity-60">@{user.username}</p>
+                </div>
+
+                <div className="mt-8 p-6 md:p-8 rounded-[2rem] bg-card/50 backdrop-blur-xl border border-border/50 shadow-xl w-full">
+                    <p className="text-sm md:text-base font-medium italic text-muted-foreground/80 leading-relaxed">
+                        "{user.bio || "Seorang penjelajah imajinasi di semesta Nusakarsa kawan."}"
+                    </p>
+                    
+                    <div className="mt-8 pt-8 border-t border-border/30 flex justify-center items-center gap-6">
+                        {user.domicile && (
+                            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                                <MapPin className="h-3.5 w-3.5 text-primary" />
+                                <span>{user.domicile}</span>
                             </div>
                         )}
-                    </div>
-
-                    <div className="space-y-2">
-                        <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-tight">{user.displayName}</h1>
-                        <p className="text-xs md:text-sm font-black text-primary uppercase tracking-[0.3em] opacity-60">@{user.username}</p>
-                    </div>
-
-                    <div className="mt-8 p-6 md:p-8 rounded-[2rem] bg-card/50 backdrop-blur-xl border border-border/50 shadow-xl w-full">
-                        <p className="text-sm md:text-base font-medium italic text-muted-foreground/80 leading-relaxed">
-                            "{user.bio || "Seorang penjelajah imajinasi di semesta Nusakarsa kawan."}"
-                        </p>
-                        
-                        <div className="mt-8 pt-8 border-t border-border/30 space-y-4">
-                            {user.domicile && (
-                                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                                    <MapPin className="h-3.5 w-3.5 text-primary" />
-                                    <span>{user.domicile}</span>
-                                </div>
-                            )}
-                            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                                <Calendar className="h-3.5 w-3.5 text-primary" />
-                                <span>Pujangga {user.role}</span>
-                            </div>
+                        <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                            <Calendar className="h-3.5 w-3.5 text-primary" />
+                            <span>Pujangga {user.role}</span>
                         </div>
                     </div>
-
-                    <div className="w-full mt-8">
-                        {isOwnProfile ? (
-                            <Button className="w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
-                                <Link href="/settings"><Edit className="mr-3 h-4 w-4" /> Kelola Profil</Link>
-                            </Button>
-                        ) : (
-                            <Button 
-                                className={cn(
-                                    "w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest transition-all shadow-xl active:scale-95", 
-                                    isFollowing ? "bg-muted text-foreground border-border" : "bg-primary text-white shadow-primary/20"
-                                )} 
-                                onClick={handleFollow} 
-                                disabled={isTogglingFollow}
-                            >
-                                {isTogglingFollow ? <Loader2 className="h-4 w-4 animate-spin" /> : isFollowing ? <UserMinus className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
-                                {isFollowing ? 'Berhenti Ikuti' : 'Mulai Ikuti'}
-                            </Button>
-                        )}
-                    </div>
                 </div>
-            </aside>
 
-            {/* RIGHT COLUMN: Content & Stats */}
-            <main className="flex-1 space-y-12 pb-20">
+                <div className="w-full max-w-sm mx-auto mt-8">
+                    {isOwnProfile ? (
+                        <Button className="w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
+                            <Link href="/settings"><Edit className="mr-3 h-4 w-4" /> Kelola Profil</Link>
+                        </Button>
+                    ) : (
+                        <Button 
+                            className={cn(
+                                "w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest transition-all shadow-xl active:scale-95", 
+                                isFollowing ? "bg-muted text-foreground border-border" : "bg-primary text-white shadow-primary/20"
+                            )} 
+                            onClick={handleFollow} 
+                            disabled={isTogglingFollow}
+                        >
+                            {isTogglingFollow ? <Loader2 className="h-4 w-4 animate-spin" /> : isFollowing ? <UserMinus className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                            {isFollowing ? 'Berhenti Ikuti' : 'Mulai Ikuti'}
+                        </Button>
+                    )}
+                </div>
+            </div>
+
+            {/* CONTENT SECTION */}
+            <main className="w-full space-y-12 pb-20">
                 {/* Stats Dashboard */}
-                <div className="grid grid-cols-3 gap-4 md:gap-8 bg-card/30 backdrop-blur-md p-8 md:p-10 rounded-[2.5rem] border border-white/10 shadow-xl">
-                    <div className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/30">
-                        <div className="p-2 rounded-xl bg-primary/5 text-primary mb-1"><Layers className="h-4 w-4" /></div>
-                        <p className="font-black text-2xl md:text-4xl tracking-tighter">{publishedBooks?.length || 0}</p>
-                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] opacity-40">Mahakarya</p>
-                    </div>
+                <div className="grid grid-cols-3 gap-4 md:gap-8 bg-card/30 backdrop-blur-md p-8 md:p-10 rounded-[2.5rem] border border-white/10 shadow-xl max-w-2xl mx-auto">
                     <button 
                         onClick={() => setSheetState({ open: true, type: 'followers' })} 
-                        className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/30 hover:bg-primary/5 rounded-2xl transition-all"
+                        className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/30 hover:bg-primary/5 rounded-2xl transition-all p-2"
                     >
                         <div className="p-2 rounded-xl bg-emerald-500/5 text-emerald-600 mb-1"><Users className="h-4 w-4" /></div>
                         <p className="font-black text-2xl md:text-4xl tracking-tighter">{new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(user.followers || 0)}</p>
                         <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] opacity-40">Pengikut</p>
                     </button>
+                    <div className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/30 p-2">
+                        <div className="p-2 rounded-xl bg-primary/5 text-primary mb-1"><Layers className="h-4 w-4" /></div>
+                        <p className="font-black text-2xl md:text-4xl tracking-tighter">{publishedBooks?.length || 0}</p>
+                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] opacity-40">Mahakarya</p>
+                    </div>
                     <button 
                         onClick={() => setSheetState({ open: true, type: 'following' })} 
-                        className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-primary/5 rounded-2xl transition-all"
+                        className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-primary/5 rounded-2xl transition-all p-2"
                     >
                         <div className="p-2 rounded-xl bg-indigo-500/5 text-indigo-600 mb-1"><Sparkles className="h-4 w-4" /></div>
                         <p className="font-black text-2xl md:text-4xl tracking-tighter">{user.following || 0}</p>
@@ -229,9 +227,9 @@ export default function ProfilePage() {
                         <div className="h-px bg-border/50 flex-1" />
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                         {areBooksLoading ? (
-                            Array.from({ length: 3 }).map((_, i) => (
+                            Array.from({ length: 4 }).map((_, i) => (
                                 <div key={i} className="aspect-[2/3] bg-muted animate-pulse rounded-[2rem]" />
                             ))
                         ) : publishedBooks?.length === 0 ? (
@@ -273,3 +271,5 @@ export default function ProfilePage() {
     </div>
   )
 }
+
+    
