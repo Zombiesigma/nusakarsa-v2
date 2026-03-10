@@ -219,7 +219,7 @@ export function CreateReelModal({ isOpen, onClose, currentUserProfile }: CreateR
         onCloseAutoFocus={(e) => { e.preventDefault(); document.body.style.pointerEvents = 'auto'; }}
       >
         <DialogHeader className="sr-only">
-          <DialogTitle>Editor Reels Elitera</DialogTitle>
+          <DialogTitle>Editor Reels Nusakarsa</DialogTitle>
           <DialogDescription>Review dan sesuaikan karya video Anda.</DialogDescription>
         </DialogHeader>
 

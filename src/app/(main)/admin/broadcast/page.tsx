@@ -79,7 +79,7 @@ export default function BroadcastPage() {
         link: values.link || '/',
         actor: {
           uid: currentUser.uid,
-          displayName: 'Sistem Elitera',
+          displayName: 'Sistem Nusakarsa',
           photoURL: 'https://raw.githubusercontent.com/Zombiesigma/elitera-asset/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg',
         },
         read: false,
@@ -120,7 +120,7 @@ export default function BroadcastPage() {
         </Button>
         <div>
           <h1 className="text-2xl md:text-4xl font-headline font-black tracking-tight">Kirim <span className="text-primary italic">Siaran</span></h1>
-          <p className="text-xs md:text-sm text-muted-foreground font-medium">Buat pengumuman resmi komunitas Elitera.</p>
+          <p className="text-xs md:text-sm text-muted-foreground font-medium">Buat pengumuman resmi komunitas Nusakarsa.</p>
         </div>
       </div>
 
@@ -170,7 +170,7 @@ export default function BroadcastPage() {
                                         <FormLabel className="font-black text-[10px] uppercase tracking-widest ml-1">Isi Pesan Notifikasi</FormLabel>
                                         <FormControl>
                                             <Textarea 
-                                                placeholder="Contoh: Kami telah memperbarui fitur Elitera AI!" 
+                                                placeholder="Contoh: Kami telah memperbarui fitur Nusakarsa AI!" 
                                                 {...field} 
                                                 rows={5} 
                                                 className="rounded-xl md:rounded-2xl bg-muted/30 border-none focus-visible:ring-primary/20 py-4 px-4 md:px-5 font-medium resize-none text-sm leading-relaxed"

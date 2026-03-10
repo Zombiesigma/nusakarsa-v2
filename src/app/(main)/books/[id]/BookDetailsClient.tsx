@@ -218,7 +218,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
                     
                     <div className="flex items-center gap-2">
                         <div className="h-1 w-12 bg-primary rounded-full" />
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Elitera</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Arsip Mahakarya Nusakarsa</p>
                     </div>
                 </div>
                 
@@ -383,7 +383,7 @@ export default function BookDetailsClient({ bookId }: BookDetailsClientProps) {
       <div className="text-center opacity-20 select-none grayscale py-16">
           <div className="flex items-center justify-center gap-3">
               <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Elitera Digital Sastra</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital Sastra</span>
           </div>
       </div>
     </div>

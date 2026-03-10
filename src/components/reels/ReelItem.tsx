@@ -169,8 +169,8 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
   const handleExternalShare = async () => {
     const shareUrl = `${window.location.origin}/reels?id=${reel.id}`;
     const shareData = {
-      title: `Karya Video ${reel.authorName} di Elitera`,
-      text: reel.caption || 'Saksikan momen puitis ini di Elitera!',
+      title: `Karya Video ${reel.authorName} di Nusakarsa`,
+      text: reel.caption || 'Saksikan momen puitis ini di Nusakarsa!',
       url: shareUrl,
     };
 
@@ -267,7 +267,7 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
             </div>
             <div className="overflow-hidden max-w-[180px]">
                 <p className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap animate-[marquee_10s_linear_infinite]">
-                    Suara Asli - {reel.authorName} • Karya Elitera • {reel.authorName}
+                    Suara Asli - {reel.authorName} • Karya Nusakarsa • {reel.authorName}
                 </p>
             </div>
         </div>

@@ -121,7 +121,7 @@ export default function WelcomePage() {
             {[
               { icon: BookOpen, title: "Literasi Digital", desc: "Arsip narasi tanpa batas." },
               { icon: PenTool, title: "Studio Kreator", desc: "Editor naskah kelas industri." },
-              { icon: Sparkles, title: "Ruang Apresiasi", desc: "Ekosistem puitis digital." }
+              { icon: Sparkles, title: "Ruang Apresiasi", desc: "Platform puitis digital." }
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center gap-4 group p-4 rounded-3xl bg-slate-900/50 border border-transparent hover:border-cyan-400/20 transition-all duration-500">
                 <div className="p-4 rounded-2xl bg-slate-800/80 group-hover:bg-cyan-400/10 group-hover:text-cyan-400 text-slate-400 transition-all duration-500 shadow-inner group-hover:shadow-cyan-500/5">
@@ -214,7 +214,7 @@ export default function WelcomePage() {
                         <Heart className="h-4 w-4 fill-current" /> Kontribusi
                       </p>
                       <p className="text-base font-bold leading-relaxed text-slate-400/80 italic">
-                        Mari bersama merawat ekosistem literasi bangsa.
+                        Mari bersama merawat platform literasi bangsa.
                       </p>
                     </div>
                   </div>

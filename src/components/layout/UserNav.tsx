@@ -263,7 +263,7 @@ export function UserNav() {
           <SheetFooter className="p-6 border-t bg-muted/5 flex flex-col items-center gap-2 mt-auto">
             <div className="flex items-center gap-2 opacity-20 select-none grayscale">
                 <Sparkles className="h-3 w-3" />
-                <span className="text-[8px] font-black uppercase tracking-[0.4em]">Nusakarsa Ecosystem v1.0</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.4em]">Nusakarsa v1.0</span>
             </div>
           </SheetFooter>
         </SheetContent>

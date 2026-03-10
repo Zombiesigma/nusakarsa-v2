@@ -1,5 +1,5 @@
 /**
- * @fileOverview Barrel file untuk ekspor Firebase Elitera.
+ * @fileOverview Barrel file untuk ekspor Firebase Nusakarsa.
  * Memastikan pemisahan antara provider murni dan client provider untuk mencegah circular dependencies.
  */
 

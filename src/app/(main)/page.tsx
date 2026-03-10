@@ -57,7 +57,7 @@ export default function HomePage() {
       <div className="text-center opacity-10 select-none grayscale py-20">
           <div className="flex items-center justify-center gap-3">
               <Leaf className="h-5 w-5 text-primary" />
-              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital Ecosystem</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.6em]">Nusakarsa Digital</span>
           </div>
       </div>
     </div>

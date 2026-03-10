@@ -86,7 +86,7 @@ export function ProtectedLayout({ children }: { children: React.ReactNode }) {
                         Nusakarsa
                     </h1>
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">
-                        Ekosistem Daya Cipta Bangsa
+                        Daya Cipta Bangsa
                     </p>
                 </div>
                 

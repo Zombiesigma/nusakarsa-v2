@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = 'https://www.litera.my.id/';
+  const siteUrl = 'https://www.nusakarsa.my.id/';
 
   // Ini adalah peta situs statis. Untuk SEO yang optimal, Anda harus membuatnya dinamis
   // dengan mengambil data semua buku dan pengguna dari database Anda.
