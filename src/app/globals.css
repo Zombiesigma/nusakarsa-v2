@@ -90,11 +90,8 @@
   }
 
   @media (min-width: 768px) {
-    html {
-      cursor: url('/cursor/cursor.svg'), auto;
-    }
-    a, button {
-      cursor: url('/cursor/cursor.svg'), auto;
+    html, body, a, button {
+      cursor: url('/cursor/cursor.svg'), auto !important;
     }
   }
 }
