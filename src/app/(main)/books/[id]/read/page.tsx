@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
@@ -46,11 +47,11 @@ import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { searchYouTube, getPreviewAudioUrl } from '@/app/actions/music';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
-type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper' | 'studio';
+type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper';
 type FontFamily = 'font-serif' | 'font-sans' | 'font-mono';
 
 const PAPER_TEXTURE_URL = "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&q=80&w=1600";
@@ -66,7 +67,7 @@ export default function ReadPage() {
   const [fontSize, setFontSize] = useState(18);
   const [lineHeight, setLineHeight] = useState(1.2);
   const [fontFamily, setFontFamily] = useState<FontFamily>('font-serif');
-  const [readingTheme, setReadingTheme] = useState<ReadingTheme>('studio');
+  const [readingTheme, setReadingTheme] = useState<ReadingTheme>('light');
   
   const [readingProgress, setReadingProgress] = useState(0);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -161,12 +162,12 @@ export default function ReadPage() {
   const applyTheme = (t: ReadingTheme) => {
     setReadingTheme(t);
     localStorage.setItem('reading-theme', t);
-    document.documentElement.classList.toggle('dark', t === 'dark' || t === 'studio');
+    document.documentElement.classList.toggle('dark', t === 'dark');
   };
 
   useEffect(() => {
     setIsMounted(true);
-    const savedTheme = (localStorage.getItem('reading-theme') as ReadingTheme) || 'studio';
+    const savedTheme = (localStorage.getItem('reading-theme') as ReadingTheme) || 'light';
     applyTheme(savedTheme);
   }, []);
 
@@ -200,7 +201,6 @@ export default function ReadPage() {
         "flex h-full w-full transition-all duration-500 mx-auto overflow-hidden relative", 
         readingTheme === 'sepia' ? "bg-[#f4ecd8] text-[#5b4636]" : 
         readingTheme === 'dark' ? "bg-background" : 
-        readingTheme === 'studio' ? "bg-zinc-950 text-white" :
         readingTheme === 'light' ? "bg-background" : ""
       )}
       style={paperStyles}
@@ -218,7 +218,7 @@ export default function ReadPage() {
         <header className={cn(
             "flex items-center justify-between px-2 md:px-4 h-16 border-b sticky top-0 z-30 backdrop-blur-md",
             readingTheme === 'paper' ? "bg-white/40 border-black/10" : 
-            readingTheme === 'studio' ? "bg-black/60 border-white/5" : "bg-background/80"
+            "bg-background/80"
         )}>
           <Link href={`/books/${book.id}`} className="shrink-0">
             <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 md:h-10 md:w-10">
@@ -432,7 +432,7 @@ export default function ReadPage() {
                     <div className="grid grid-cols-2 gap-2">
                         {[
                           { id: 'light', label: 'Light', icon: null },
-                          { id: 'studio', label: 'Studio', icon: <Clapperboard className="h-3 w-3" /> },
+                          { id: 'dark', label: 'Dark', icon: null },
                           { id: 'sepia', label: 'Sepia', icon: null },
                           { id: 'paper', label: 'Paper', icon: <ScrollText className="h-3 w-3" /> }
                         ].map(t => (
