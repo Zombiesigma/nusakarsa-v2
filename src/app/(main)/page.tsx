@@ -7,6 +7,7 @@ import type { Book } from '@/lib/types';
 import { BookCarousel } from '@/components/BookCarousel';
 import { Leaf, Book as BookIcon, Feather, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { GlobalSearch } from '@/components/layout/GlobalSearch';
 
 export default function HomePage() {
   const firestore = useFirestore();
@@ -49,15 +50,26 @@ export default function HomePage() {
 
   return (
     <div className="relative space-y-16 w-full max-w-7xl mx-auto pb-20">
-      <header className="space-y-4">
-        <motion.h1 
+      <header className="space-y-8">
+        <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl md:text-6xl font-headline font-black tracking-tight text-foreground"
+            className="space-y-4"
         >
-            Selamat Datang, <span className="text-primary italic">{currentUser?.displayName || 'Pujangga'}!</span>
-        </motion.h1>
-        <p className="text-muted-foreground font-medium text-lg italic opacity-60">"Setiap karsa Anda adalah awal dari sebuah mahakarya."</p>
+            <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight text-foreground">
+                Selamat Datang, <span className="text-primary italic">{currentUser?.displayName || 'Pujangga'}!</span>
+            </h1>
+            <p className="text-muted-foreground font-medium text-lg italic opacity-60">"Setiap karsa Anda adalah awal dari sebuah mahakarya."</p>
+        </motion.div>
+        
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="max-w-xl"
+        >
+            <GlobalSearch />
+        </motion.div>
       </header>
 
       <section className="space-y-10 pt-8">
