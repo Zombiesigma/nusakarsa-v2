@@ -84,7 +84,7 @@ function SearchPageContent() {
             
             <div className="space-y-4">
                 <h1 className="text-4xl md:text-5xl font-headline font-black tracking-tight uppercase">Jelajahi <span className="text-primary italic">Semesta.</span></h1>
-                <p className="text-muted-foreground max-w-sm mx-auto text-base font-medium leading-relaxed">Masukkan kata kunci di bilah pencarian atas untuk menemukan inspirasi dari para pujangga Elitera.</p>
+                <p className="text-muted-foreground max-w-sm mx-auto text-base font-medium leading-relaxed">Masukkan kata kunci di bilah pencarian atas untuk menemukan inspirasi dari para pujangga Nusakarsa.</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto pt-6">

@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, MessageSquare, Send, Sparkles, MessageCircle } from 'lucide-react';
+import { Loader2, MessageSquare, Send } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
@@ -63,7 +63,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
 
       const newComment = {
         userId: currentUser.uid,
-        userName: currentUser.displayName || 'Pujangga Elitera',
+        userName: currentUser.displayName || 'Pujangga Nusakarsa',
         userAvatarUrl: currentUser.photoURL || '',
         text: commentText.trim(),
         likeCount: 0,
@@ -131,7 +131,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
                 </SheetDescription>
             </div>
             <div className="bg-primary/5 p-3 rounded-2xl hidden sm:block">
-                <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+                
             </div>
           </div>
         </SheetHeader>
@@ -155,7 +155,7 @@ export function ReelCommentsSheet({ reelId, reelAuthorId, isOpen, onOpenChange }
                         <MessageSquare className="h-16 w-16 text-muted-foreground" />
                     </div>
                     <h3 className="font-headline text-xl font-bold italic">Belum Ada Suara</h3>
-                    <p className="text-sm max-w-[240px] mx-auto mt-2 leading-relaxed font-medium">Jadilah yang pertama memberikan apresiasi puitis pada video ini.</p>
+                    <p className="text-sm max-w-[240px] mx-auto mt-2 leading-relaxed font-medium">Jadilah pujangga pertama yang memberikan apresiasi puitis pada video ini.</p>
                 </motion.div>
             ) : (
                 <div className="space-y-8 pb-24">

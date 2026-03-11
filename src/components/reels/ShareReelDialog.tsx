@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Loader2, Search, Check, Send, Sparkles } from 'lucide-react';
+import { Loader2, Search, Check, Send } from 'lucide-react';
 import { useMemo, useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
@@ -83,7 +83,7 @@ export function ShareReelDialog({ reel, open, onOpenChange }: ShareReelDialogPro
             const chatDocRef = doc(firestore, 'chats', selectedChatId);
             batch.update(chatDocRef, {
                 lastMessage: {
-                    text: `🎥 Membagikan video: ${reel.caption || 'Video Elitera'}`,
+                    text: `🎥 Membagikan video: ${reel.caption || 'Video Nusakarsa'}`,
                     senderId: currentUser.uid,
                     timestamp: serverTimestamp(),
                 },

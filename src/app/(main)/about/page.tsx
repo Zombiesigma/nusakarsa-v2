@@ -14,7 +14,7 @@ const architects = [
         name: "Guntur Padilah",
         role: "Lead Full-stack Developer",
         handle: "gunturpadilah",
-        avatar: "https://raw.githubusercontent.com/Zombiesigma/elitera-asset/main/IMG-20251221-WA0058.jpg",
+        avatar: "https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/IMG-20251221-WA0058.jpg",
         glow: "rgba(66, 70, 25, 0.6)",
         gradient: "linear-gradient(145deg, #424619 0%, #a3b18a 100%)"
     },

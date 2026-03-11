@@ -17,7 +17,6 @@ import {
   Trash2, 
   Check, 
   X, 
-  Sparkles, 
   LayoutGrid, 
   ArrowRight,
   Eye,
@@ -146,7 +145,7 @@ export default function StudioPage() {
     setProcessingId(bookId);
     try {
       await deleteDoc(doc(firestore, 'books', bookId));
-      toast({ variant: 'success', title: "Karya Dilenyapkan", description: "Jejak narasi tersebut telah dihapus selamanya." });
+      toast({ variant: 'success', title: "Karya Dilenyapkan", description: "Jejak narasi tersebut telah dihapus selamanya dari semesta Nusakarsa." });
     } catch (e) {
       toast({ variant: 'destructive', title: "Gagal Melenyapkan" });
     } finally {
@@ -335,7 +334,7 @@ export default function StudioPage() {
                         <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
                     ) : invitations?.length === 0 ? (
                         <div className="py-20 text-center bg-indigo-50/50 rounded-[2.5rem] border-2 border-dashed border-indigo-100 opacity-40">
-                            <Sparkles className="h-12 w-12 mx-auto mb-4 text-indigo-300" />
+                            
                             <p className="font-bold text-sm text-indigo-900">Hening. Tidak ada undangan baru.</p>
                         </div>
                     ) : (
@@ -390,7 +389,7 @@ export default function StudioPage() {
                 <div className="mx-auto bg-rose-50 p-4 rounded-2xl w-fit mb-4"><AlertTriangle className="h-8 w-8 text-rose-500" /></div>
                 <AlertDialogTitle className="font-headline text-2xl font-black text-center">Lenyapkan Karya?</AlertDialogTitle>
                 <AlertDialogDescription className="text-center font-medium leading-relaxed">
-                    Tindakan ini permanen. Seluruh bab, apresiasi, dan sejarah narasi dari karya ini akan hilang selamanya dari semesta Elitera.
+                    Tindakan ini permanen. Seluruh bab, apresiasi, dan sejarah narasi dari karya ini akan hilang selamanya dari semesta Nusakarsa.
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-3">

@@ -213,7 +213,7 @@ export default function JoinAuthorPage() {
                         transition={{ duration: 0.6 }}
                     >
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mb-4 md:mb-6">
-                            Jajaran Penulis Elitera
+                            Jajaran Penulis Nusakarsa
                         </div>
                         <h1 className="text-3xl md:text-6xl font-headline font-black text-foreground tracking-tight leading-tight">
                             Temui Para <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Penulis</span> Kalcer
@@ -365,7 +365,7 @@ export default function JoinAuthorPage() {
                                                 <div className="my-6 md:my-8 w-12 h-1 bg-primary/10 rounded-full group-hover:w-24 transition-all duration-700 ease-out" />
 
                                                 <p className="text-xs md:text-base text-muted-foreground/80 leading-relaxed italic line-clamp-3 mb-8 px-2 md:px-4 font-medium min-h-[3rem] md:min-h-[4.5rem]">
-                                                    {author.bio || `Seorang penjelajah kata di Elitera yang percaya bahwa setiap cerita memiliki keajaibannya sendiri.`}
+                                                    {author.bio || `Seorang penjelajah kata di Nusakarsa yang percaya bahwa setiap cerita memiliki keajaibannya sendiri.`}
                                                 </p>
                                                 
                                                 <div className="mt-auto pt-6 md:pt-8 border-t border-border/50 grid grid-cols-3 gap-4 w-full relative">
@@ -407,7 +407,7 @@ export default function JoinAuthorPage() {
                         <div className="p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] bg-primary/5 border border-primary/10 max-w-2xl mx-auto shadow-inner">
                             <h4 className="text-2xl md:text-3xl font-headline font-black mb-2 md:mb-3">Siap Menjadi Bagian Dari Mereka?</h4>
                             <p className="text-muted-foreground font-medium text-sm md:text-base leading-relaxed mb-8 md:mb-10">
-                                Bergabunglah bersama para pujangga di atas dan mulai bangun duniamu sendiri. Jadilah inspirasi bagi ribuan pembaca Elitera.
+                                Bergabunglah bersama para pujangga di atas dan mulai bangun duniamu sendiri. Jadilah inspirasi bagi ribuan pembaca Nusakarsa.
                             </p>
                             <Button 
                                 onClick={() => setApplicationStatus('not_applied')}
@@ -475,7 +475,7 @@ export default function JoinAuthorPage() {
                             <div className="mt-10 md:mt-12 p-5 md:p-6 rounded-[1.5rem] md:rounded-3xl bg-primary/5 border border-primary/10 max-w-2xl mx-auto flex items-start gap-3 md:gap-4 text-left">
                                 <Info className="h-4 w-4 md:h-5 md:w-5 text-primary shrink-0 mt-0.5" />
                                 <p className="text-[11px] md:text-sm text-muted-foreground leading-relaxed">
-                                    Kami biasanya membutuhkan waktu <strong>1-3 hari kerja</strong> untuk memberikan keputusan. Anda akan menerima notifikasi instan segera setelah tim kami memberikan persetujuan.
+                                    Kami biasanya membutuhkan waktu 1-3 hari kerja untuk memberikan keputusan. Anda akan menerima notifikasi instan segera setelah tim kami memberikan persetujuan.
                                 </p>
                             </div>
                         </CardContent>
@@ -510,7 +510,7 @@ export default function JoinAuthorPage() {
                         Mulai Perjalanan <br/> <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Sastramu</span> Anda
                     </h1>
                     <p className="mt-4 md:mt-6 text-base md:text-lg text-muted-foreground leading-relaxed font-medium">
-                        Bergabunglah dengan komunitas pujangga modern dan mulai bagikan dunia imajinasi Anda kepada pembaca global di Elitera.
+                        Bergabunglah dengan komunitas pujangga modern dan mulai bagikan dunia imajinasi Anda kepada pembaca global di Nusakarsa.
                     </p>
                 </motion.div>
             </div>
@@ -645,7 +645,7 @@ export default function JoinAuthorPage() {
                                     name="motivation"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel className="font-black text-[10px] md:text-xs uppercase tracking-widest ml-1">Apa visi Anda bergabung di Elitera?</FormLabel>
+                                            <FormLabel className="font-black text-[10px] md:text-xs uppercase tracking-widest ml-1">Apa visi Anda bergabung di Nusakarsa?</FormLabel>
                                             <FormControl>
                                                 <Textarea 
                                                     placeholder="Ceritakan gairah menulis Anda dan apa yang ingin Anda capai..." 

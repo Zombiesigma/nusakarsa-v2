@@ -42,7 +42,9 @@ import {
   Clock,
   Trash2,
   AlertTriangle,
-  Feather
+  Feather,
+  Video,
+  ListChecks
 } from "lucide-react";
 import {
   AlertDialog,
@@ -638,7 +640,7 @@ export default function EditBookPage() {
             <AlertDialogHeader>
                 <div className="mx-auto bg-primary/10 p-4 rounded-2xl w-fit mb-4"><BookUp className="h-8 w-8 text-primary" /></div>
                 <AlertDialogTitle className="font-headline text-2xl font-black text-center">Terbitkan Karya?</AlertDialogTitle>
-                <AlertDialogDescription className="text-center font-medium">Karya Anda akan dikirim ke tim kurasi Elitera sebelum tampil secara resmi di hadapan seluruh pembaca.</AlertDialogDescription>
+                <AlertDialogDescription className="text-center font-medium">Karya Anda akan dikirim ke tim kurasi Nusakarsa sebelum tampil secara resmi di hadapan seluruh pembaca.</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-2">
                 <AlertDialogCancel className="rounded-full h-12 border-2 flex-1 font-bold">Batal</AlertDialogCancel>

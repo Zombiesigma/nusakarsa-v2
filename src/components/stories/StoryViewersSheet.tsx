@@ -70,7 +70,7 @@ export function StoryViewersSheet({ storyId, isOpen, onOpenChange, onStoryDelete
       toast({
         variant: "success",
         title: "Momen Dihapus",
-        description: "Cerita Anda telah dihapus secara permanen dari semesta Elitera."
+        description: "Cerita Anda telah dihapus secara permanen dari semesta Nusakarsa."
       });
       
       onOpenChange(false);
