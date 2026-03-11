@@ -32,8 +32,8 @@ function SearchPageContent() {
     setInputValue(q);
   }, [q]);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (inputValue.trim() === q) return;
     router.push(`/search?q=${encodeURIComponent(inputValue.trim())}`);
   };
@@ -70,7 +70,8 @@ function SearchPageContent() {
 
       const users = (rawUsers || []).filter(u => 
           u.displayName?.toLowerCase().includes(term) || 
-          u.username?.toLowerCase().includes(term)
+          u.username?.toLowerCase().includes(term) ||
+          u.role?.toLowerCase().includes(term)
       );
 
       return { books, users };
@@ -114,7 +115,7 @@ function SearchPageContent() {
                   {[
                       { label: 'Novel', color: 'text-blue-500', q: 'novel' },
                       { label: 'Fantasi', color: 'text-emerald-500', q: 'fantasy' },
-                      { label: 'Pujangga Baru', color: 'text-orange-500', q: 'admin' },
+                      { label: 'Pujangga Baru', color: 'text-orange-500', q: 'penulis' },
                       { label: 'Puisi', color: 'text-rose-500', q: 'poem' }
                   ].map((item, i) => (
                       <Card 
