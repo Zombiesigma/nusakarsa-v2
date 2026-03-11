@@ -2,7 +2,7 @@
 
 import { useFirestore, useCollection, useUser } from '@/firebase';
 import { collection, query, where, orderBy } from 'firebase/firestore';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { Book } from '@/lib/types';
 import { BookCarousel } from '@/components/BookCarousel';
 import { Leaf, Book as BookIcon, Feather, TrendingUp } from 'lucide-react';
@@ -12,6 +12,29 @@ import { GlobalSearch } from '@/components/layout/GlobalSearch';
 export default function HomePage() {
   const firestore = useFirestore();
   const { user: currentUser } = useUser();
+  
+  const [greeting, setGreeting] = useState("Selamat Datang");
+  const [tagline, setTagline] = useState("Setiap karsa Anda adalah awal dari sebuah mahakarya.");
+
+  useEffect(() => {
+    const getGreeting = () => {
+      const hour = new Date().getHours();
+      if (hour < 5) return "Selamat Malam";
+      if (hour < 12) return "Selamat Pagi";
+      if (hour < 15) return "Selamat Siang";
+      if (hour < 18) return "Selamat Sore";
+      return "Selamat Malam";
+    };
+    setGreeting(getGreeting());
+
+    const taglines = [
+        "Setiap karsa Anda adalah awal dari sebuah mahakarya.",
+        "Di mana imajinasi menemukan rumahnya.",
+        "Tuliskan duniamu, satu kata setiap saat.",
+        "Jejak digital untuk para pujangga modern."
+    ];
+    setTagline(taglines[Math.floor(Math.random() * taglines.length)]);
+  }, []);
   
   const booksQuery = useMemo(() => (
     (firestore && currentUser)
@@ -57,9 +80,9 @@ export default function HomePage() {
             className="space-y-4"
         >
             <h1 className="text-4xl md:text-6xl font-headline font-black tracking-tight text-foreground">
-                Selamat Datang, <span className="text-primary italic">{currentUser?.displayName || 'Pujangga'}!</span>
+                {greeting}, <span className="text-primary italic">{currentUser?.displayName || 'Pujangga'}!</span>
             </h1>
-            <p className="text-muted-foreground font-medium text-lg italic opacity-60">"Setiap karsa Anda adalah awal dari sebuah mahakarya."</p>
+            <p className="text-muted-foreground font-medium text-lg italic opacity-60">"{tagline}"</p>
         </motion.div>
         
         <motion.div 
