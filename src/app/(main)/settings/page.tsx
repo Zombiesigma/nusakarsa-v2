@@ -33,15 +33,11 @@ import {
   Monitor, 
   Moon, 
   Sun, 
-  Sparkles, 
   ChevronRight,
-  Zap,
   Camera,
   AtSign,
-  Fingerprint,
-  Pencil,
-  Trash2,
-  Heart
+  Heart,
+  Pencil
 } from 'lucide-react';
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -211,12 +207,12 @@ export default function SettingsPage() {
         onClick={() => setActiveTab(tab)}
         className={cn(
             "flex items-center justify-between w-full p-5 rounded-[1.75rem] transition-all",
-            activeTab === tab ? "bg-primary text-white shadow-lg" : "hover:bg-muted/50 text-muted-foreground"
+            activeTab === tab ? "bg-primary text-white shadow-lg shadow-primary/20" : "hover:bg-muted/50 text-muted-foreground"
         )}
     >
         <div className="flex items-center gap-4">
             <Icon className="h-5 w-5" />
-            <span className="font-black text-[13px] uppercase tracking-widest">{label}</span>
+            <span className="font-black text-sm uppercase tracking-wider">{label}</span>
         </div>
         <ChevronRight className="h-4 w-4" />
     </button>
@@ -232,8 +228,8 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 px-4">
         <aside className="lg:col-span-4 space-y-6">
-            <div className="bg-card border rounded-[2.5rem] p-3 space-y-2 shadow-xl">
-                <NavItem tab="profile" icon={UserIcon} label="Profil Publik" />
+            <div className="bg-card/50 backdrop-blur-md border rounded-[2.5rem] p-3 space-y-2 shadow-xl border-white/10">
+                <NavItem tab="profile" icon={UserIcon} label="Profil" />
                 <NavItem tab="appearance" icon={Palette} label="Tampilan" />
                 <NavItem tab="notifications" icon={Bell} label="Notifikasi" />
             </div>
@@ -246,43 +242,55 @@ export default function SettingsPage() {
                         <Card className="border-none shadow-xl bg-card rounded-[3rem] overflow-hidden">
                             <Form {...profileForm}>
                                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)}>
-                                    <CardHeader className="bg-primary/5 p-8 md:p-12 border-b">
+                                    <CardHeader className="bg-primary/5 p-8 md:p-12 border-b border-primary/10">
                                         <CardTitle className="font-headline text-2xl md:text-3xl font-black">Profil Publik</CardTitle>
+                                        <CardDescription>Informasi ini akan ditampilkan di halaman profil Anda.</CardDescription>
                                     </CardHeader>
                                     <CardContent className="p-8 md:p-12 space-y-12">
                                         <div className="flex flex-col md:flex-row items-center gap-10">
                                             <div className="relative">
-                                                <Avatar className="h-36 w-36 md:h-44 md:w-44 border-4 border-background shadow-2xl">
+                                                <div className="absolute -inset-2 rounded-full bg-primary/10 blur-2xl animate-pulse" />
+                                                <Avatar className="relative h-36 w-36 md:h-44 md:w-44 border-4 border-background shadow-2xl ring-1 ring-border/50">
                                                     <AvatarImage src={profileForm.watch('photoURL')} className="object-cover" />
                                                     <AvatarFallback className="bg-primary/5 text-primary text-5xl font-black">{profileForm.watch('displayName')?.charAt(0)}</AvatarFallback>
                                                 </Avatar>
                                                 <button 
                                                     type="button"
                                                     onClick={() => document.getElementById('photo-upload')?.click()}
-                                                    className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-2xl shadow-xl border-4 border-background"
+                                                    className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-2xl shadow-xl border-4 border-background hover:scale-110 transition-transform"
                                                 >
-                                                    <Camera className="h-5 w-5" />
+                                                    {isUploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
                                                 </button>
                                                 <input id="photo-upload" type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                                             </div>
-                                            <div className="flex-1 space-y-2">
+                                            <div className="flex-1 space-y-2 text-center md:text-left">
                                                 <h4 className="font-black text-xl tracking-tight uppercase">Citra Visual</h4>
                                                 <p className="text-sm text-muted-foreground">Bagaimana pujangga lain mengenali karsa Anda.</p>
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <FormField control={profileForm.control} name="username" render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="font-black text-[10px] uppercase tracking-widest text-primary/60">Username</FormLabel>
-                                                    <FormControl><Input {...field} className="h-14 rounded-2xl bg-muted/30 border-none font-bold" /></FormControl>
+                                                    <FormControl>
+                                                        <div className="relative group">
+                                                            <AtSign className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                                                            <Input {...field} className="h-14 rounded-2xl bg-muted/30 border-none font-bold pl-12" />
+                                                        </div>
+                                                    </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )} />
                                             <FormField control={profileForm.control} name="displayName" render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel className="font-black text-[10px] uppercase tracking-widest text-primary/60">Nama Panggung</FormLabel>
-                                                    <FormControl><Input {...field} className="h-14 rounded-2xl bg-muted/30 border-none font-bold" /></FormControl>
+                                                    <FormControl>
+                                                        <div className="relative group">
+                                                            <UserIcon className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                                                            <Input {...field} className="h-14 rounded-2xl bg-muted/30 border-none font-bold pl-12" />
+                                                        </div>
+                                                    </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )} />
@@ -291,13 +299,13 @@ export default function SettingsPage() {
                                         <FormField control={profileForm.control} name="bio" render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="font-black text-[10px] uppercase tracking-widest text-primary/60">Biografi</FormLabel>
-                                                <FormControl><Textarea {...field} rows={5} className="rounded-[2rem] bg-muted/30 border-none font-medium resize-none" /></FormControl>
+                                                <FormControl><Textarea {...field} rows={5} className="rounded-[2rem] bg-muted/30 border-none font-medium resize-none p-5" /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )} />
                                     </CardContent>
                                     <CardFooter className="p-8 md:p-12 flex justify-end">
-                                        <Button type="submit" disabled={isSavingProfile || isLoading || !profileForm.formState.isDirty} className="rounded-2xl px-12 h-16 font-black uppercase text-xs tracking-widest">
+                                        <Button type="submit" disabled={isSavingProfile || isLoading || !profileForm.formState.isDirty} className="rounded-2xl px-10 h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-primary/20">
                                             {isSavingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Simpan Profil
                                         </Button>
                                     </CardFooter>
@@ -310,13 +318,34 @@ export default function SettingsPage() {
                 {activeTab === 'appearance' && (
                     <motion.div key="appearance" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
                         <Card className="border-none shadow-xl bg-card rounded-[3rem] p-8 md:p-12">
-                            <CardHeader>
+                            <CardHeader className="px-2">
                                 <CardTitle className="font-headline text-2xl font-black">Estetika Tampilan</CardTitle>
+                                <CardDescription>Pilih suasana visual yang paling menginspirasi Anda.</CardDescription>
                             </CardHeader>
-                            <CardContent className="grid grid-cols-3 gap-6 pt-8">
-                                {['light', 'dark', 'system'].map((mode) => (
-                                    <button key={mode} onClick={() => handleThemeChange(mode)} className={cn("p-8 rounded-[2rem] border-2 transition-all font-black uppercase text-xs tracking-widest", theme === mode ? "border-primary bg-primary/5 text-primary" : "border-muted bg-muted/20 text-muted-foreground")}>
-                                        {mode}
+                            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
+                                {[
+                                    { id: 'light', label: 'Cahaya', icon: Sun, bg: 'bg-white', text: 'text-zinc-800' },
+                                    { id: 'dark', label: 'Senja', icon: Moon, bg: 'bg-zinc-900', text: 'text-white' },
+                                    { id: 'system', label: 'Otomatis', icon: Monitor, bg: 'bg-gradient-to-br from-white to-zinc-900', text: 'text-zinc-800' }
+                                ].map((mode) => (
+                                    <button 
+                                      key={mode.id} 
+                                      onClick={() => handleThemeChange(mode.id)} 
+                                      className={cn(
+                                          "p-6 rounded-[2rem] border-2 transition-all space-y-4 shadow-lg active:scale-95", 
+                                          theme === mode.id ? "border-primary ring-4 ring-primary/10" : "border-muted/30 hover:border-primary/30"
+                                      )}
+                                    >
+                                        <div className={cn("h-24 rounded-xl flex flex-col p-4 justify-between", mode.bg)}>
+                                            <div className="flex justify-end"><div className="h-2 w-10 bg-primary rounded-full"></div></div>
+                                            <div className={cn("flex items-center gap-2", mode.id === 'system' && "mix-blend-difference")}>
+                                                <div className={cn("h-6 w-6 flex items-center justify-center rounded-full", theme === mode.id ? "bg-primary" : "bg-muted")}>
+                                                    <mode.icon className={cn("h-4 w-4", theme === mode.id ? "text-white" : "text-muted-foreground")} />
+                                                </div>
+                                                <div className={cn("h-3 w-20 rounded-full", theme === mode.id ? "bg-primary/50" : "bg-muted")} />
+                                            </div>
+                                        </div>
+                                        <p className="font-black text-sm uppercase tracking-widest">{mode.label}</p>
                                     </button>
                                 ))}
                             </CardContent>
@@ -331,18 +360,24 @@ export default function SettingsPage() {
                                 <form onSubmit={notificationForm.handleSubmit(onNotificationSubmit)}>
                                     <CardHeader className="bg-primary/5 p-8 border-b">
                                         <CardTitle className="font-headline text-2xl font-black">Pusat Kabar</CardTitle>
+                                        <CardDescription>Atur pemberitahuan mana yang ingin Anda terima.</CardDescription>
                                     </CardHeader>
                                     <CardContent className="p-8 space-y-6">
                                         {[
-                                            { name: 'onNewFollower', label: 'Pengikut Baru', icon: UserIcon },
-                                            { name: 'onBookComment', label: 'Ulasan Karya', icon: Pencil },
-                                            { name: 'onBookFavorite', label: 'Koleksi Favorit', icon: Heart }
+                                            { name: 'onNewFollower', label: 'Pengikut Baru', description: 'Saat pujangga lain mulai mengikuti Anda.', icon: UserIcon },
+                                            { name: 'onBookComment', label: 'Ulasan Karya', description: 'Saat ada ulasan baru pada karya Anda.', icon: Pencil },
+                                            { name: 'onBookFavorite', label: 'Koleksi Favorit', description: 'Saat karya Anda ditambahkan ke favorit.', icon: Heart }
                                         ].map((item) => (
                                             <FormField key={item.name} control={notificationForm.control} name={item.name as any} render={({ field }) => (
-                                                <div className="flex items-center justify-between p-6 rounded-[2rem] hover:bg-muted/30 transition-all border border-transparent hover:border-border">
+                                                <div className="flex items-center justify-between p-5 rounded-[2rem] hover:bg-muted/30 transition-all border border-transparent hover:border-border">
                                                     <div className="flex items-center gap-4">
-                                                        <item.icon className="h-5 w-5 text-primary" />
-                                                        <Label className="font-black uppercase tracking-tight">{item.label}</Label>
+                                                        <div className={cn("p-2.5 rounded-xl bg-primary/5 text-primary", field.value && "bg-primary text-white")}>
+                                                            <item.icon className="h-5 w-5" />
+                                                        </div>
+                                                        <div>
+                                                            <Label className="font-black text-sm uppercase tracking-wider">{item.label}</Label>
+                                                            <p className="text-[10px] text-muted-foreground font-medium">{item.description}</p>
+                                                        </div>
                                                     </div>
                                                     <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
                                                 </div>
@@ -350,7 +385,7 @@ export default function SettingsPage() {
                                         ))}
                                     </CardContent>
                                     <CardFooter className="p-8 flex justify-end">
-                                        <Button type="submit" disabled={isSavingNotifications || isLoading || !notificationForm.formState.isDirty} className="rounded-2xl px-12 h-16 font-black uppercase text-xs tracking-widest">
+                                        <Button type="submit" disabled={isSavingNotifications || isLoading || !notificationForm.formState.isDirty} className="rounded-2xl px-10 h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-primary/20">
                                             {isSavingNotifications && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Simpan
                                         </Button>
                                     </CardFooter>
