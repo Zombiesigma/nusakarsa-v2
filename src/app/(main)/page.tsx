@@ -1,11 +1,11 @@
 'use client';
 
 import { useFirestore, useCollection, useUser } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 import { useMemo } from 'react';
 import type { Book } from '@/lib/types';
 import { BookCarousel } from '@/components/BookCarousel';
-import { Leaf } from 'lucide-react';
+import { Leaf, Book as BookIcon, Feather, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
@@ -23,16 +23,32 @@ export default function HomePage() {
   
   const { data: rawBooks, isLoading: areBooksLoading } = useCollection<Book>(booksQuery);
 
-  const popularBooks = useMemo(() => {
+  const latestBooks = useMemo(() => {
     if (!rawBooks) return null;
     return [...rawBooks]
       .filter(b => b.visibility === 'public')
+      .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+      .slice(0, 12);
+  }, [rawBooks]);
+
+  const popularNovels = useMemo(() => {
+    if (!rawBooks) return null;
+    return [...rawBooks]
+      .filter(b => b.visibility === 'public' && b.type === 'book')
+      .sort((a, b) => (b.favoriteCount + b.viewCount) - (a.favoriteCount + a.viewCount))
+      .slice(0, 12);
+  }, [rawBooks]);
+  
+  const popularPoems = useMemo(() => {
+    if (!rawBooks) return null;
+    return [...rawBooks]
+      .filter(b => b.visibility === 'public' && b.type === 'poem')
       .sort((a, b) => (b.favoriteCount + b.viewCount) - (a.favoriteCount + a.viewCount))
       .slice(0, 12);
   }, [rawBooks]);
 
   return (
-    <div className="relative space-y-12 w-full max-w-7xl mx-auto pb-20">
+    <div className="relative space-y-16 w-full max-w-7xl mx-auto pb-20">
       <header className="space-y-4">
         <motion.h1 
             initial={{ opacity: 0, x: -20 }}
@@ -47,12 +63,39 @@ export default function HomePage() {
       <section className="space-y-10 pt-8">
         <div className="flex items-center gap-4">
             <h2 className="text-2xl md:text-3xl font-headline font-black tracking-tight flex items-center gap-3">
+                <TrendingUp className="h-7 w-7 text-primary/80" />
                 Rilisan <span className="text-primary italic">Terbaru</span>
             </h2>
             <div className="h-px bg-border/50 flex-1" />
         </div>
-        <BookCarousel title="" books={popularBooks} isLoading={areBooksLoading} />
+        <BookCarousel title="" books={latestBooks} isLoading={areBooksLoading} />
       </section>
+      
+      {popularNovels && popularNovels.length > 0 && (
+        <section className="space-y-10">
+          <div className="flex items-center gap-4">
+              <h2 className="text-2xl md:text-3xl font-headline font-black tracking-tight flex items-center gap-3">
+                  <BookIcon className="h-7 w-7 text-primary/80" />
+                  Novel <span className="text-primary italic">Populer</span>
+              </h2>
+              <div className="h-px bg-border/50 flex-1" />
+          </div>
+          <BookCarousel title="" books={popularNovels} isLoading={areBooksLoading} />
+        </section>
+      )}
+
+      {popularPoems && popularPoems.length > 0 && (
+        <section className="space-y-10">
+          <div className="flex items-center gap-4">
+              <h2 className="text-2xl md:text-3xl font-headline font-black tracking-tight flex items-center gap-3">
+                  <Feather className="h-7 w-7 text-primary/80" />
+                  Antologi <span className="text-primary italic">Puisi</span>
+              </h2>
+              <div className="h-px bg-border/50 flex-1" />
+          </div>
+          <BookCarousel title="" books={popularPoems} isLoading={areBooksLoading} />
+        </section>
+      )}
 
       <div className="text-center opacity-10 select-none grayscale py-20">
           <div className="flex items-center justify-center gap-3">
