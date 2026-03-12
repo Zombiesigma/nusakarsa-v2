@@ -47,36 +47,20 @@
     --input: 66 30% 15%;
     --ring: 66 60% 50%;
   }
-}
- 
-@layer base {
+
   * {
     @apply border-border;
     -webkit-tap-highlight-color: transparent;
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
   }
   
   ::-webkit-scrollbar {
     display: none !important;
   }
-  
-  * {
-    -ms-overflow-style: none !important;
-    scrollbar-width: none !important;
-  }
 
   html, body {
     @apply scroll-smooth;
-    cursor: url('/cursor/cursor.svg'), auto;
-  }
-
-  a, button, [role="button"] {
-    cursor: url('/cursor/klik.svg'), pointer;
-  }
-
-  input, textarea, [contenteditable="true"] {
-    user-select: text !important;
-    -webkit-user-select: text !important;
-    cursor: text;
   }
 }
 
@@ -99,4 +83,19 @@
   .rotate-y-90 {
     transform: rotateY(90deg);
   }
+}
+
+/* Custom Cursor Styles */
+html, body {
+  cursor: url('/cursor/cursor.svg'), auto;
+}
+
+a, button, [role="button"] {
+  cursor: url('/cursor/klik.svg'), pointer;
+}
+
+input, textarea, [contenteditable="true"] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text;
 }
