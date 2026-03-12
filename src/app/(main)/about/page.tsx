@@ -108,18 +108,28 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
                 >
-                    <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md rounded-[2.5rem] text-center group h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-                        <CardContent className="p-8">
-                            <Avatar className="h-28 w-28 mx-auto mb-6 border-4 border-background shadow-lg transition-transform duration-500 group-hover:scale-105">
-                                <AvatarImage src={dev.avatar} alt={dev.name} />
-                                <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <h3 className="font-headline text-xl font-bold tracking-tight">{dev.name}</h3>
-                            <p className="text-primary text-sm font-medium">{dev.role}</p>
-                            <div className="mt-4 pt-4 border-t border-border/10">
-                                <p className="text-muted-foreground text-xs font-mono">@{dev.handle}</p>
-                            </div>
-                        </CardContent>
+                    <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-card/50 backdrop-blur-md group h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+                      <div className="h-32 relative">
+                        <Image src={dev.avatar} alt={`${dev.name} background`} fill className="object-cover blur-md scale-125 opacity-30" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/50 to-transparent" />
+                      </div>
+                      
+                      <div className="relative -mt-16 flex justify-center">
+                        <div className="p-1.5 bg-background rounded-full ring-4 ring-background shadow-2xl">
+                          <Avatar className="h-24 w-24 border-2 border-primary/20">
+                            <AvatarImage src={dev.avatar} alt={dev.name} />
+                            <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                        </div>
+                      </div>
+
+                      <CardContent className="p-8 pt-6 text-center">
+                        <h3 className="font-headline text-2xl font-bold tracking-tight">{dev.name}</h3>
+                        <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
+                        <div className="mt-6 pt-6 border-t border-border/20">
+                          <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
+                        </div>
+                      </CardContent>
                     </Card>
                 </motion.div>
             ))}
