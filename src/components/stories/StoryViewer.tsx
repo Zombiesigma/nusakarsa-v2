@@ -148,9 +148,13 @@ export function StoryViewer({ stories, initialAuthorId, isOpen, onClose }: Story
     if (currentStory?.type === 'video' && videoRef.current) {
         const video = videoRef.current;
         
-        // Load and Play
         if (!isPaused && !showViews && !showComments) {
-            video.play().catch(err => console.log("Playback interaction required:", err));
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                  // This is to prevent the harmless "The play() request was interrupted" error.
+                });
+            }
         } else {
             video.pause();
         }

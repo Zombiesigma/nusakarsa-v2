@@ -69,14 +69,21 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
   }, [firestore, currentUser, reel.id, reel.authorId]);
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (!video) return;
 
     if (isVisible && !isPausedByModal && !isPaused) {
-      videoRef.current.play().catch(() => {});
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // This is to prevent the harmless "The play() request was interrupted" error.
+        });
+      }
     } else {
-      videoRef.current.pause();
+      video.pause();
     }
   }, [isVisible, isPausedByModal, isPaused]);
+
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
@@ -120,9 +127,9 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
           const authorDoc = await getDoc(doc(firestore, 'users', reel.authorId));
           if (authorDoc.exists()) {
               const authorProfile = authorDoc.data() as User;
-              if (authorProfile.notificationPreferences?.onReelLike !== false) {
+              if (authorProfile.notificationPreferences?.onReelComment !== false) {
                   addDoc(collection(firestore, 'users', reel.authorId, 'notifications'), {
-                      type: 'reel_like',
+                      type: 'reel_comment',
                       text: `${currentUser.displayName} menyukai video Reel Anda.`,
                       link: `/reels?id=${reel.id}`,
                       actor: {
@@ -132,7 +139,7 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
                       },
                       read: false,
                       createdAt: serverTimestamp()
-                  }).catch(err => console.warn("Notification failed", err));
+                  }).catch(err => console.warn("Notif failed", err));
               }
           }
       }
@@ -150,13 +157,14 @@ export function ReelItem({ reel, isMuted, onToggleMute, isPausedByModal = false 
     if (now - lastClickTime.current < DOUBLE_CLICK_DELAY) {
         handleToggleLike(true);
     } else {
-        if (videoRef.current) {
+        const video = videoRef.current;
+        if (video) {
             if (isPaused) {
-                videoRef.current.play();
+                video.play().catch(()=>{});
                 setIsPaused(false);
                 setShowPlayPauseAnim('play');
             } else {
-                videoRef.current.pause();
+                video.pause();
                 setIsPaused(true);
                 setShowPlayPauseAnim('pause');
             }
