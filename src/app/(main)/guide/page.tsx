@@ -1,3 +1,4 @@
+
 'use client';
 
 import { 
@@ -15,10 +16,7 @@ import {
   ShieldCheck, 
   HelpCircle,
   MessageCircle,
-  Clapperboard,
   Share2,
-  Zap,
-  Video,
   Maximize2
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -46,28 +44,6 @@ export default function GuidePage() {
         { 
           q: "Sistem Favorit & Koleksi", 
           a: "Menekan ikon 'Hati' pada detail buku akan menyimpan karya tersebut ke dalam tab 'Favorit' di profil Anda." 
-        }
-      ]
-    },
-    {
-      id: "screenplay",
-      icon: Clapperboard,
-      title: "Penulisan Naskah Film",
-      description: "Alat profesional untuk penulis skenario masa depan.",
-      color: "text-orange-500",
-      bg: "bg-orange-500/5",
-      content: [
-        {
-          q: "Apa itu Industrial Screenplay Editor?",
-          a: "Ini adalah editor khusus yang mematuhi standar industri film. Gunakan Toolbar di bagian atas untuk memasukkan elemen seperti SLUGLINE, ACTION, CHARACTER, dan DIALOGUE secara otomatis."
-        },
-        {
-          q: "Shortcut Cerdas: Tombol Tab",
-          a: "Saat menulis naskah, tekan tombol **Tab** pada keyboard Anda untuk berpindah secara otomatis ke posisi penulisan Nama Karakter."
-        },
-        {
-          q: "Zen Mode: Fokus Tanpa Gangguan",
-          a: "Klik ikon 'Maximize' di pojok kanan atas editor untuk mengaktifkan Zen Mode. Seluruh elemen antarmuka akan disembunyikan."
         }
       ]
     },
@@ -108,14 +84,13 @@ export default function GuidePage() {
                 Pusat <span className="text-primary italic underline decoration-primary/20">Bantuan</span> Nusakarsa
             </h1>
             <p className="text-muted-foreground font-medium max-w-2xl mx-auto text-sm md:text-lg leading-relaxed px-2">
-                Panduan lengkap untuk menavigasi ekosistem literasi digital modern—dari teks puitis hingga naskah film industri.
+                Panduan lengkap untuk menavigasi ekosistem literasi digital modern—dari teks puitis hingga buku.
             </p>
         </div>
       </motion.section>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 px-4">
         {[
-            { icon: Clapperboard, label: "Naskah Pro", color: "text-orange-500", bg: "bg-orange-500/5" },
             { icon: Maximize2, label: "Zen Mode", color: "text-indigo-500", bg: "bg-indigo-500/5" },
             { icon: ShieldCheck, label: "Eksport PDF", color: "text-emerald-500", bg: "bg-emerald-500/5" }
         ].map((item, i) => (

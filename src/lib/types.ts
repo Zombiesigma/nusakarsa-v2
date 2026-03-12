@@ -32,31 +32,14 @@ export type MusicTrack = {
   source: 'youtube' | 'internal';
 };
 
-export type ScreenplayBlock = {
-  id: string;
-  type: 'slugline' | 'action' | 'character' | 'parenthetical' | 'dialogue' | 'transition';
-  text: string;
-};
-
-export type Shot = {
-  id: string;
-  number: string;
-  scene: string;
-  type: 'WS' | 'MS' | 'CU' | 'ECU' | string;
-  angle: string;
-  movement: string;
-  description: string;
-};
-
 export type Book = {
   id: string;
   title: string;
   genre: string;
-  type: 'book' | 'screenplay' | 'poem';
+  type: 'book' | 'poem';
   synopsis: string;
   coverUrl: string;
   fileUrl?: string; 
-  shotListUrl?: string; 
   viewCount: number;
   favoriteCount: number;
   chapterCount: number;
@@ -68,13 +51,6 @@ export type Book = {
   isCompleted?: boolean;
   visibility: 'public' | 'followers_only';
   playlist?: MusicTrack[];
-  collaboratorUids?: string[];
-  collaborators?: {
-    uid: string;
-    displayName: string;
-    photoURL: string;
-    username: string;
-  }[];
   createdAt: Timestamp;
 };
 
@@ -84,17 +60,6 @@ export type Chapter = {
     content: string; 
     order: number;
     createdAt: Timestamp;
-};
-
-export type CollaborationInvitation = {
-  id: string;
-  bookId: string;
-  bookTitle: string;
-  ownerId: string;
-  ownerName: string;
-  collaboratorId: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: Timestamp;
 };
 
 export type Music = {

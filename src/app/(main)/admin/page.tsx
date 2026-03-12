@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState } from "react";
@@ -36,7 +37,6 @@ import {
   ShieldAlert,
   FileText,
   Music2,
-  Sparkles,
   Smartphone,
   MapPin
 } from "lucide-react";
@@ -45,7 +45,7 @@ import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { generateBookPdf, generateShotListPdf } from "@/app/actions/pdf-generator";
+import { generateBookPdf } from "@/app/actions/pdf-generator";
 
 export default function AdminPage() {
   const { user: currentUser } = useUser();
@@ -126,13 +126,9 @@ export default function AdminPage() {
       
       const bookData = bookSnap.data() as Book;
       const pdfUrl = await generateBookPdf(bookId);
-      let shotListUrl = "";
-      if (bookData.type === 'screenplay') {
-          try { shotListUrl = await generateShotListPdf(bookId); } catch (e) {}
-      }
 
       const batch = writeBatch(firestore);
-      batch.update(bookRef, { status: 'published', fileUrl: pdfUrl, shotListUrl: shotListUrl || null });
+      batch.update(bookRef, { status: 'published', fileUrl: pdfUrl });
 
       const allUsersSnap = await getDocs(collection(firestore, 'users'));
       allUsersSnap.forEach((userDoc) => {
