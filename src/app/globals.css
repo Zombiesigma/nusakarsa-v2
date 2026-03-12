@@ -70,7 +70,7 @@
   }
 
   a, button, [role="button"] {
-    cursor: url('/cursor/cursor.svg'), pointer;
+    cursor: url('/cursor/klik.svg'), pointer;
   }
 
   input, textarea, [contenteditable="true"] {
