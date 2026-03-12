@@ -100,7 +100,7 @@ export default function WelcomePage() {
             </Button>
             <Button asChild variant="outline" size="lg" className="flex-1 rounded-[1.25rem] h-16 border-2 font-black uppercase text-xs tracking-[0.2em] hover:bg-primary/5 hover:border-primary/40 transition-all active:scale-95 shadow-lg bg-card/50 backdrop-blur-md group">
               <Link href="/login" className="flex items-center justify-center">
-                Masuk Kembali
+                Masuk
                 <ArrowRight className="ml-2 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </Link>
             </Button>

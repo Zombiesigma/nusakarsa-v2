@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { Globe, PenTool, Cpu, Zap, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import ProfileCard from '@/components/ProfileCard';
 
 const architects = [
     {
@@ -15,24 +15,18 @@ const architects = [
         role: "Lead Full-stack Developer",
         handle: "gunturpadilah",
         avatar: "https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/IMG-20251221-WA0058.jpg",
-        glow: "rgba(66, 70, 25, 0.6)",
-        gradient: "linear-gradient(145deg, #424619 0%, #a3b18a 100%)"
     },
     {
         name: "Khalid Ar-Rahman",
         role: "Systems Architect",
         handle: "khalid_ar",
         avatar: "https://picsum.photos/seed/khalid/600/800",
-        glow: "rgba(49, 27, 146, 0.6)",
-        gradient: "linear-gradient(145deg, #311b92 0%, #5c6bc0 100%)"
     },
     {
         name: "Nursyifa Aeni",
         role: "Creative Director",
         handle: "syifa_aeni",
         avatar: "https://picsum.photos/seed/syifa/600/800",
-        glow: "rgba(190, 24, 93, 0.6)",
-        gradient: "linear-gradient(145deg, #be185d 0%, #f472b6 100%)"
     }
 ];
 
@@ -105,7 +99,7 @@ export default function AboutPage() {
             <div className="h-px bg-border/50 flex-1" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {architects.map((dev, i) => (
                 <motion.div 
                     key={i} 
@@ -113,21 +107,20 @@ export default function AboutPage() {
                     whileInView={{ opacity: 1, y: 0 }} 
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="flex justify-center"
                 >
-                    <ProfileCard 
-                        name={dev.name}
-                        title={dev.role}
-                        handle={dev.handle}
-                        status="Active"
-                        avatarUrl={dev.avatar}
-                        behindGlowColor={dev.glow}
-                        innerGradient={dev.gradient}
-                        enableTilt={true}
-                        behindGlowEnabled={true}
-                        contactText="Profil Arsitek"
-                        className="w-full"
-                    />
+                    <Card className="border-none shadow-xl bg-card/50 backdrop-blur-md rounded-[2.5rem] text-center group h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+                        <CardContent className="p-8">
+                            <Avatar className="h-28 w-28 mx-auto mb-6 border-4 border-background shadow-lg transition-transform duration-500 group-hover:scale-105">
+                                <AvatarImage src={dev.avatar} alt={dev.name} />
+                                <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <h3 className="font-headline text-xl font-bold tracking-tight">{dev.name}</h3>
+                            <p className="text-primary text-sm font-medium">{dev.role}</p>
+                            <div className="mt-4 pt-4 border-t border-border/10">
+                                <p className="text-muted-foreground text-xs font-mono">@{dev.handle}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </motion.div>
             ))}
         </div>
