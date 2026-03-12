@@ -61,6 +61,17 @@
 
   html, body {
     @apply scroll-smooth;
+    cursor: url('/cursor/cursor.svg'), auto;
+  }
+  
+  a, button, [role="button"] {
+    cursor: url('/cursor/klik.svg'), pointer;
+  }
+  
+  input, textarea, [contenteditable="true"] {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      cursor: text;
   }
 }
 
@@ -83,19 +94,4 @@
   .rotate-y-90 {
     transform: rotateY(90deg);
   }
-}
-
-/* Custom Cursor Styles */
-html, body {
-  cursor: url('/cursor/cursor.svg'), auto;
-}
-
-a, button, [role="button"] {
-  cursor: url('/cursor/klik.svg'), pointer;
-}
-
-input, textarea, [contenteditable="true"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  cursor: text;
 }
