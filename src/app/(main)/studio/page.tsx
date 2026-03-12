@@ -1,8 +1,7 @@
-
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useFirestore, useUser } from '@/firebase';
+import { useFirestore, useUser, useCollection } from '@/firebase';
 import { collection, query, where, doc, deleteDoc } from 'firebase/firestore';
 import type { Book } from '@/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
