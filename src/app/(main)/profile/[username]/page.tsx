@@ -15,7 +15,6 @@ import {
   Edit, 
   Loader2, 
   UserMinus, 
-  Sparkles, 
   CheckCircle2, 
   X,
   BookOpen,
@@ -218,7 +217,7 @@ export default function ProfilePage() {
                                 {isFollowing ? 'Berhenti Ikuti' : 'Mulai Ikuti'}
                             </Button>
                         )}
-                    </div>
+                    </motion.div>
                 </div>
             </motion.aside>
 
@@ -240,7 +239,7 @@ export default function ProfilePage() {
                         <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-white/40">Pengikut</p>
                     </motion.button>
                     <motion.button variants={statVariants} onClick={() => setSheetState({ open: true, type: 'following' })} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-cyan-500/5 rounded-2xl transition-all">
-                        <div className="p-2.5 rounded-xl bg-cyan-500/5 text-cyan-400 mb-1"><Sparkles className="h-5 w-5" /></div>
+                        <div className="p-2.5 rounded-xl bg-cyan-500/5 text-cyan-400 mb-1"><UserPlus className="h-5 w-5" /></div>
                         <p className="font-black text-2xl md:text-4xl tracking-tighter text-white">{user.following || 0}</p>
                         <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-white/40">Mengikuti</p>
                     </motion.button>
