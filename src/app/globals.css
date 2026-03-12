@@ -66,16 +66,11 @@
 
   html, body {
     @apply scroll-smooth;
-    cursor: url('/cursor/cursor.svg'), url('/cursor/cursor.cur'), auto;
-  }
-
-  body {
-    @apply bg-background text-foreground antialiased min-h-screen overflow-x-hidden;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    cursor: url('/cursor/cursor.svg'), auto;
   }
 
   a, button, [role="button"] {
-    cursor: url('/cursor/cursor.svg'), url('/cursor/cursor.cur'), pointer;
+    cursor: url('/cursor/cursor.svg'), pointer;
   }
 
   input, textarea, [contenteditable="true"] {
