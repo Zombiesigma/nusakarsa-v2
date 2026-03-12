@@ -22,8 +22,7 @@ import {
   MapPin,
   Calendar,
   Layers,
-  Award,
-  AtSign
+  Award
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -125,8 +124,8 @@ export default function ProfilePage() {
 
   if (isUserLoading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-cyan-400/40" />
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Memindai Jejak Digital...</p>
+        <Loader2 className="h-10 w-10 animate-spin text-primary/40" />
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground">Memindai Jejak Digital...</p>
     </div>
   );
   if (!user) notFound();
@@ -145,53 +144,51 @@ export default function ProfilePage() {
       />
 
       <motion.div custom={0} variants={sectionVariants} className="relative">
-        <div className="h-48 md:h-80 w-full rounded-[2.5rem] md:rounded-[4rem] bg-black relative overflow-hidden border border-cyan-400/20 shadow-2xl shadow-cyan-500/10">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] opacity-20 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_10%,transparent_100%)]"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-blue-900/50 to-cyan-900/30 opacity-60"></div>
-            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[120px] rounded-full" />
-            <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-700/10 blur-[100px] rounded-full" />
+        <div className="h-48 md:h-80 w-full rounded-[2.5rem] md:rounded-[4rem] bg-card/20 relative overflow-hidden border border-primary/10 shadow-2xl shadow-primary/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-accent/5 opacity-80"></div>
+            <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-accent/5 blur-[120px] rounded-full" />
+            <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/5 blur-[100px] rounded-full" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-10 md:gap-16 px-6 md:px-16 -mt-16 md:-mt-24 relative z-10">
             <motion.aside custom={1} variants={sectionVariants} className="w-full lg:w-[320px] shrink-0 space-y-8">
                 <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
                     <div className="relative mb-6">
-                        <div className="p-1.5 rounded-full bg-slate-900 ring-8 ring-slate-900 shadow-2xl relative group">
-                            <div className="absolute -inset-1 rounded-full bg-cyan-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
-                            <Avatar className="h-32 w-32 md:h-48 md:w-48 border-4 border-slate-800 shadow-inner cursor-pointer" onClick={() => setIsPhotoPreviewOpen(true)}>
+                        <div className="p-1.5 rounded-full bg-background ring-8 ring-background shadow-2xl relative group">
+                            <div className="absolute -inset-1 rounded-full bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
+                            <Avatar className="h-32 w-32 md:h-48 md:w-48 border-4 border-background shadow-inner cursor-pointer" onClick={() => setIsPhotoPreviewOpen(true)}>
                                 <AvatarImage src={user.photoURL} className="object-cover" />
-                                <AvatarFallback className="bg-slate-800 text-cyan-400 text-6xl font-black">{user.displayName[0]}</AvatarFallback>
+                                <AvatarFallback className="bg-primary/5 text-primary text-6xl font-black">{user.displayName[0]}</AvatarFallback>
                             </Avatar>
                         </div>
                         {(user.role === 'penulis' || user.role === 'admin') && (
-                            <div className="absolute -bottom-2 -right-2 bg-gradient-to-br from-cyan-400 to-blue-500 text-white p-2.5 rounded-full shadow-2xl shadow-cyan-500/40 ring-4 ring-slate-900">
+                            <div className="absolute -bottom-2 -right-2 bg-primary text-primary-foreground p-2.5 rounded-full shadow-2xl shadow-primary/40 ring-4 ring-background">
                                 <Award className="h-6 w-6" />
                             </div>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-tight text-white">{user.displayName}</h1>
+                        <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-tight text-foreground">{user.displayName}</h1>
                         <div className="flex items-center justify-center lg:justify-start gap-2">
-                           <AtSign className="h-3 w-3 text-cyan-400/50"/>
-                           <p className="text-sm font-mono text-cyan-400/50">@{user.username}</p>
+                           <p className="text-sm font-mono text-muted-foreground">@{user.username}</p>
                         </div>
                     </div>
 
-                    <motion.div custom={2} variants={sectionVariants} className="mt-8 p-6 md:p-8 rounded-[2rem] bg-slate-900/70 backdrop-blur-2xl border border-cyan-400/10 shadow-2xl w-full">
-                        <p className="text-sm md:text-base font-medium italic text-slate-400/80 leading-relaxed">
+                    <motion.div custom={2} variants={sectionVariants} className="mt-8 p-6 md:p-8 rounded-[2rem] bg-card/50 backdrop-blur-2xl border shadow-xl w-full">
+                        <p className="text-sm md:text-base font-medium italic text-muted-foreground leading-relaxed">
                             "{user.bio || "Jelajahi imajinasiku dalam semesta digital Nusakarsa."}"
                         </p>
                         
-                        <div className="mt-8 pt-8 border-t border-cyan-400/10 space-y-4">
+                        <div className="mt-8 pt-8 border-t border-border/50 space-y-4">
                             {user.domicile && (
-                                <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-slate-400/60">
-                                    <MapPin className="h-4 w-4 text-cyan-400/70" />
+                                <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+                                    <MapPin className="h-4 w-4 text-primary" />
                                     <span>{user.domicile}</span>
                                 </div>
                             )}
-                            <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-slate-400/60">
-                                <Calendar className="h-4 w-4 text-cyan-400/70" />
+                            <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
+                                <Calendar className="h-4 w-4 text-primary" />
                                 <span>Pujangga {user.role}</span>
                             </div>
                         </div>
@@ -199,17 +196,13 @@ export default function ProfilePage() {
 
                     <motion.div custom={3} variants={sectionVariants} className="w-full mt-8">
                         {isOwnProfile ? (
-                            <Button className="w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-cyan-500/20 bg-cyan-400 text-slate-900 hover:bg-cyan-300 active:scale-95 transition-all" asChild>
+                            <Button className="w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest shadow-xl shadow-primary/20 active:scale-95 transition-all" asChild>
                                 <Link href="/settings"><Edit className="mr-3 h-4 w-4" /> Kelola Profil</Link>
                             </Button>
                         ) : (
                             <Button 
-                                className={cn(
-                                    "w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest transition-all shadow-xl active:scale-95", 
-                                    isFollowing 
-                                        ? "bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:border-slate-600" 
-                                        : "bg-cyan-400 text-slate-900 shadow-cyan-500/20 hover:bg-cyan-300"
-                                )} 
+                                variant={isFollowing ? "outline" : "default"}
+                                className="w-full rounded-2xl h-14 font-black uppercase text-xs tracking-widest transition-all shadow-xl active:scale-95" 
                                 onClick={handleFollow} 
                                 disabled={isTogglingFollow}
                             >
@@ -226,39 +219,39 @@ export default function ProfilePage() {
                   initial="hidden"
                   animate="visible"
                   variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-                  className="grid grid-cols-3 gap-4 md:gap-8 bg-slate-900/70 backdrop-blur-2xl p-6 md:p-8 rounded-[2.5rem] border border-cyan-400/10 shadow-2xl"
+                  className="grid grid-cols-3 gap-4 md:gap-8 bg-card/50 backdrop-blur-2xl p-6 md:p-8 rounded-[2.5rem] border shadow-2xl"
                 >
-                    <motion.div variants={statVariants} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-cyan-400/10">
-                        <div className="p-2.5 rounded-xl bg-cyan-500/5 text-cyan-400 mb-1"><Layers className="h-5 w-5" /></div>
-                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-white">{publishedBooks?.length || 0}</p>
-                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-white/40">Karya</p>
+                    <motion.div variants={statVariants} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/50">
+                        <div className="p-2.5 rounded-xl bg-primary/10 text-primary mb-1"><Layers className="h-5 w-5" /></div>
+                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-foreground">{publishedBooks?.length || 0}</p>
+                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground">Karya</p>
                     </motion.div>
-                    <motion.button variants={statVariants} onClick={() => setSheetState({ open: true, type: 'followers' })} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-cyan-400/10 hover:bg-cyan-500/5 rounded-2xl transition-all">
-                        <div className="p-2.5 rounded-xl bg-cyan-500/5 text-cyan-400 mb-1"><Users className="h-5 w-5" /></div>
-                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-white">{new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(user.followers || 0)}</p>
-                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-white/40">Pengikut</p>
+                    <motion.button variants={statVariants} onClick={() => setSheetState({ open: true, type: 'followers' })} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 border-r border-border/50 hover:bg-primary/5 rounded-2xl transition-all">
+                        <div className="p-2.5 rounded-xl bg-primary/10 text-primary mb-1"><Users className="h-5 w-5" /></div>
+                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-foreground">{new Intl.NumberFormat('id-ID', { notation: 'compact' }).format(user.followers || 0)}</p>
+                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground">Pengikut</p>
                     </motion.button>
-                    <motion.button variants={statVariants} onClick={() => setSheetState({ open: true, type: 'following' })} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-cyan-500/5 rounded-2xl transition-all">
-                        <div className="p-2.5 rounded-xl bg-cyan-500/5 text-cyan-400 mb-1"><UserPlus className="h-5 w-5" /></div>
-                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-white">{user.following || 0}</p>
-                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-white/40">Mengikuti</p>
+                    <motion.button variants={statVariants} onClick={() => setSheetState({ open: true, type: 'following' })} className="flex flex-col items-center justify-center space-y-1 md:space-y-2 hover:bg-primary/5 rounded-2xl transition-all">
+                        <div className="p-2.5 rounded-xl bg-primary/10 text-primary mb-1"><UserPlus className="h-5 w-5" /></div>
+                        <p className="font-black text-2xl md:text-4xl tracking-tighter text-foreground">{user.following || 0}</p>
+                        <p className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-muted-foreground">Mengikuti</p>
                     </motion.button>
                 </motion.div>
 
                 <motion.section custom={4} variants={sectionVariants} className="space-y-8">
                     <div className="flex items-center gap-4 px-2">
-                        <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400"><BookOpen className="h-5 w-5" /></div>
-                        <h2 className="text-xl md:text-3xl font-headline font-black tracking-tight text-white">Arsip <span className="text-cyan-400 italic">Karsa.</span></h2>
-                        <div className="h-px bg-cyan-400/10 flex-1" />
+                        <div className="p-2 rounded-xl bg-primary/10 text-primary"><BookOpen className="h-5 w-5" /></div>
+                        <h2 className="text-xl md:text-3xl font-headline font-black tracking-tight text-foreground">Arsip <span className="text-primary italic">Karsa.</span></h2>
+                        <div className="h-px bg-border flex-1" />
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
                         {areBooksLoading ? (
                             Array.from({ length: 3 }).map((_, i) => (
-                                <div key={i} className="aspect-[2/3] bg-slate-800 animate-pulse rounded-[2rem]" />
+                                <div key={i} className="aspect-[2/3] bg-muted animate-pulse rounded-[2rem]" />
                             ))
                         ) : publishedBooks?.length === 0 ? (
-                            <div className="col-span-full py-20 text-center text-slate-500 italic font-medium">
+                            <div className="col-span-full py-20 text-center text-muted-foreground italic font-medium">
                                 Belum ada artefak digital yang diarsipkan.
                             </div>
                         ) : (
@@ -281,7 +274,7 @@ export default function ProfilePage() {
 
       <Dialog open={isPhotoPreviewOpen} onOpenChange={setIsPhotoPreviewOpen}>
         <DialogContent className="max-w-none w-screen h-[100dvh] p-0 border-none bg-black/90 flex items-center justify-center rounded-none z-[300]">
-            <button onClick={() => setIsPhotoPreviewOpen(false)} className="absolute top-10 right-10 text-white hover:text-cyan-400 transition-colors h-12 w-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-md border border-white/10">
+            <button onClick={() => setIsPhotoPreviewOpen(false)} className="absolute top-10 right-10 text-white hover:text-primary transition-colors h-12 w-12 flex items-center justify-center bg-white/10 rounded-full backdrop-blur-md border border-white/10">
                 <X className="h-7 w-7" />
             </button>
             <motion.img 
