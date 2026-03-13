@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
-import { Globe, PenTool, Cpu, Zap, ShieldCheck } from 'lucide-react';
+import { Globe, PenTool, Cpu, Zap, ShieldCheck, Instagram, Twitter, Github, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const technologies = [
     { title: "TypeScript", desc: "Bahasa pemrograman dengan sistem tipe yang kuat untuk kode yang lebih aman, cepat, dan terstruktur.", icon: "https://svgl.app/library/typescript.svg" },
@@ -168,13 +169,85 @@ export default function AboutPage() {
             ))}
         </div>
       </section>
+      
+      <footer className="relative z-10 w-full mt-auto pt-20">
+        <div className="bg-card/50 backdrop-blur-3xl border-t rounded-t-[3rem] md:rounded-t-[5rem] p-10 md:p-20 shadow-[0_-20px_100px_-20px_rgba(0,0,0,0.1)]">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+                <div className="lg:col-span-5 space-y-8">
+                  <div className="flex items-center gap-4">
+                    <Logo className="h-14 w-14 rounded-2xl shadow-2xl ring-1 ring-primary/10" />
+                    <div>
+                      <h2 className="font-headline text-3xl font-black tracking-tight leading-none text-foreground">Nusakarsa</h2>
+                      <p className="text-xs font-black uppercase tracking-[0.4em] text-primary/60 mt-2">Imajinasi Digital</p>
+                    </div>
+                  </div>
+                  <p className="text-base md:text-lg text-muted-foreground leading-relaxed font-medium italic max-w-sm">
+                    "Melestarikan akar kreativitas melalui teknologi, membangun peradaban sastra digital yang abadi dan bermartabat."
+                  </p>
+                  <div className="flex items-center gap-5 pt-4">
+                    {[
+                      { icon: Instagram, href: '#' },
+                      { icon: Twitter, href: '#' },
+                      { icon: Github, href: 'https://github.com/Zombiesigma' },
+                      { icon: Globe, href: 'https://www.gunturpadilah.web.id/' }
+                    ].map((social, i) => (
+                      <a 
+                        key={i} 
+                        href={social.href} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="h-12 w-12 rounded-2xl bg-primary/5 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-white transition-all duration-500 shadow-sm border border-transparent hover:border-primary/20"
+                      >
+                        <social.icon className="h-5 w-5" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
 
-      <div className="text-center space-y-6 opacity-40 select-none grayscale pb-16">
-          <div className="flex items-center justify-center gap-3">
-              <ShieldCheck className="h-5 w-5 text-primary" />
-              <span className="text-[10px] font-black uppercase tracking-[0.5em]">Nusakarsa Digital</span>
-          </div>
-      </div>
+                <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 lg:gap-8">
+                  <div className="space-y-8">
+                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Navigasi</h4>
+                    <ul className="space-y-5">
+                      {[
+                        {label: 'Eksplorasi', href: '/search'}, 
+                        {label: 'Panduan', href: '/guide'},
+                        {label: 'Tentang', href: '/about'}
+                      ].map(item => (
+                        <li key={item.label}>
+                          <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors inline-flex items-center group">
+                            {item.label} <ChevronRight className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="space-y-8">
+                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Otoritas</h4>
+                    <ul className="space-y-5">
+                      {[
+                        {label: 'Pusat Kendali', href: '/admin'}, 
+                        {label: 'Karir Penulis', href: '/join-author'}
+                      ].map(item => (
+                        <li key={item.label}>
+                          <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item.label}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="col-span-2 md:col-span-1 space-y-8">
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
+                <p className="text-xs font-black uppercase tracking-[0.3em]">
+                  &copy; {new Date().getFullYear()} Nusakarsa.
+                </p>
+              </div>
+            </div>
+        </div>
+      </footer>
     </div>
   );
 }
