@@ -107,29 +107,28 @@ export default function AboutPage() {
                     whileInView={{ opacity: 1, y: 0 }} 
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
+                    className="h-full"
                 >
-                    <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-card/50 backdrop-blur-md group h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-                      <div className="h-32 relative">
-                        <Image src={dev.avatar} alt={`${dev.name} background`} fill className="object-cover blur-md scale-125 opacity-30" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-card/50 to-transparent" />
-                      </div>
-                      
-                      <div className="relative -mt-16 flex justify-center">
-                        <div className="p-1.5 bg-background rounded-full ring-4 ring-background shadow-2xl">
-                          <Avatar className="h-24 w-24 border-2 border-primary/20">
-                            <AvatarImage src={dev.avatar} alt={dev.name} />
-                            <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                        </div>
-                      </div>
+                    <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-card/50 backdrop-blur-md group h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl text-center flex flex-col">
+                        <CardContent className="p-8 flex flex-col items-center flex-1">
+                            <div className="relative mb-6">
+                                <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-primary via-accent to-primary/50 blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
+                                <Avatar className="relative h-32 w-32 border-4 border-background shadow-xl ring-1 ring-border/50">
+                                    <AvatarImage src={dev.avatar} alt={dev.name} className="object-cover" />
+                                    <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                            </div>
+                            <h3 className="font-headline text-2xl font-bold tracking-tight">{dev.name}</h3>
+                            <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
+                            
+                            <div className="my-6 w-16 h-1 bg-primary/10 rounded-full group-hover:w-24 transition-all duration-700"/>
 
-                      <CardContent className="p-8 pt-6 text-center">
-                        <h3 className="font-headline text-2xl font-bold tracking-tight">{dev.name}</h3>
-                        <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
-                        <div className="mt-6 pt-6 border-t border-border/20">
-                          <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
-                        </div>
-                      </CardContent>
+                            <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
+
+                            <div className="mt-auto pt-8">
+                                <Button variant="outline" className="rounded-full font-bold border-2 text-xs">Hubungi</Button>
+                            </div>
+                        </CardContent>
                     </Card>
                 </motion.div>
             ))}
