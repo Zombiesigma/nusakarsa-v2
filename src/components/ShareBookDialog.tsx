@@ -2,10 +2,13 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Send, ImageIcon, Share2 } from 'lucide-react';
-import { useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Send, Copy, Share2, Check } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Book } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ShareBookDialogProps {
     book: Book;
@@ -15,18 +18,38 @@ interface ShareBookDialogProps {
 
 export function ShareBookDialog({ book, open, onOpenChange }: ShareBookDialogProps) {
     const { toast } = useToast();
+    const [showLinkInput, setShowLinkInput] = useState(false);
+    const [isCopied, setIsCopied] = useState(false);
+    const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/books/${book.id}` : '';
 
     useEffect(() => {
         if (!open) {
             const timer = setTimeout(() => {
                 document.body.style.pointerEvents = '';
+                setShowLinkInput(false);
+                setIsCopied(false);
             }, 300);
             return () => clearTimeout(timer);
         }
     }, [open]);
 
-    const handleExternalShare = async () => {
-        const shareUrl = `${window.location.origin}/books/${book.id}`;
+    const handleCopyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            toast({ variant: 'success', title: "Tautan Berhasil Disalin!" });
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } catch (err) {
+            toast({ 
+                variant: 'destructive', 
+                title: "Gagal Menyalin Otomatis",
+                description: "Silakan salin tautan secara manual dari kolom yang muncul.",
+            });
+            setShowLinkInput(true);
+        }
+    };
+    
+    const handleShare = async () => {
         if (navigator.share) {
             try {
                 await navigator.share({
@@ -36,10 +59,10 @@ export function ShareBookDialog({ book, open, onOpenChange }: ShareBookDialogPro
                 });
             } catch (err) {}
         } else {
-            await navigator.clipboard.writeText(shareUrl);
-            toast({ variant: 'success', title: "Tautan Disalin" });
+            setShowLinkInput(true);
         }
     };
+
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -70,19 +93,34 @@ export function ShareBookDialog({ book, open, onOpenChange }: ShareBookDialogPro
                 </div>
 
                 <div className="p-10 space-y-6">
-                    <p className="text-center text-sm font-medium text-muted-foreground italic">"Biarkan dunia mendengar setiap karsa yang Anda tanam."</p>
                     <div className="grid grid-cols-1 gap-4">
-                        <Button size="lg" className="rounded-2xl h-16 font-black uppercase text-xs tracking-widest gap-3 shadow-xl" onClick={handleExternalShare}>
+                        <Button size="lg" className="rounded-2xl h-16 font-black uppercase text-xs tracking-widest gap-3 shadow-xl" onClick={handleShare}>
                             <Share2 className="h-5 w-5" /> Bagikan Sekarang
                         </Button>
-                        <Button variant="outline" size="lg" className="rounded-2xl h-16 font-black uppercase text-xs tracking-widest gap-3 border-2" onClick={() => {
-                            const shareUrl = `${window.location.origin}/books/${book.id}`;
-                            navigator.clipboard.writeText(shareUrl);
-                            toast({ variant: 'success', title: "Tautan Disalin" });
-                        }}>
-                            <ImageIcon className="h-5 w-5 text-primary" /> Salin Tautan
+                        <Button variant="outline" size="lg" className="rounded-2xl h-16 font-black uppercase text-xs tracking-widest gap-3 border-2" onClick={handleCopyToClipboard}>
+                            <Copy className="h-5 w-5 text-primary" /> Salin Tautan
                         </Button>
                     </div>
+
+                    <AnimatePresence>
+                    {showLinkInput && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                            animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem' }}
+                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                            className="relative"
+                        >
+                            <Input 
+                                readOnly 
+                                value={shareUrl} 
+                                className="h-14 rounded-2xl bg-muted/30 border-none pr-14 text-xs font-bold"
+                            />
+                            <Button size="icon" className={cn("absolute right-2 top-2 h-10 w-10 rounded-xl", isCopied && "bg-emerald-500")} onClick={handleCopyToClipboard}>
+                                {isCopied ? <Check className="h-4 w-4"/> : <Copy className="h-4 w-4"/>}
+                            </Button>
+                        </motion.div>
+                    )}
+                    </AnimatePresence>
                 </div>
 
                 <DialogFooter className="p-6 bg-muted/20 border-t border-border/50">

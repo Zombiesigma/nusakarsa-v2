@@ -26,7 +26,7 @@ export function BookCard({ book }: BookCardProps) {
             src={book.coverUrl}
             alt={`Sampul ${book.title}`}
             fill
-            className="object-cover bg-muted transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
+            className="object-cover bg-muted transition-transform duration-700 group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, 20vw"
           />
           
