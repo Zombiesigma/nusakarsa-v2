@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -9,27 +10,6 @@ import { Globe, PenTool, Cpu, Zap, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-const architects = [
-    {
-        name: "Guntur Padilah",
-        role: "Lead Full-stack Developer",
-        handle: "gunturpadilah",
-        avatar: "https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/IMG-20251221-WA0058.jpg",
-    },
-    {
-        name: "Khalid Ar-Rahman",
-        role: "Systems Architect",
-        handle: "khalid_ar",
-        avatar: "https://picsum.photos/seed/khalid/600/800",
-    },
-    {
-        name: "Nursyifa Aeni",
-        role: "Creative Director",
-        handle: "syifa_aeni",
-        avatar: "https://picsum.photos/seed/syifa/600/800",
-    }
-];
-
 const technologies = [
     { title: "TypeScript", desc: "Bahasa pemrograman dengan sistem tipe yang kuat untuk kode yang lebih aman, cepat, dan terstruktur.", icon: "https://svgl.app/library/typescript.svg" },
     { title: "Firebase", desc: "Infrastruktur Cloud Google yang menjamin keamanan data dan sinkronisasi real-time mahakarya.", icon: "https://svgl.app/library/firebase.svg" },
@@ -37,6 +17,28 @@ const technologies = [
 ];
 
 export default function AboutPage() {
+  const [centeredCardIndex, setCenteredCardIndex] = useState(1);
+  const architects = [
+      {
+          name: "Khalid Ar-Rahman",
+          role: "Systems Architect",
+          handle: "khalid_ar",
+          avatar: "https://picsum.photos/seed/khalid/600/800",
+      },
+      {
+          name: "Guntur Padilah",
+          role: "Lead Full-stack Developer",
+          handle: "gunturpadilah",
+          avatar: "https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/IMG-20251221-WA0058.jpg",
+      },
+      {
+          name: "Nursyifa Aeni",
+          role: "Creative Director",
+          handle: "syifa_aeni",
+          avatar: "https://picsum.photos/seed/syifa/600/800",
+      }
+  ];
+
   return (
     <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-1 pt-6">
       <div className="absolute top-0 right-[-10%] w-64 md:w-96 h-64 md:h-96 bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -z-10 pointer-events-none animate-pulse" />
@@ -91,7 +93,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <motion.section initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="space-y-12 px-4">
+      <section className="space-y-12 px-4">
         <div className="flex items-center gap-4">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 flex items-center gap-3 whitespace-nowrap">
                 <PenTool className="h-4 w-4 text-primary" /> Tim Arsitek
@@ -99,41 +101,50 @@ export default function AboutPage() {
             <div className="h-px bg-border/50 flex-1" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {architects.map((dev, i) => (
-                <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0, y: 20 }} 
-                    whileInView={{ opacity: 1, y: 0 }} 
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="h-full"
-                >
-                    <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-xl bg-card/50 backdrop-blur-md group h-full transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl text-center flex flex-col">
-                        <CardContent className="p-8 flex flex-col items-center flex-1">
-                            <div className="relative mb-6">
-                                <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-primary via-accent to-primary/50 blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500" />
-                                <Avatar className="relative h-32 w-32 border-4 border-background shadow-xl ring-1 ring-border/50">
-                                    <AvatarImage src={dev.avatar} alt={dev.name} className="object-cover" />
-                                    <AvatarFallback>{dev.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                            </div>
-                            <h3 className="font-headline text-2xl font-bold tracking-tight">{dev.name}</h3>
-                            <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
-                            
-                            <div className="my-6 w-16 h-1 bg-primary/10 rounded-full group-hover:w-24 transition-all duration-700"/>
+        <div className="relative h-[550px] w-full flex items-center justify-center" style={{ perspective: '1000px' }}>
+          {architects.map((dev, i) => {
+              const offset = i - centeredCardIndex;
+              const isCentered = offset === 0;
 
-                            <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
-
-                            <div className="mt-auto pt-8">
-                                <Button variant="outline" className="rounded-full font-bold border-2 text-xs">Hubungi</Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </motion.div>
-            ))}
+              return (
+                  <motion.div
+                      key={i}
+                      initial={false}
+                      animate={{
+                          x: `${offset * 45}%`,
+                          scale: isCentered ? 1 : 0.7,
+                          zIndex: isCentered ? 3 : (offset === -1 ? 2 : 1),
+                          opacity: isCentered ? 1 : 0.5,
+                      }}
+                      transition={{ type: 'spring', stiffness: 170, damping: 26 }}
+                      onClick={() => setCenteredCardIndex(i)}
+                      className="absolute w-72 md:w-80 h-[500px] cursor-pointer group"
+                      style={{ transformStyle: 'preserve-3d' }}
+                  >
+                      <Card className="relative overflow-visible rounded-[2.5rem] border-none shadow-2xl h-full transition-all duration-500 bg-card/50 backdrop-blur-xl text-center flex flex-col">
+                          <div className="absolute -top-16 left-0 right-0 h-80">
+                               <Image
+                                  src={dev.avatar}
+                                  alt={dev.name}
+                                  fill
+                                  className="object-contain object-bottom drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-110"
+                                  sizes="(max-width: 768px) 50vw, 33vw"
+                              />
+                          </div>
+                          
+                          <CardContent className="p-8 flex flex-col items-center flex-1 justify-end mt-auto">
+                              <div className="h-48" />
+                              <h3 className="font-headline text-2xl font-black tracking-tight">{dev.name}</h3>
+                              <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
+                              <div className="my-6 w-16 h-1 bg-primary/10 rounded-full mx-auto group-hover:w-24 transition-all duration-700" />
+                              <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
+                          </CardContent>
+                      </Card>
+                  </motion.div>
+              );
+          })}
         </div>
-      </motion.section>
+      </section>
 
       <section className="space-y-16 px-4">
         <div className="text-center space-y-4">
