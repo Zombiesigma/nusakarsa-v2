@@ -135,24 +135,23 @@ export default function AboutPage() {
                       className="absolute w-72 md:w-80 h-[500px] cursor-pointer group"
                       style={{ transformStyle: 'preserve-3d' }}
                   >
-                      <Card className="relative overflow-visible rounded-[2.5rem] border-none shadow-2xl h-full transition-all duration-500 bg-card/50 backdrop-blur-xl text-center flex flex-col">
-                          <div className="absolute -top-16 left-0 right-0 h-80">
-                               <Image
+                      <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-2xl h-full transition-all duration-500 bg-card/50 backdrop-blur-xl flex flex-col">
+                          <div className="relative flex-1 w-full pt-8">
+                              <Image
                                   src={dev.avatar}
                                   alt={dev.name}
                                   fill
-                                  className="object-contain object-bottom drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-110"
+                                  className="object-contain object-bottom drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-105"
                                   sizes="(max-width: 768px) 50vw, 33vw"
                               />
                           </div>
                           
-                          <CardContent className="p-8 flex flex-col items-center flex-1 justify-end mt-auto">
-                              <div className="h-48" />
+                          <div className="p-8 pt-4 text-center bg-card/50 backdrop-blur-sm z-10">
                               <h3 className="font-headline text-2xl font-black tracking-tight">{dev.name}</h3>
                               <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
                               <div className="my-6 w-16 h-1 bg-primary/10 rounded-full mx-auto group-hover:w-24 transition-all duration-700" />
                               <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
-                          </CardContent>
+                          </div>
                       </Card>
                   </motion.div>
               );
