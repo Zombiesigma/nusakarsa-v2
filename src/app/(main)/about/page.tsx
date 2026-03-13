@@ -125,7 +125,7 @@ export default function AboutPage() {
                       key={dev.handle}
                       initial={false}
                       animate={{
-                          x: `${offset * 45}%`,
+                          x: `${offset * 65}%`,
                           scale: isCentered ? 1 : 0.7,
                           zIndex: isCentered ? 3 : (offset === -1 ? 2 : 1),
                           opacity: isCentered ? 1 : 0.5,
