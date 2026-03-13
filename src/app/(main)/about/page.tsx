@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -56,7 +55,7 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-1 pt-6">
+    <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-4 pt-6">
       <div className="absolute top-0 right-[-10%] w-64 md:w-96 h-64 md:h-96 bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -z-10 pointer-events-none animate-pulse" />
       
       <motion.section 
@@ -117,7 +116,7 @@ export default function AboutPage() {
             <div className="h-px bg-border/50 flex-1" />
         </div>
         
-        <div className="relative h-[600px] w-full flex items-center justify-center" style={{ perspective: '1200px' }}>
+        <div className="relative h-[600px] w-full flex items-center justify-center">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[100px] opacity-60 z-0 pointer-events-none transition-opacity duration-700"></div>
           {architects.map((dev, i) => {
               const offset = i - centerIndex;
@@ -130,7 +129,7 @@ export default function AboutPage() {
                       animate={{
                           x: `${offset * 38}%`,
                           scale: isCentered ? 1 : 0.75,
-                          rotateY: isCentered ? 0 : (offset === -1 ? 15 : -15),
+                          rotateY: isCentered ? 0 : (offset === -1 ? 20 : -20),
                           zIndex: isCentered ? 20 : 10,
                           opacity: isCentered ? 1 : 0.6,
                       }}
@@ -138,7 +137,7 @@ export default function AboutPage() {
                       onClick={() => handleCardClick(i)}
                       className="absolute w-72 md:w-80 h-[480px] cursor-pointer group"
                   >
-                    <div className="relative w-full h-full rounded-[2.5rem] shadow-2xl overflow-hidden bg-muted/30 border border-white/10">
+                    <div className="relative w-full h-full rounded-[2.5rem] shadow-2xl overflow-hidden bg-muted/30 border border-white/10 flex flex-col justify-end">
                         <Image 
                             src={dev.avatar} 
                             alt={dev.name} 
@@ -148,7 +147,7 @@ export default function AboutPage() {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                        <div className="absolute inset-0 p-6 flex flex-col justify-end text-center items-center">
+                        <div className="relative z-10 p-6 text-center items-center">
                             <div className="transition-all duration-500 transform-gpu group-hover:-translate-y-6">
                                 <h3 className="font-headline text-3xl font-black tracking-tight text-white drop-shadow-lg">
                                     {dev.name}
