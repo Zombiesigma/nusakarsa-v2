@@ -70,16 +70,12 @@ export default function LoginPage() {
       });
       setIsLoading(false);
     } else if (user) {
-      if (!user.emailVerified && user.providerData.some(p => p.providerId === 'password')) {
-        router.push('/verify-email');
-      } else {
-        toast({
-          variant: 'success',
-          title: 'Selamat Datang Kembali',
-          description: 'Mari lanjutkan petualangan sastra Anda.',
-        });
-        router.push('/');
-      }
+      toast({
+        variant: 'success',
+        title: 'Selamat Datang Kembali',
+        description: 'Mari lanjutkan petualangan sastra Anda.',
+      });
+      router.push('/');
     }
   }
 
