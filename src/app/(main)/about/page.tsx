@@ -17,8 +17,7 @@ const technologies = [
 ];
 
 export default function AboutPage() {
-  const [centeredCardIndex, setCenteredCardIndex] = useState(1);
-  const architects = [
+  const initialArchitects = [
       {
           name: "Khalid Ar-Rahman",
           role: "Systems Architect",
@@ -38,6 +37,21 @@ export default function AboutPage() {
           avatar: "https://picsum.photos/seed/syifa/600/800",
       }
   ];
+  const [architects, setArchitects] = useState(initialArchitects);
+  const centerIndex = 1;
+
+  const handleCardClick = (clickedIndex: number) => {
+    if (clickedIndex === centerIndex) return;
+
+    setArchitects(currentArchitects => {
+      const newArchitects = [...currentArchitects];
+      // Swap the clicked card with the center card
+      const temp = newArchitects[centerIndex];
+      newArchitects[centerIndex] = newArchitects[clickedIndex];
+      newArchitects[clickedIndex] = temp;
+      return newArchitects;
+    });
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-1 pt-6">
@@ -103,12 +117,12 @@ export default function AboutPage() {
 
         <div className="relative h-[550px] w-full flex items-center justify-center" style={{ perspective: '1000px' }}>
           {architects.map((dev, i) => {
-              const offset = i - centeredCardIndex;
+              const offset = i - centerIndex;
               const isCentered = offset === 0;
 
               return (
                   <motion.div
-                      key={i}
+                      key={dev.handle}
                       initial={false}
                       animate={{
                           x: `${offset * 45}%`,
@@ -117,7 +131,7 @@ export default function AboutPage() {
                           opacity: isCentered ? 1 : 0.5,
                       }}
                       transition={{ type: 'spring', stiffness: 170, damping: 26 }}
-                      onClick={() => setCenteredCardIndex(i)}
+                      onClick={() => handleCardClick(i)}
                       className="absolute w-72 md:w-80 h-[500px] cursor-pointer group"
                       style={{ transformStyle: 'preserve-3d' }}
                   >
