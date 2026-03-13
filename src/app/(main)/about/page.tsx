@@ -135,8 +135,8 @@ export default function AboutPage() {
                       className="absolute w-72 md:w-80 h-[500px] cursor-pointer group"
                       style={{ transformStyle: 'preserve-3d' }}
                   >
-                      <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-2xl h-full transition-all duration-500 bg-card/50 backdrop-blur-xl flex flex-col">
-                          <div className="relative flex-1 w-full pt-8">
+                      <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-2xl w-full bg-card/50 backdrop-blur-xl flex flex-col">
+                          <div className="relative w-full aspect-[4/5] bg-transparent">
                               <Image
                                   src={dev.avatar}
                                   alt={dev.name}
