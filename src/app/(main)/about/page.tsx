@@ -22,19 +22,19 @@ export default function AboutPage() {
           name: "Khalid Ar-Rahman",
           role: "Systems Architect",
           handle: "khalid_ar",
-          avatar: "https://picsum.photos/seed/khalid/600/800",
+          avatar: "/tim/cek.png",
       },
       {
           name: "Guntur Padilah",
           role: "Lead Full-stack Developer",
           handle: "gunturpadilah",
-          avatar: "https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/IMG-20251221-WA0058.jpg",
+          avatar: "/tim/cek.png",
       },
       {
           name: "Nursyifa Aeni",
           role: "Creative Director",
           handle: "syifa_aeni",
-          avatar: "https://picsum.photos/seed/syifa/600/800",
+          avatar: "/tim/cek.png",
       }
   ];
   const [architects, setArchitects] = useState(initialArchitects);
