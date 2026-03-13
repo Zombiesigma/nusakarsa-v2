@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -127,7 +128,7 @@ export default function AboutPage() {
                       animate={{
                           x: `${offset * 65}%`,
                           scale: isCentered ? 1 : 0.7,
-                          zIndex: isCentered ? 3 : (offset === -1 ? 2 : 1),
+                          z: isCentered ? 100 : 0,
                           opacity: isCentered ? 1 : 0.5,
                       }}
                       transition={{ type: 'spring', stiffness: 170, damping: 26 }}
