@@ -39,20 +39,6 @@ export default function AboutPage() {
         quote: "Desain adalah jembatan sunyi antara imajinasi dan realitas.",
     }
   ];
-  const [architects, setArchitects] = useState(initialArchitects);
-  const centerIndex = 1;
-
-  const handleCardClick = (clickedIndex: number) => {
-    if (clickedIndex === centerIndex) return;
-
-    setArchitects(currentArchitects => {
-        const newArchitects = [...currentArchitects];
-        const temp = newArchitects[centerIndex];
-        newArchitects[centerIndex] = newArchitects[clickedIndex];
-        newArchitects[clickedIndex] = temp;
-        return newArchitects;
-    });
-  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-4 pt-6">
@@ -116,59 +102,48 @@ export default function AboutPage() {
             <div className="h-px bg-border/50 flex-1" />
         </div>
         
-        <div className="relative h-[600px] w-full flex items-center justify-center">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[100px] opacity-60 z-0 pointer-events-none transition-opacity duration-700"></div>
-          {architects.map((dev, i) => {
-              const offset = i - centerIndex;
-              const isCentered = offset === 0;
-
-              return (
-                  <motion.div
-                      key={dev.handle}
-                      initial={false}
-                      animate={{
-                          x: `${offset * 38}%`,
-                          scale: isCentered ? 1 : 0.75,
-                          rotateY: isCentered ? 0 : (offset === -1 ? 20 : -20),
-                          zIndex: isCentered ? 20 : 10,
-                          opacity: isCentered ? 1 : 0.6,
-                      }}
-                      transition={{ type: 'spring', stiffness: 170, damping: 26 }}
-                      onClick={() => handleCardClick(i)}
-                      className="absolute w-72 md:w-80 h-[480px] cursor-pointer group"
-                  >
-                    <div className="relative w-full h-full rounded-[2.5rem] shadow-2xl overflow-hidden bg-muted/30 border border-white/10 flex flex-col justify-end">
-                        <Image 
-                            src={dev.avatar} 
-                            alt={dev.name} 
-                            fill
-                            sizes="(max-width: 768px) 50vw, 33vw"
-                            className="object-contain object-bottom transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
-                        <div className="relative z-10 p-6 text-center items-center">
-                            <div className="transition-all duration-500 transform-gpu group-hover:-translate-y-6">
-                                <h3 className="font-headline text-3xl font-black tracking-tight text-white drop-shadow-lg">
-                                    {dev.name}
-                                </h3>
-                                <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot"></span>
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/90">{dev.role}</span>
-                                </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {initialArchitects.map((dev, i) => (
+                <motion.div
+                    key={dev.handle}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="group"
+                >
+                    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl h-full bg-card/50 backdrop-blur-xl flex flex-col text-center transition-all duration-500 hover:-translate-y-2">
+                        <div className="relative p-8 pt-16">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36">
+                                <Image 
+                                    src={dev.avatar} 
+                                    alt={dev.name} 
+                                    fill
+                                    sizes="144px"
+                                    className="object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
+                                />
                             </div>
-
-                            <div className="pt-4 opacity-0 group-hover:opacity-100 transition-all duration-500 transform-gpu translate-y-4 group-hover:translate-y-0">
-                                <Button className="rounded-full border border-white/30 bg-white/20 text-white hover:bg-white hover:text-foreground text-xs font-bold backdrop-blur-sm px-5 py-2.5 transition-colors">
-                                    Lihat Profil
-                                </Button>
+                        </div>
+                        
+                        <div className="p-8 pt-12 space-y-4 bg-background/50 rounded-t-[2rem] flex-1 flex flex-col">
+                            <h3 className="font-headline text-3xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
+                                {dev.name}
+                            </h3>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot"></span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">{dev.role}</span>
+                            </div>
+                            
+                            <div className="relative pt-6 flex-1 flex flex-col justify-center">
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-background/50" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
+                                <p className="text-sm text-muted-foreground leading-relaxed italic bg-background/50 p-4 rounded-xl">
+                                    "{dev.quote}"
+                                </p>
                             </div>
                         </div>
                     </div>
-                    {isCentered && <div className="absolute inset-0 rounded-[2.5rem] ring-2 ring-primary/50 z-20 pointer-events-none transition-all"></div>}
-                  </motion.div>
-              );
-          })}
+                </motion.div>
+            ))}
         </div>
       </section>
 
