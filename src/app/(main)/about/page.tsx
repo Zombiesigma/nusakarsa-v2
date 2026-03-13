@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { Globe, PenTool, Cpu, Zap, ShieldCheck } from 'lucide-react';
@@ -19,24 +18,24 @@ const technologies = [
 
 export default function AboutPage() {
   const initialArchitects = [
-      {
-          name: "Khalid Ar-Rahman",
-          role: "Systems Architect",
-          handle: "khalid_ar",
-          avatar: "/tim/cek.png",
-      },
-      {
-          name: "Guntur Padilah",
-          role: "Lead Full-stack Developer",
-          handle: "gunturpadilah",
-          avatar: "/tim/cek.png",
-      },
-      {
-          name: "Nursyifa Aeni",
-          role: "Creative Director",
-          handle: "syifa_aeni",
-          avatar: "/tim/cek.png",
-      }
+    {
+        name: "Khalid Ar-Rahman",
+        role: "Systems Architect",
+        handle: "khalid_ar",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+        name: "Guntur Padilah",
+        role: "Lead Full-stack Developer",
+        handle: "gunturpadilah",
+        avatar: "/tim/cek.png",
+    },
+    {
+        name: "Nursyifa Aeni",
+        role: "Creative Director",
+        handle: "syifa_aeni",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+    }
   ];
   const [architects, setArchitects] = useState(initialArchitects);
   const centerIndex = 1;
@@ -46,7 +45,6 @@ export default function AboutPage() {
 
     setArchitects(currentArchitects => {
       const newArchitects = [...currentArchitects];
-      // Swap the clicked card with the center card
       const temp = newArchitects[centerIndex];
       newArchitects[centerIndex] = newArchitects[clickedIndex];
       newArchitects[clickedIndex] = temp;
@@ -115,8 +113,9 @@ export default function AboutPage() {
             </h2>
             <div className="h-px bg-border/50 flex-1" />
         </div>
-
-        <div className="relative h-[550px] w-full flex items-center justify-center" style={{ perspective: '1000px' }}>
+        
+        <div className="relative h-[600px] w-full flex items-center justify-center" style={{ perspective: '1200px' }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[100px] opacity-60 z-0 pointer-events-none transition-opacity duration-700"></div>
           {architects.map((dev, i) => {
               const offset = i - centerIndex;
               const isCentered = offset === 0;
@@ -126,34 +125,55 @@ export default function AboutPage() {
                       key={dev.handle}
                       initial={false}
                       animate={{
-                          x: `${offset * 65}%`,
-                          scale: isCentered ? 1 : 0.7,
-                          z: isCentered ? 100 : 0,
+                          x: `${offset * 38}%`,
+                          rotateY: isCentered ? 0 : (offset < 0 ? 20 : -20),
+                          scale: isCentered ? 1 : 0.75,
+                          zIndex: isCentered ? 20 : 10,
                           opacity: isCentered ? 1 : 0.5,
                       }}
                       transition={{ type: 'spring', stiffness: 170, damping: 26 }}
                       onClick={() => handleCardClick(i)}
-                      className="absolute w-72 md:w-80 h-[500px] cursor-pointer group"
+                      className="absolute w-72 md:w-80 h-[480px] cursor-pointer group"
                       style={{ transformStyle: 'preserve-3d' }}
                   >
-                      <Card className="relative overflow-hidden rounded-[2.5rem] border-none shadow-2xl w-full bg-card/50 backdrop-blur-xl flex flex-col">
-                          <div className="relative w-full aspect-[4/5] bg-transparent">
-                              <Image
-                                  src={dev.avatar}
-                                  alt={dev.name}
+                      <div className="relative overflow-hidden rounded-[2.5rem] border-none shadow-2xl h-full flex flex-col justify-end bg-muted transition-all duration-500">
+                          {/* Background Image Layer */}
+                          <div className="absolute inset-0 z-0">
+                              <Image 
+                                  src={dev.avatar} 
+                                  alt={dev.name} 
                                   fill
-                                  className="object-contain object-bottom drop-shadow-[0_20px_20px_rgba(0,0,0,0.4)] transition-transform duration-500 group-hover:scale-105"
                                   sizes="(max-width: 768px) 50vw, 33vw"
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                               />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90"></div>
                           </div>
                           
-                          <div className="p-8 pt-4 text-center bg-card/50 backdrop-blur-sm z-10">
-                              <h3 className="font-headline text-2xl font-black tracking-tight">{dev.name}</h3>
-                              <p className="text-primary text-sm font-black uppercase tracking-widest mt-1">{dev.role}</p>
-                              <div className="my-6 w-16 h-1 bg-primary/10 rounded-full mx-auto group-hover:w-24 transition-all duration-700" />
-                              <p className="text-muted-foreground text-sm font-mono tracking-wider">@{dev.handle}</p>
+                          {/* Content Layer */}
+                          <div className="relative z-10 p-8 text-center space-y-3 transition-all duration-500 group-hover:-translate-y-2">
+                              
+                              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+                                  <span className="h-2 w-2 rounded-full bg-primary animate-pulse-dot"></span>
+                                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/90">{dev.role}</span>
+                              </div>
+
+                              <h3 className="font-headline text-3xl font-black tracking-tight text-white drop-shadow-md">
+                                  {dev.name}
+                              </h3>
+                              
+                              <p className="text-white/60 text-xs font-mono tracking-wider">
+                                  @{dev.handle}
+                              </p>
+
+                              <div className="pt-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                                  <button className="rounded-full border border-white/30 bg-white/10 text-white hover:bg-white hover:text-foreground text-xs font-bold backdrop-blur-sm px-4 py-2 transition-colors">
+                                      Lihat Profil
+                                  </button>
+                              </div>
                           </div>
-                      </Card>
+                          
+                          {isCentered && <div className="absolute inset-0 rounded-[2.5rem] ring-2 ring-primary/50 z-20 pointer-events-none transition-all"></div>}
+                      </div>
                   </motion.div>
               );
           })}
