@@ -38,7 +38,7 @@ Setelah instalasi selesai, Anda dapat menjalankan server pengembangan:
 npm run dev
 ```
 
-Buka [http://localhost:9002](http://localhost:9002) di browser Anda untuk melihat aplikasi berjalan.
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat aplikasi berjalan.
 
 ## Skrip yang Tersedia
 
