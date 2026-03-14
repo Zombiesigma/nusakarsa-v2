@@ -223,11 +223,12 @@ export default function AboutPage() {
                     </ul>
                   </div>
                   <div className="space-y-8">
-                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Otoritas</h4>
+                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Legal</h4>
                     <ul className="space-y-5">
                       {[
                         {label: 'Pusat Kendali', href: '/admin'}, 
-                        {label: 'Karir Penulis', href: '/join-author'}
+                        {label: 'Karir Penulis', href: '/join-author'},
+                        {label: 'Kebijakan Privasi', href: '/privacy'}
                       ].map(item => (
                         <li key={item.label}>
                           <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item.label}</Link>
