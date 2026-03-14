@@ -173,21 +173,28 @@ export default function WelcomePage() {
                   <div className="space-y-8">
                     <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Navigasi</h4>
                     <ul className="space-y-5">
-                      {['Eksplorasi', 'Panduan', 'Tentang'].map(item => (
-                        <li key={item}>
-                          <Link href={`/${item.toLowerCase()}`} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors inline-flex items-center group">
-                            {item} <ChevronRight className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                      {[
+                        {label: 'Eksplorasi', href: '/search'}, 
+                        {label: 'Panduan', href: '/guide'},
+                        {label: 'Tentang', href: '/about'}
+                      ].map(item => (
+                        <li key={item.label}>
+                          <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors inline-flex items-center group">
+                            {item.label} <ChevronRight className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
                           </Link>
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div className="space-y-8">
-                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Otoritas</h4>
+                    <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Legal</h4>
                     <ul className="space-y-5">
-                      {['Pusat Kendali', 'Karir Penulis', 'Keamanan'].map(item => (
-                        <li key={item}>
-                          <Link href="#" className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item}</Link>
+                      {[
+                        {label: 'Karir Penulis', href: '/join-author'},
+                        {label: 'Kebijakan Privasi', href: '/privacy'}
+                      ].map(item => (
+                        <li key={item.label}>
+                          <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item.label}</Link>
                         </li>
                       ))}
                     </ul>
