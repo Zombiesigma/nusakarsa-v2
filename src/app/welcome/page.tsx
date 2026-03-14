@@ -328,7 +328,8 @@ export default function WelcomePage() {
                     <ul className="space-y-5">
                       {[
                         {label: 'Karir Penulis', href: '/join-author'},
-                        {label: 'Kebijakan Privasi', href: '/privacy'}
+                        {label: 'Kebijakan Privasi', href: '/privacy'},
+                        {label: 'Ketentuan Layanan', href: '/terms'}
                       ].map(item => (
                         <li key={item.label}>
                           <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item.label}</Link>

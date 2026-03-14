@@ -21,7 +21,9 @@ export default function MainAppLayout({
   const isImmersiveRoute = pathname?.includes('/read') ||
                            pathname?.includes('/edit');
 
-  if (pathname === '/privacy') {
+  const isPublicLegalPage = pathname === '/privacy' || pathname === '/terms';
+
+  if (isPublicLegalPage) {
     return (
       <div className="bg-background text-foreground">
         <main className="w-full">
@@ -85,7 +87,8 @@ export default function MainAppLayout({
                         {[
                           {label: 'Pusat Kendali', href: '/admin'}, 
                           {label: 'Karir Penulis', href: '/join-author'},
-                          {label: 'Kebijakan Privasi', href: '/privacy'}
+                          {label: 'Kebijakan Privasi', href: '/privacy'},
+                          {label: 'Ketentuan Layanan', href: '/terms'}
                         ].map(item => (
                           <li key={item.label}>
                             <Link href={item.href} className="text-base font-bold text-muted-foreground hover:text-primary transition-colors">{item.label}</Link>
