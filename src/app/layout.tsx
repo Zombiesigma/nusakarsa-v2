@@ -5,7 +5,7 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
 import { ProtectionProvider } from '@/components/ProtectionProvider';
 
-const productionUrl = 'https://nusakarsa-one.vercel.app/';
+const productionUrl = 'https://nusakarsa-one.vecel.app/';
 const brandIcon = 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp';
 
 export const viewport: Viewport = {
