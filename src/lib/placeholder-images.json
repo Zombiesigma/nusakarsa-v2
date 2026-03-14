@@ -63,8 +63,44 @@
     {
       "id": "book-cover-8",
       "description": "Book cover for The Alchemist",
-      "imageUrl": "https://images.unsplash.com/photo-1559739837-554d1bb771e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxqb3VybmV5JTIwc3Vuc2V0fGVufDB8fHx8MTc2OTE1MTUwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1559739837-554d1bb771e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxqT3VybmV5JTIwc3Vuc2V0fGVufDB8fHx8MTc2OTE1MTUwNXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "journey sunset"
+    },
+    {
+      "id": "feature-studio",
+      "description": "A feature image for the creator studio section",
+      "imageUrl": "https://images.unsplash.com/photo-1494488373238-a9282361bbed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3cml0aW5nJTIwZGVza3xlbnwwfHx8fDE3MjE1MDM0OTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "writing desk"
+    },
+    {
+      "id": "feature-explore",
+      "description": "A feature image for the reading experience section",
+      "imageUrl": "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxsaWJyYXJ5JTIwYm9va3NoZWxmfGVufDB8fHx8MTcyMTUwMzU0MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "library bookshelf"
+    },
+    {
+      "id": "feature-community",
+      "description": "A feature image for the community section",
+      "imageUrl": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjb21tdW5pdHklMjBkaXNjdXNzaW9ufGVufDB8fHx8MTcyMTUwMzU2NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "community discussion"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Testimonial portrait 1",
+      "imageUrl": "https://images.unsplash.com/photo-1560250097-0b93528c311a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhdXRob3IlMjBwb3J0cmFpdHxlbnwwfHx8fDE3MjE1MDM2MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "author portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Testimonial portrait 2",
+      "imageUrl": "https://images.unsplash.com/photo-1600057912952-2591689c3757?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjcmVhdGl2ZSUyMHdyaXRlcnxlbnwwfHx8fDE3MjE1MDM2NDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "creative writer"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Testimonial portrait 3",
+      "imageUrl": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjByZWFkaW5nfGVufDB8fHx8MTcyMTUwMzY3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person reading"
     }
   ]
 }

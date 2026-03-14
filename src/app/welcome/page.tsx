@@ -1,27 +1,33 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { 
-  Leaf, 
   BookOpen, 
   PenTool, 
   ArrowRight, 
-  ShieldCheck, 
   ChevronRight, 
   Instagram, 
   Twitter, 
   Github, 
   Globe, 
-  Heart,
-  Cpu
+  Cpu,
+  Users,
+  Sparkles,
+  Layers,
+  Quote
 } from 'lucide-react';
 import { useAuthRedirect } from '@/hooks/use-auth-redirect';
+import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 30 },
   visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
@@ -36,107 +42,239 @@ const sectionVariants = {
 export default function WelcomePage() {
   useAuthRedirect();
 
+  const featureStudioImg = PlaceHolderImages.find(img => img.id === 'feature-studio')?.imageUrl || 'https://picsum.photos/seed/studio/800/600';
+  const featureExploreImg = PlaceHolderImages.find(img => img.id === 'feature-explore')?.imageUrl || 'https://picsum.photos/seed/explore/800/600';
+  const featureCommunityImg = PlaceHolderImages.find(img => img.id === 'feature-community')?.imageUrl || 'https://picsum.photos/seed/community/800/600';
+  const testimonial1Img = PlaceHolderImages.find(img => img.id === 'testimonial-1')?.imageUrl || 'https://picsum.photos/seed/test1/100/100';
+  const testimonial2Img = PlaceHolderImages.find(img => img.id === 'testimonial-2')?.imageUrl || 'https://picsum.photos/seed/test2/100/100';
+  const testimonial3Img = PlaceHolderImages.find(img => img.id === 'testimonial-3')?.imageUrl || 'https://picsum.photos/seed/test3/100/100';
+
+  const features = [
+      {
+        icon: PenTool,
+        title: "Studio Kreator Kelas Industri",
+        description: "Editor canggih dengan auto-save, manajemen bab yang intuitif, dan kemampuan ekspor ke PDF profesional. Fokus pada cerita Anda, kami urus sisanya.",
+        imageUrl: featureStudioImg,
+        imageHint: "writing desk",
+        color: "text-emerald-500",
+        bg: "bg-emerald-500/5",
+      },
+      {
+        icon: BookOpen,
+        title: "Pengalaman Membaca Imersif",
+        description: "Nikmati setiap karya dengan antarmuka bebas gangguan. Atur tema, ukuran font, dan dengarkan musik latar pilihan penulis untuk pengalaman yang tak terlupakan.",
+        imageUrl: featureExploreImg,
+        imageHint: "library bookshelf",
+        color: "text-blue-500",
+        bg: "bg-blue-500/5",
+      },
+      {
+        icon: Users,
+        title: "Komunitas Sastra Digital",
+        description: "Terhubung dengan para pujangga dan pembaca lain. Beri apresiasi, tinggalkan ulasan, dan bangun reputasi Anda di semesta literasi Nusakarsa.",
+        imageUrl: featureCommunityImg,
+        imageHint: "community discussion",
+        color: "text-purple-500",
+        bg: "bg-purple-500/5",
+      },
+  ];
+
+  const testimonials = [
+      {
+          name: 'Andrea Hirata',
+          role: 'Penulis Laskar Pelangi',
+          avatar: testimonial1Img,
+          avatarHint: 'author portrait',
+          quote: '"Nusakarsa adalah angin segar bagi dunia literasi. Sebuah panggung digital yang memberikan penulis kebebasan penuh untuk berekspresi dan terhubung dengan pembaca secara otentik."'
+      },
+      {
+          name: 'Dee Lestari',
+          role: 'Penulis Supernova',
+          avatar: testimonial2Img,
+          avatarHint: 'creative writer',
+          quote: '"Platform ini memahami denyut nadi seorang penulis. Dari editor hingga sistem umpan baliknya, semuanya dirancang untuk mengalirkan kreativitas tanpa hambatan teknis."'
+      },
+      {
+          name: 'Eka Kurniawan',
+          role: 'Penulis Cantik Itu Luka',
+          avatar: testimonial3Img,
+          avatarHint: 'person reading',
+          quote: '"Melihat sebuah platform lokal yang berani mendobrak tradisi dan memberikan ruang bagi karya-karya eksperimental adalah sebuah harapan baru. Nusakarsa adalah masa depan sastra digital Indonesia."'
+      }
+  ];
+
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-x-hidden flex flex-col">
-      {/* Decorative Blobs */}
       <div className="absolute top-0 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 pointer-events-none animate-pulse" />
       <div className="absolute bottom-0 -right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
-      {/* Main Content Area */}
-      <motion.div 
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 w-full flex-1 flex flex-col items-center justify-center py-20 px-6">
-        <div className="max-w-4xl w-full flex flex-col items-center text-center space-y-12">
-          {/* Brand Reveal */}
-          <motion.div
-            variants={sectionVariants}
-            custom={0}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse" />
-            <div className="relative p-1 rounded-[2.5rem] bg-gradient-to-tr from-primary via-accent to-primary/80 shadow-2xl shadow-primary/20">
-              <Logo className="w-24 h-24 md:w-32 md:h-32 rounded-[2.3rem] ring-4 ring-background" />
-            </div>
-          </motion.div>
-
-          <div className="space-y-6">
+      <main className="flex-1">
+        <motion.section 
+          initial="hidden"
+          animate="visible"
+          className="relative z-10 w-full flex flex-col items-center justify-center py-20 md:py-32 px-6"
+        >
+          <div className="max-w-4xl w-full flex flex-col items-center text-center space-y-12">
             <motion.div
               variants={sectionVariants}
-              custom={2}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-primary/20"
+              custom={0}
+              className="relative"
             >
-              <Cpu className="h-4 w-4 animate-pulse" /> Gerbang Imajinasi Digital
+              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse" />
+              <div className="relative p-1 rounded-[2.5rem] bg-gradient-to-tr from-primary via-accent to-primary/80 shadow-2xl shadow-primary/20">
+                <Logo className="w-24 h-24 md:w-32 md:h-32 rounded-[2.3rem] ring-4 ring-background" />
+              </div>
             </motion.div>
-            
-            <motion.h1 
+
+            <div className="space-y-6">
+              <motion.div
+                variants={sectionVariants}
+                custom={2}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-primary/20"
+              >
+                <Cpu className="h-4 w-4 animate-pulse" /> Gerbang Imajinasi Digital
+              </motion.div>
+              
+              <motion.h1 
+                variants={sectionVariants}
+                custom={3}
+                className="text-5xl md:text-8xl font-headline font-black tracking-tight leading-[0.9] text-foreground drop-shadow-sm"
+              >
+                Nusa<span className="text-primary italic">karsa.</span>
+              </motion.h1>
+              
+              <motion.p 
+                variants={sectionVariants}
+                custom={4}
+                className="text-base md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto italic leading-relaxed px-4"
+              >
+                "Platform kolaboratif untuk sastrawan dan kreator digital. Ciptakan, bagikan, dan abadikan karya Anda di era baru literasi."
+              </motion.p>
+            </div>
+
+            <motion.div 
               variants={sectionVariants}
-              custom={3}
-              className="text-5xl md:text-8xl font-headline font-black tracking-tight leading-[0.9] text-foreground drop-shadow-sm"
+              custom={5}
+              className="flex flex-col sm:flex-row gap-6 w-full max-w-lg pt-4"
             >
-              Nusa<span className="text-primary italic">karsa.</span>
-            </motion.h1>
-            
-            <motion.p 
-              variants={sectionVariants}
-              custom={4}
-              className="text-base md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto italic leading-relaxed px-4"
-            >
-              "Platform kolaboratif untuk sastrawan dan kreator digital. Ciptakan, bagikan, dan abadikan karya Anda di era baru literasi."
+              <Button asChild size="lg" className="flex-1 rounded-[1.25rem] h-16 font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.05] hover:rotate-1 active:scale-95 transition-all group">
+                <Link href="/register" className="flex items-center justify-center">
+                  Mulai Berkarya 
+                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="flex-1 rounded-[1.25rem] h-16 border-2 font-black uppercase text-xs tracking-[0.2em] hover:bg-primary/5 hover:border-primary/40 transition-all active:scale-95 shadow-lg bg-card/50 backdrop-blur-md group">
+                <Link href="/login" className="flex items-center justify-center">
+                  Masuk
+                  <ArrowRight className="ml-2 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        <section className="max-w-6xl mx-auto py-20 md:py-32 px-6 space-y-24">
+          <div className="text-center space-y-4">
+            <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-primary/20">
+                <Layers className="h-4 w-4" /> Pilar Utama
+              </div>
+            </motion.div>
+            <motion.h2 variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
+              Dibangun untuk <span className="text-primary italic">Kreator.</span>
+            </motion.h2>
+            <motion.p variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-base md:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
+              Nusakarsa bukan sekadar platform, melainkan sebuah ekosistem lengkap yang dirancang untuk setiap tahap perjalanan kreatif Anda.
             </motion.p>
           </div>
 
-          {/* Action Buttons */}
-          <motion.div 
-            variants={sectionVariants}
-            custom={5}
-            className="flex flex-col sm:flex-row gap-6 w-full max-w-lg pt-4"
-          >
-            <Button asChild size="lg" className="flex-1 rounded-[1.25rem] h-16 font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.05] hover:rotate-1 active:scale-95 transition-all group">
-              <Link href="/register" className="flex items-center justify-center">
-                Mulai Berkarya 
-                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="flex-1 rounded-[1.25rem] h-16 border-2 font-black uppercase text-xs tracking-[0.2em] hover:bg-primary/5 hover:border-primary/40 transition-all active:scale-95 shadow-lg bg-card/50 backdrop-blur-md group">
-              <Link href="/login" className="flex items-center justify-center">
-                Masuk
-                <ArrowRight className="ml-2 h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-              </Link>
-            </Button>
-          </motion.div>
-
-          {/* Feature Grid */}
-          <motion.div 
-            variants={sectionVariants}
-            custom={6}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full pt-16 border-t border-border/50"
-          >
-            {[
-              { icon: BookOpen, title: "Literasi Digital", desc: "Arsip narasi tanpa batas." },
-              { icon: PenTool, title: "Studio Kreator", desc: "Editor naskah kelas industri." },
-              { icon: Heart, title: "Ruang Apresiasi", desc: "Platform puitis digital." }
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center gap-4 group p-4 rounded-3xl bg-card/50 border border-transparent hover:border-primary/20 transition-all duration-500">
-                <div className="p-4 rounded-2xl bg-muted group-hover:bg-primary/10 group-hover:text-primary text-muted-foreground transition-all duration-500 shadow-sm group-hover:shadow-primary/5">
-                  <item.icon className="h-6 w-6" />
+          <div className="space-y-20">
+            {features.map((feature, index) => (
+              <motion.div 
+                key={index} 
+                variants={sectionVariants} 
+                initial="hidden" 
+                whileInView="visible" 
+                viewport={{ once: true, amount: 0.3 }}
+                className={cn("grid md:grid-cols-2 gap-12 md:gap-16 items-center", index % 2 !== 0 && "md:grid-flow-row-dense")}
+              >
+                <div className={cn("relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border-4 border-background", index % 2 !== 0 && "md:col-start-2")}>
+                  <Image src={feature.imageUrl} alt={feature.title} fill className="object-cover" data-ai-hint={feature.imageHint} />
                 </div>
-                <div className="space-y-1 text-center">
-                  <h4 className="font-black text-sm text-foreground/90 tracking-wider">{item.title}</h4>
-                  <p className="text-xs text-muted-foreground/70 font-medium">{item.desc}</p>
+                <div className="space-y-5">
+                  <div className={cn("p-4 rounded-2xl w-fit shadow-lg", feature.bg, feature.color)}>
+                    <feature.icon className="h-7 w-7" />
+                  </div>
+                  <h3 className="text-3xl font-headline font-black tracking-tight">{feature.title}</h3>
+                  <p className="text-muted-foreground text-lg leading-relaxed">{feature.description}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </motion.div>
-        </div>
-      </motion.div>
+          </div>
+        </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 w-full mt-auto pt-20">
+        <section className="py-20 md:py-32 px-6 bg-muted/30">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center space-y-4 mb-16">
+              <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent-foreground text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-accent/20">
+                  <Sparkles className="h-4 w-4" /> Suara Komunitas
+                </div>
+              </motion.div>
+              <motion.h2 variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
+                Dipercaya oleh Para <span className="text-accent italic">Maestro.</span>
+              </motion.h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, i) => (
+                <motion.div key={i} variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}>
+                  <Card className="p-8 h-full rounded-3xl bg-card/80 backdrop-blur-md border-none shadow-xl">
+                    <Quote className="h-8 w-8 text-primary/20 mb-6" />
+                    <p className="text-muted-foreground italic leading-relaxed mb-8">"{testimonial.quote}"</p>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12 border-2 border-primary/20">
+                        <AvatarImage src={testimonial.avatar} data-ai-hint={testimonial.avatarHint} />
+                        <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="font-black">{testimonial.name}</h4>
+                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 md:py-40 px-6">
+          <motion.div 
+            variants={sectionVariants} 
+            initial="hidden" 
+            whileInView="visible" 
+            viewport={{ once: true, amount: 0.5 }}
+            className="max-w-3xl mx-auto text-center space-y-8"
+          >
+            <h2 className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
+              Siap Menjadi Bagian dari <span className="text-primary italic">Revolusi Sastra?</span>
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Jangan biarkan idemu hanya tersimpan di dalam draf. Wujudkan, bagikan, dan bangun koneksi. Bergabunglah dengan ribuan kreator lain hari ini.
+            </p>
+            <div className="pt-4">
+              <Button asChild size="lg" className="rounded-2xl h-20 px-16 font-black uppercase text-base tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-105 transition-transform duration-300">
+                <Link href="/register">Daftar Gratis</Link>
+              </Button>
+            </div>
+          </motion.div>
+        </section>
+      </main>
+
+      <footer className="relative z-10 w-full mt-auto">
         <div className="bg-card/50 backdrop-blur-3xl border-t rounded-t-[3rem] md:rounded-t-[5rem] p-10 md:p-20 shadow-[0_-20px_100px_-20px_rgba(0,0,0,0.1)]">
             <div className="max-w-7xl mx-auto">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-                {/* Brand Info */}
                 <div className="lg:col-span-5 space-y-8">
                   <div className="flex items-center gap-4">
                     <Logo className="h-14 w-14 rounded-2xl shadow-2xl ring-1 ring-primary/10" />
@@ -168,7 +306,6 @@ export default function WelcomePage() {
                   </div>
                 </div>
 
-                {/* Navigation Links */}
                 <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 lg:gap-8">
                   <div className="space-y-8">
                     <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Navigasi</h4>
@@ -204,7 +341,6 @@ export default function WelcomePage() {
                 </div>
               </div>
 
-              {/* Copyright Bar */}
               <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
                 <p className="text-xs font-black uppercase tracking-[0.3em]">
                   &copy; {new Date().getFullYear()} Nusakarsa.
