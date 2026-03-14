@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     default: 'Nusakarsa - Daya Cipta Bangsa',
     template: '%s | Nusakarsa',
   },
-  description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
-  keywords: ['nusakarsa', 'buku', 'novel', 'cerita', 'seni', 'kreatif', 'bangsa', 'daya cipta'],
+  description: 'Ruang kolaborasi untuk para penulis, pujangga, dan sastrawan bangsa di Nusakarsa.',
+  keywords: ['nusakarsa', 'buku', 'novel', 'cerita', 'seni', 'kreatif', 'bangsa', 'daya cipta', 'penulis', 'pujangga'],
   authors: [{ name: 'Guntur P.', url: 'https://www.gunturpadilah.web.id/' }],
   creator: 'Guntur P.',
   icons: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
       default: 'Nusakarsa - Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
-    description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
+    description: 'Ruang kolaborasi untuk para penulis, pujangga, dan sastrawan bangsa di Nusakarsa.',
     siteName: 'Nusakarsa',
     url: productionUrl,
     locale: 'id_ID',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
       default: 'Nusakarsa - Daya Cipta Bangsa',
       template: '%s | Nusakarsa',
     },
-    description: 'Ruang kolaborasi kreatif untuk para pujangga dan seniman bangsa di Nusakarsa.',
+    description: 'Ruang kolaborasi untuk para penulis, pujangga, dan sastrawan bangsa di Nusakarsa.',
     images: [brandIcon],
   },
 };

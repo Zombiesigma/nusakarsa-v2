@@ -423,77 +423,6 @@ export default function JoinAuthorPage() {
         )
     }
 
-     if (applicationStatus === 'pending') {
-        return (
-            <div className="max-w-4xl mx-auto py-10 md:py-20 relative px-4 overflow-x-hidden w-full">
-                <div className="absolute top-0 right-[-30px] w-64 md:w-96 h-64 md:h-96 bg-accent/5 rounded-full blur-[80px] md:blur-[120px] -z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-[-30px] w-48 md:w-72 h-48 md:h-72 bg-primary/5 rounded-full blur-[80px] md:blur-[100px] -z-10 pointer-events-none" />
-
-                <motion.div 
-                    initial={{ opacity: 0, y: 30 }} 
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <Card className="text-center rounded-[2.5rem] md:rounded-[3rem] border-none shadow-2xl bg-card/50 backdrop-blur-xl overflow-hidden relative border border-white/20">
-                        <CardHeader className="pt-12 md:pt-16 pb-8 md:pb-10 px-6 md:px-10 relative z-10">
-                            <div className="mx-auto relative mb-8 md:mb-10">
-                                <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full scale-150 animate-pulse" />
-                                <div className="relative bg-white dark:bg-zinc-900 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl text-accent w-fit mx-auto border border-accent/10">
-                                    <Clock className="h-12 w-12 md:h-16 md:w-16 animate-[spin_10s_linear_infinite]" />
-                                </div>
-                            </div>
-                            <CardTitle className="font-headline text-3xl md:text-5xl font-black mb-3 md:mb-4 leading-tight tracking-tight">
-                                Permohonan Sedang <br/> <span className="text-accent italic underline decoration-accent/20">Ditinjau.</span>
-                            </CardTitle>
-                            <CardDescription className="text-base md:text-xl leading-relaxed text-muted-foreground font-medium max-w-2xl mx-auto italic">
-                                "Sabar adalah kunci dari setiap karya agung. Tim kurasi kami sedang menelaah gairah sastra yang Anda kirimkan."
-                            </CardDescription>
-                        </CardHeader>
-
-                        <CardContent className="px-6 md:pt-10 pb-12 md:pb-16 relative z-10">
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto mt-2">
-                                {[
-                                    { icon: ShieldCheck, label: "Verifikasi", status: "Selesai", color: "text-emerald-500", bg: "bg-emerald-500/10" },
-                                    { icon: Medal, label: "Kurasi", status: "Berlangsung", color: "text-accent", bg: "bg-accent/10", active: true },
-                                    { icon: Star, label: "Keputusan", status: "Menunggu", color: "text-muted-foreground", bg: "bg-muted" },
-                                ].map((step, i) => (
-                                    <div key={i} className={cn(
-                                        "p-5 md:p-6 rounded-[2rem] border border-border/50 flex flex-col items-center gap-3 transition-all duration-500",
-                                        step.active ? "bg-white dark:bg-zinc-800 shadow-xl scale-[1.02] md:scale-105 border-accent/20" : "bg-muted/30 opacity-60"
-                                    )}>
-                                        <div className={cn("p-2.5 md:p-3 rounded-2xl", step.bg, step.color)}>
-                                            <step.icon className="h-5 w-5 md:h-6 md:w-6" />
-                                        </div>
-                                        <div className="text-center">
-                                            <p className="font-black text-[10px] md:text-xs uppercase tracking-widest mb-0.5">{step.label}</p>
-                                            <p className={cn("text-[8px] md:text-[10px] font-bold uppercase", step.color)}>{step.status}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="mt-10 md:mt-12 p-5 md:p-6 rounded-[1.5rem] md:rounded-3xl bg-primary/5 border border-primary/10 max-w-2xl mx-auto flex items-start gap-3 md:gap-4 text-left">
-                                <Info className="h-4 w-4 md:h-5 md:w-5 text-primary shrink-0 mt-0.5" />
-                                <p className="text-[11px] md:text-sm text-muted-foreground leading-relaxed">
-                                    Kami biasanya membutuhkan waktu 1-3 hari kerja untuk memberikan keputusan. Anda akan menerima notifikasi instan segera setelah tim kami memberikan persetujuan.
-                                </p>
-                            </div>
-                        </CardContent>
-
-                        <CardFooter className="flex flex-col sm:flex-row justify-center items-center gap-3 md:gap-4 relative z-10 px-6 md:px-10 pb-12 md:pb-16">
-                            <Button asChild size="lg" className="w-full sm:w-auto rounded-full px-8 md:px-10 h-14 font-black shadow-xl shadow-primary/20 transition-all active:scale-95 text-xs md:text-sm">
-                                <Link href="/"><BookOpen className="mr-2 h-4 w-4" /> Jelajahi Buku Lain</Link>
-                            </Button>
-                            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8 md:px-10 h-14 font-black border-2 transition-all hover:bg-muted/50 text-xs md:text-sm">
-                                <Link href="/ai"><Info className="mr-2 h-4 w-4 text-primary" /> Tanya Nusakarsa AI</Link>
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </motion.div>
-            </div>
-        )
-    }
-
   return (
     <div className="max-w-5xl mx-auto py-8 md:py-12 px-4 overflow-x-hidden w-full">
       <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -507,7 +436,7 @@ export default function JoinAuthorPage() {
                         <PenTool className="h-3 w-3" /> Karir Penulis
                     </div>
                     <h1 className="text-3xl md:text-5xl font-headline font-black leading-tight tracking-tight text-foreground">
-                        Mulai Perjalanan <br/> <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Sastramu</span> Anda
+                        Mulai Perjalanan <br/> <span className="text-primary italic underline decoration-primary/20 underline-offset-8">Sastramu</span>
                     </h1>
                     <p className="mt-4 md:mt-6 text-base md:text-lg text-muted-foreground leading-relaxed font-medium">
                         Bergabunglah dengan komunitas pujangga modern dan mulai bagikan dunia imajinasi Anda kepada pembaca global di Nusakarsa.

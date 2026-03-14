@@ -52,7 +52,7 @@ export default function WelcomePage() {
   const features = [
       {
         icon: PenTool,
-        title: "Studio Kreator Kelas Industri",
+        title: "Studio Penulis Modern",
         description: "Editor canggih dengan auto-save, manajemen bab yang intuitif, dan kemampuan ekspor ke PDF profesional. Fokus pada cerita Anda, kami urus sisanya.",
         imageUrl: featureStudioImg,
         imageHint: "writing desk",
@@ -148,7 +148,7 @@ export default function WelcomePage() {
                 custom={4}
                 className="text-base md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto italic leading-relaxed px-4"
               >
-                "Platform kolaboratif untuk sastrawan dan kreator digital. Ciptakan, bagikan, dan abadikan karya Anda di era baru literasi."
+                "Platform untuk para penulis dan sastrawan. Kami percaya setiap karya berhak untuk dibaca, dan setiap suara layak untuk didengar."
               </motion.p>
             </div>
 
@@ -181,10 +181,10 @@ export default function WelcomePage() {
               </div>
             </motion.div>
             <motion.h2 variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
-              Dibangun untuk <span className="text-primary italic">Kreator.</span>
+              Dibangun untuk <span className="text-primary italic">Penulis.</span>
             </motion.h2>
             <motion.p variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-base md:text-xl text-muted-foreground font-medium max-w-3xl mx-auto leading-relaxed">
-              Nusakarsa bukan sekadar platform, melainkan sebuah ekosistem lengkap yang dirancang untuk setiap tahap perjalanan kreatif Anda.
+              Nusakarsa adalah ekosistem yang dirancang untuk setiap tahap perjalanan sastra Anda, dari draf pertama hingga karya yang diterbitkan.
             </motion.p>
           </div>
 
@@ -260,7 +260,7 @@ export default function WelcomePage() {
               Siap Menjadi Bagian dari <span className="text-primary italic">Revolusi Sastra?</span>
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Jangan biarkan idemu hanya tersimpan di dalam draf. Wujudkan, bagikan, dan bangun koneksi. Bergabunglah dengan ribuan kreator lain hari ini.
+              Jangan biarkan idemu hanya tersimpan di dalam draf. Wujudkan, bagikan, dan bangun koneksi. Bergabunglah dengan ribuan penulis lain hari ini.
             </p>
             <div className="pt-4">
               <Button asChild size="lg" className="rounded-2xl h-20 px-16 font-black uppercase text-base tracking-[0.2em] shadow-2xl shadow-primary/30 hover:scale-105 transition-transform duration-300">
