@@ -159,7 +159,7 @@ export default function WelcomePage() {
             >
               <Button asChild size="lg" className="flex-1 rounded-[1.25rem] h-16 font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.05] hover:rotate-1 active:scale-95 transition-all group">
                 <Link href="/register" className="flex items-center justify-center">
-                  Mulai Berkarya 
+                  Gabung Gratis
                   <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
