@@ -1,12 +1,36 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, Playfair_Display, Courier_Prime } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
 import { ProtectionProvider } from '@/components/ProtectionProvider';
+import { cn } from '@/lib/utils';
 
 const productionUrl = 'https://nusakarsa-one.vercel.app/';
 const brandIcon = 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/download.webp';
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair-display',
+  weight: ['700', '800', '900'],
+  display: 'swap',
+});
+
+const courierPrime = Courier_Prime({
+    subsets: ['latin'],
+    variable: '--font-courier-prime',
+    weight: ['400', '700'],
+    style: ['normal', 'italic'],
+    display: 'swap',
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -71,14 +95,31 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-          rel="stylesheet"
+        <script
+            dangerouslySetInnerHTML={{
+                __html: `
+(function() {
+    try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    } catch (e) {}
+})();
+                `,
+            }}
         />
       </head>
-      <body className="font-body antialiased">
+      <body className={cn(
+        "font-body antialiased",
+        inter.variable,
+        playfairDisplay.variable,
+        courierPrime.variable
+      )}>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           <ProtectionProvider>
