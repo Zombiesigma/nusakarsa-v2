@@ -58,7 +58,7 @@ export default function AboutPage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center space-y-8 pt-12 md:pt-20 pb-12"
+        className="text-center space-y-8 pb-12"
       >
         <div className="flex justify-center mb-8">
             <div className="relative p-4 md:p-6 rounded-[2.5rem] bg-white dark:bg-zinc-900 shadow-2xl shadow-primary/10 group overflow-hidden border border-border/50 ring-1 ring-primary/5">
