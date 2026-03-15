@@ -18,13 +18,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, AlertTriangle, BookUser, Upload, FileImage, Globe, Users, ArrowRight, PenTool, FileText, Type, File as FileIcon, Feather } from "lucide-react";
+import { Loader2, AlertTriangle, BookUser, Upload, FileImage, Globe, Users, ArrowRight, PenTool, FileText, Type, File as FileIcon } from "lucide-react";
 import type { User as AppUser } from '@/lib/types';
 import { uploadBookCover, uploadBookFile } from '@/lib/uploader';
 import { extractBookContent } from '../../actions/book-processor';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+
+// New enriched genre list
+const genres = [
+  { value: "fantasi", label: "Fantasi" },
+  { value: "fiksi-ilmiah", label: "Fiksi Ilmiah" },
+  { value: "misteri", label: "Misteri" },
+  { value: "thriller", label: "Thriller" },
+  { value: "horor", label: "Horor" },
+  { value: "romansa", label: "Romansa" },
+  { value: "fiksi-sejarah", label: "Fiksi Sejarah" },
+  { value: "petualangan", label: "Petualangan" },
+  { value: "pengembangan-diri", label: "Pengembangan Diri" },
+  { value: "biografi", label: "Biografi" },
+  { value: "humor", label: "Humor / Komedi" },
+  { value: "spiritual", label: "Spiritual" },
+  { value: "sastra-klasik", label: "Sastra Klasik" },
+  { value: "puisi", label: "Puisi" },
+];
+
 
 const formSchema = z.object({
   title: z.string().min(3, { message: "Judul minimal 3 karakter." }).max(100, { message: "Judul maksimal 100 karakter."}),
@@ -366,13 +385,9 @@ export default function CreateBookPage() {
                                         </SelectTrigger>
                                         </FormControl>
                                         <SelectContent className="rounded-xl">
-                                            <SelectItem value="novel">Novel</SelectItem>
-                                            <SelectItem value="fantasy">Fantasi</SelectItem>
-                                            <SelectItem value="sci-fi">Fiksi Ilmiah</SelectItem>
-                                            <SelectItem value="horror">Horor</SelectItem>
-                                            <SelectItem value="romance">Romansa</SelectItem>
-                                            <SelectItem value="self-improvement">Self-Improvement</SelectItem>
-                                            <SelectItem value="poetry">Puisi / Sajak</SelectItem>
+                                            {genres.map(genre => (
+                                                <SelectItem key={genre.value} value={genre.value}>{genre.label}</SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
