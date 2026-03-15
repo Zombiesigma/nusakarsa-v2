@@ -315,7 +315,7 @@ export default function AdminPage() {
                                     <TableCell className="text-right px-6">
                                         <div className="flex items-center justify-end gap-2">
                                             <Button asChild size="sm" variant="outline" className="rounded-full text-[10px]">
-                                                <Link href={`/books/${book.id}/read`} target="_blank">
+                                                <Link href={`/admin/review/${book.id}`}>
                                                     <BookOpen className="mr-1 h-3 w-3" />
                                                     Review
                                                 </Link>
