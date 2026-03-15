@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetFooter,
   SheetClose,
   SheetTrigger
@@ -149,6 +150,7 @@ export function UserNav() {
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Menu Navigasi Profil</SheetTitle>
+            <SheetDescription>Akses cepat ke profil, pengaturan, dan informasi lainnya.</SheetDescription>
           </SheetHeader>
 
           <div className="p-6 pb-8 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent border-b border-primary/5">

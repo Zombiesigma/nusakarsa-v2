@@ -199,7 +199,7 @@ export default function WelcomePage() {
                 className={cn("grid md:grid-cols-2 gap-12 md:gap-16 items-center", index % 2 !== 0 && "md:grid-flow-row-dense")}
               >
                 <div className={cn("relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border-4 border-background", index % 2 !== 0 && "md:col-start-2")}>
-                  <Image src={feature.imageUrl} alt={feature.title} fill className="object-cover" data-ai-hint={feature.imageHint} />
+                  <Image src={feature.imageUrl} alt={feature.title} fill sizes="100vw" className="object-cover" data-ai-hint={feature.imageHint} />
                 </div>
                 <div className="space-y-5">
                   <div className={cn("p-4 rounded-2xl w-fit shadow-lg", feature.bg, feature.color)}>

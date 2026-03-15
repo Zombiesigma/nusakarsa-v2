@@ -85,11 +85,10 @@
 
   html, body {
     @apply scroll-smooth;
-    cursor: url('/cursor/cursor.svg'), auto;
   }
   
   a, button, [role="button"] {
-    cursor: url('/cursor/klik.svg'), pointer;
+    cursor: pointer;
   }
   
   input, textarea, [contenteditable="true"] {
