@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Logo } from '@/components/Logo';
 import { Instagram, Twitter, Github, Globe, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function MainAppLayout({
   children,
@@ -100,7 +101,8 @@ export default function MainAppLayout({
                 </div>
 
                 <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
-                  <p className="text-xs font-black uppercase tracking-[0.3em]">
+                  <p className="text-xs font-black uppercase tracking-[0.3em] flex items-center gap-2">
+                    <Image src="/logo/copyright.png" alt="Copyright Icon" width={16} height={16} className="h-4 w-4" />
                     &copy; {new Date().getFullYear()} Nusakarsa.
                   </p>
                 </div>
