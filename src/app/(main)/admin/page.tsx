@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useMemo, useState } from "react";
@@ -73,7 +74,7 @@ export default function AdminPage() {
   const isAdmin = adminProfile?.role === 'admin';
 
   const authorRequestsQuery = useMemo(() => (
-    (firestore && currentUser && isAdmin) ? collection(firestore, 'authorRequests') : null
+    (firestore && currentUser && isAdmin) ? query(collection(firestore, 'authorRequests'), where('status', '==', 'pending')) : null
   ), [firestore, currentUser, isAdmin]);
   const { data: rawAuthorRequests, isLoading: areAuthorRequestsLoading } = useCollection<AuthorRequest>(authorRequestsQuery);
   
@@ -174,7 +175,7 @@ export default function AdminPage() {
         if (!bookSnap.exists()) throw new Error("Karya tidak ditemukan.");
         const bookData = bookSnap.data() as Book;
 
-        batch.update(bookRef, { status: 'draft' });
+        batch.update(bookRef, { status: 'rejected' });
 
         const notifRef = doc(collection(firestore, `users/${bookData.authorId}/notifications`));
         batch.set(notifRef, {
@@ -185,7 +186,7 @@ export default function AdminPage() {
             read: false,
             createdAt: serverTimestamp(),
         });
-        toast({ variant: 'destructive', title: "Karya Dikembalikan ke Draf" });
+        toast({ variant: 'destructive', title: "Karya Ditolak" });
       }
       
       await batch.commit();

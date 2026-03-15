@@ -563,11 +563,13 @@ export default function EditBookPage() {
             <AlertDialogHeader>
                 <div className="mx-auto bg-primary/10 p-4 rounded-2xl w-fit mb-4"><BookUp className="h-8 w-8 text-primary" /></div>
                 <AlertDialogTitle className="font-headline text-2xl font-black text-center">
-                    {book?.status === 'published' ? 'Perbarui & Terbitkan Ulang?' : 'Terbitkan Karya?'}
+                    {book?.status === 'published' ? 'Perbarui & Terbitkan Ulang?' : book?.status === 'rejected' ? 'Kirim Ulang untuk Moderasi?' : 'Terbitkan Karya?'}
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-center font-medium">
                     {book?.status === 'published' 
                         ? "Perubahan pada karya Anda akan langsung terbit dan versi PDF baru akan dibuat secara otomatis." 
+                        : book?.status === 'rejected'
+                        ? "Karya ini sebelumnya ditolak. Setelah Anda merevisinya, kirim ulang agar dapat ditinjau kembali oleh tim kurasi."
                         : "Karya Anda akan dikirim ke tim kurasi Nusakarsa sebelum tampil secara resmi di hadapan seluruh pembaca."
                     }
                 </AlertDialogDescription>
@@ -575,7 +577,7 @@ export default function EditBookPage() {
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-2">
                 <AlertDialogCancel className="rounded-full h-12 border-2 flex-1 font-bold">Batal</AlertDialogCancel>
                 <AlertDialogAction onClick={handlePublish} className="rounded-full h-12 flex-1 font-black bg-primary shadow-xl shadow-primary/20">
-                    {book?.status === 'published' ? 'Ya, Terbitkan Ulang' : 'Kirim Sekarang'}
+                    {book?.status === 'published' ? 'Ya, Terbitkan Ulang' : book?.status === 'rejected' ? 'Kirim Ulang' : 'Kirim Sekarang'}
                 </AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>

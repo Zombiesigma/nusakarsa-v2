@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useMemo, useState } from 'react';
@@ -129,10 +131,16 @@ export default function StudioPage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                                         <Badge className={cn(
-                                            "rounded-full px-3 py-1 font-black text-[8px] uppercase tracking-widest",
-                                            book.status === 'published' ? "bg-emerald-500" : book.status === 'pending_review' ? "bg-orange-500" : "bg-primary"
+                                            "rounded-full px-3 py-1 font-black text-[8px] uppercase tracking-widest text-white",
+                                            book.status === 'published' ? "bg-emerald-500" : 
+                                            book.status === 'pending_review' ? "bg-orange-500" : 
+                                            book.status === 'rejected' ? "bg-rose-500" : 
+                                            "bg-primary"
                                         )}>
-                                            {book.status === 'published' ? 'Terbit' : book.status === 'pending_review' ? 'Moderasi' : 'Draf'}
+                                            {book.status === 'published' ? 'Terbit' : 
+                                             book.status === 'pending_review' ? 'Moderasi' : 
+                                             book.status === 'rejected' ? 'Ditolak' : 
+                                             'Draf'}
                                         </Badge>
                                         <div className="flex gap-3 text-white">
                                             <div className="flex items-center gap-1"><Eye className="h-3 w-3" /><span className="text-[10px] font-black">{book.viewCount}</span></div>
