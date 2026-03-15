@@ -291,7 +291,11 @@ export default function EditBookPage() {
     
     setTimeout(() => {
         textarea.focus();
-        textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+        if (selection.length > 0) {
+            textarea.setSelectionRange(start + prefix.length, start + prefix.length + selection.length);
+        } else {
+            textarea.setSelectionRange(start + prefix.length, start + prefix.length);
+        }
     }, 0);
   };
 
@@ -473,10 +477,10 @@ export default function EditBookPage() {
                     <motion.div key={activeChapterId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={cn("min-h-full py-12 px-4 md:px-12 flex flex-col items-center")}>
                         {!isZenMode && (
                             <div className="w-full max-w-[850px] flex items-center justify-start md:justify-center gap-1 mb-10 p-2 px-4 bg-background/80 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] shadow-[0_15px_40px_-15px_rgba(59,130,246,0.2)] sticky top-4 z-[120] overflow-x-auto no-scrollbar ring-1 ring-white/20">
-                                <Button variant="ghost" onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
                                 <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
                                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/40 px-2">{isPoem ? 'Industrial Poetry Mode' : 'Industrial Novel Mode'}</p>
                             </div>
