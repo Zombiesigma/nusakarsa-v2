@@ -7,7 +7,7 @@ import { collection, query, where, doc, updateDoc, onSnapshot, limit } from 'fir
 import type { VideoCallSession } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Phone, PhoneOff, Zap, Sparkles, Video } from 'lucide-react';
+import { Phone, PhoneOff, Zap, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
@@ -127,7 +127,6 @@ export function IncomingCallOverlay() {
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Inspirasi Visual</p>
-                    <Sparkles className="h-2.5 w-2.5 text-primary animate-bounce" />
                 </div>
                 <h4 className="font-black text-lg truncate tracking-tight">{activeCall.callerName}</h4>
               </div>

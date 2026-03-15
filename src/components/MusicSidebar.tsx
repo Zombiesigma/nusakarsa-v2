@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Search, Music, Loader2, Play, Pause, ListMusic, Sparkles, PlusCircle, Trash2, Disc, Volume2, CheckCircle2 } from 'lucide-react';
+import { Search, Music, Loader2, Play, Pause, ListMusic, PlusCircle, Trash2, Disc, Volume2, CheckCircle2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { searchYouTube, getPreviewAudioUrl, type MusicTrack } from '@/app/actions/music';
@@ -280,7 +280,7 @@ export function MusicSidebar({ bookId }: MusicSidebarProps) {
                 </div>
               ) : (
                 <div className="text-center py-20 opacity-30">
-                  <Sparkles className="h-10 w-10 mx-auto mb-2" />
+                  <ListMusic className="h-10 w-10 mx-auto mb-2" />
                   <p className="text-xs font-bold uppercase tracking-widest">Playlist Belum Ada</p>
                 </div>
               )}

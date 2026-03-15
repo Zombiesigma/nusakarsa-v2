@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -17,7 +16,6 @@ import {
   Globe, 
   Cpu,
   Users,
-  Sparkles,
   Layers,
   Quote
 } from 'lucide-react';
@@ -223,7 +221,7 @@ export default function WelcomePage() {
             <div className="text-center space-y-4 mb-16">
               <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent-foreground text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-accent/20">
-                  <Sparkles className="h-4 w-4" /> Suara Komunitas
+                  Suara Komunitas
                 </div>
               </motion.div>
               <motion.h2 variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
