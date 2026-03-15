@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
-import { Globe, PenTool, Cpu, Zap, ShieldCheck, Instagram, Twitter, Github, ChevronRight } from 'lucide-react';
+import { Globe, PenTool, Cpu, Zap, ShieldCheck, Instagram, Twitter, Github, ChevronRight, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -17,6 +17,19 @@ const technologies = [
     { title: "Firebase", desc: "Infrastruktur Cloud Google yang menjamin keamanan data dan sinkronisasi real-time mahakarya.", icon: "https://svgl.app/library/firebase.svg" },
     { title: "Tailwind CSS", desc: "Sistem desain modern untuk antarmuka yang presisi, elegan, dan sepenuhnya responsif.", icon: "https://svgl.app/library/tailwindcss.svg" }
 ];
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1]
+    }
+  })
+};
 
 export default function AboutPage() {
   const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://picsum.photos/seed/khalid/400/400';
@@ -104,7 +117,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="space-y-12 px-4">
+      <section className="space-y-20 px-4">
         <div className="flex items-center gap-4">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60 flex items-center gap-3 whitespace-nowrap">
                 <PenTool className="h-4 w-4 text-primary" /> Tim Arsitek
@@ -112,45 +125,41 @@ export default function AboutPage() {
             <div className="h-px bg-border/50 flex-1" />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-20 md:gap-28">
             {initialArchitects.map((dev, i) => (
                 <motion.div
                     key={dev.handle}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group"
+                    variants={sectionVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.3 }}
+                    className="grid md:grid-cols-2 items-center gap-12 md:gap-20"
                 >
-                    <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl h-full bg-card/50 backdrop-blur-xl flex flex-col text-center transition-all duration-500 hover:-translate-y-2">
-                        <div className="relative p-8 pt-16">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36">
-                                <Image 
-                                    src={dev.avatar} 
-                                    alt={dev.name} 
-                                    data-ai-hint={dev.avatarHint}
-                                    fill
-                                    sizes="144px"
-                                    className="object-cover rounded-full group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
-                                />
-                            </div>
+                    {/* --- IMAGE COLUMN --- */}
+                    <div className={cn("relative", i % 2 !== 0 && "md:order-last")}>
+                        <div className="absolute -bottom-4 -right-4 h-full w-full rounded-3xl bg-primary -z-10" />
+                        <Image 
+                            src={dev.avatar} 
+                            alt={dev.name} 
+                            data-ai-hint={dev.avatarHint}
+                            width={600}
+                            height={600}
+                            className="relative object-cover rounded-3xl shadow-2xl w-full h-auto aspect-square"
+                        />
+                    </div>
+
+                    {/* --- TEXT COLUMN --- */}
+                    <div className="space-y-8">
+                        <Logo className="h-10 w-10" />
+                        <div className="relative">
+                            <Quote className="h-24 w-24 text-primary/10 absolute -top-10 -left-8" fill="currentColor" strokeWidth={0} />
+                            <p className="relative text-2xl lg:text-3xl font-medium italic text-foreground/80 leading-relaxed">
+                                "{dev.quote}"
+                            </p>
                         </div>
-                        
-                        <div className="p-8 pt-12 space-y-4 bg-background/50 rounded-t-[2rem] flex-1 flex flex-col">
-                            <h3 className="font-headline text-3xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
-                                {dev.name}
-                            </h3>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 self-center">
-                                <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot"></span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">{dev.role}</span>
-                            </div>
-                            
-                            <div className="relative pt-6 flex-1 flex flex-col justify-center">
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-background/50" style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} />
-                                <p className="text-sm text-muted-foreground leading-relaxed italic bg-background/50 p-4 rounded-xl">
-                                    "{dev.quote}"
-                                </p>
-                            </div>
+                        <div className="pt-4 border-t border-border/50">
+                            <h4 className="font-headline text-2xl font-bold text-foreground">{dev.name}</h4>
+                            <p className="font-semibold text-sm uppercase tracking-widest text-primary">{dev.role}</p>
                         </div>
                     </div>
                 </motion.div>
