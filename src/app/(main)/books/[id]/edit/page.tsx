@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
@@ -90,7 +91,7 @@ export default function EditBookPage() {
   const [isZenMode, setIsZenMode] = useState(false);
   const [isDeletingChapter, setIsDeletingChapter] = useState<string | null>(null);
   
-  const novelTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const novelTextareaRef = useRef<HTMLTextAreaElement | null>(null);
   const prevChapterIdRef = useRef<string | null>(null);
 
   const bookRef = useMemo(() => (firestore ? doc(firestore, 'books', params.id) : null), [firestore, params.id]);
@@ -500,14 +501,17 @@ export default function EditBookPage() {
                                     <FormField control={chapterForm.control} name="content" render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Textarea 
-                                                    ref={novelTextareaRef}
+                                                <Textarea
+                                                    {...field}
+                                                    ref={(e) => {
+                                                        field.ref(e);
+                                                        novelTextareaRef.current = e;
+                                                    }}
                                                     placeholder={isPoem ? "Tuangkan bait-bait indahmu..." : "Mulai tuangkan narasimu..."}
                                                     className={cn(
                                                         "min-h-[70vh] border-none shadow-none px-0 focus-visible:ring-0 resize-none no-scrollbar text-lg md:text-2xl font-serif leading-[1.8] text-zinc-800",
                                                         isPoem && "text-center italic"
                                                     )}
-                                                    {...field} 
                                                     readOnly={!canEdit}
                                                 />
                                             </FormControl>
