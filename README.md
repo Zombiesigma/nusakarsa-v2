@@ -1,7 +1,7 @@
 
 # Nusakarsa
 
-Aplikasi web modern yang dibangun dengan Next.js, React, dan TypeScript. Nusakarsa adalah ekosistem sastra digital yang dirancang untuk menjadi rumah bagi imajinasi para penulis, pujangga, dan sastrawan Indonesia.
+Aplikasi web modern yang dibangun dengan Next.js, React, dan TypeScript. Nusakarsa adalah ekosistem sastra digital yang dirancang untuk menjadi rumah bagi imajinasi para penulis, dan sastrawan lokal.
 
 ## Deskripsi
 
@@ -11,7 +11,7 @@ Nusakarsa adalah platform serbaguna yang menghubungkan penulis dengan pembaca da
 
 ### 📖 Untuk Pembaca
 
-*   **Eksplorasi Karya:** Jelajahi ribuan novel, puisi, dan naskah dengan sistem pencarian dan filter yang canggih.
+*   **Eksplorasi Karya:** Jelajahi ribuan novel, dan puisi dengan sistem pencarian dan filter yang canggih.
 *   **Pengalaman Membaca Imersif:** Nikmati setiap karya dengan antarmuka bebas gangguan. Atur tema (terang, gelap, sepia, kertas), ukuran font, dan jenis huruf sesuai selera.
 *   **Soundtrack Playlist:** Rasakan suasana cerita lebih dalam dengan musik latar yang telah dipilih secara khusus oleh penulis.
 *   **Pustaka Pribadi:** Simpan karya favorit Anda untuk diakses kembali kapan saja, membangun koleksi bacaan digital Anda sendiri.
