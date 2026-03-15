@@ -64,7 +64,7 @@ export default function MainAppLayout({
                     </div>
                   </div>
 
-                  <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 lg:gap-8">
+                  <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-12 lg:gap-8">
                     <div className="space-y-8">
                       <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Navigasi</h4>
                       <ul className="space-y-5">
@@ -95,8 +95,6 @@ export default function MainAppLayout({
                           </li>
                         ))}
                       </ul>
-                    </div>
-                    <div className="col-span-2 md:col-span-1 space-y-8">
                     </div>
                   </div>
                 </div>

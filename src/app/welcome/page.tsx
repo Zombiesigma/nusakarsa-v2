@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -199,7 +200,7 @@ export default function WelcomePage() {
                 className={cn("grid md:grid-cols-2 gap-12 md:gap-16 items-center", index % 2 !== 0 && "md:grid-flow-row-dense")}
               >
                 <div className={cn("relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border-4 border-background", index % 2 !== 0 && "md:col-start-2")}>
-                  <Image src={feature.imageUrl} alt={feature.title} fill className="object-cover" data-ai-hint={feature.imageHint} />
+                  <Image src={feature.imageUrl} alt={feature.title} fill className="object-cover" data-ai-hint={feature.imageHint} sizes="50vw" />
                 </div>
                 <div className="space-y-5">
                   <div className={cn("p-4 rounded-2xl w-fit shadow-lg", feature.bg, feature.color)}>
@@ -306,7 +307,7 @@ export default function WelcomePage() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12 lg:gap-8">
+                <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-12 lg:gap-8">
                   <div className="space-y-8">
                     <h4 className="text-xs font-black uppercase tracking-[0.5em] text-primary">Navigasi</h4>
                     <ul className="space-y-5">
@@ -336,8 +337,6 @@ export default function WelcomePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
-                  <div className="col-span-2 md:col-span-1 space-y-8">
                   </div>
                 </div>
               </div>
