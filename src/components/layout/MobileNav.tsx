@@ -16,7 +16,7 @@ export function MobileNav() {
   const isImmersiveRoute = pathname?.includes('/read') ||
                            pathname?.includes('/edit');
 
-  const userProfileRef = (firestore && user) ? doc(firestore, 'users', user.uid) : null;
+  const userProfileRef = (user && firestore) ? doc(firestore, 'users', user.uid) : null;
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<AppUser>(userProfileRef);
 
   if (isImmersiveRoute) return null;
@@ -26,7 +26,7 @@ export function MobileNav() {
   const navItems = [
     { href: '/', icon: Home, label: 'Beranda' },
     { href: '/search', icon: Search, label: 'Cari' },
-    ...(canUpload ? [{ href: '/upload', icon: PlusSquare, label: 'Unggah' }] : []),
+    { href: canUpload ? '/upload' : '/join-author', icon: PlusSquare, label: 'Unggah' },
     { href: '/library', icon: Library, label: 'Pustaka' },
     { href: '/profile', icon: User, label: 'Profil' },
   ];
@@ -35,12 +35,13 @@ export function MobileNav() {
     <div className="fixed bottom-0 left-0 right-0 z-[100] px-6 pb-8 md:hidden pointer-events-none">
       <div className="bg-background/80 backdrop-blur-2xl border border-white/20 shadow-[0_20px_60px_-12px_rgba(0,0,0,0.4)] rounded-[2.5rem] h-18 flex items-center justify-around px-3 relative overflow-hidden pointer-events-auto max-w-lg mx-auto ring-1 ring-black/5">
         {navItems.map((item) => {
-          const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href));
+          const isActive = (item.href === '/' && pathname === '/') || (item.href !== '/' && pathname.startsWith(item.href) && item.href !== '/join-author' && item.href !== '/upload');
           
-          const finalHref = item.href === '/profile'
-            ? (userProfile ? `/profile/${userProfile.username.toLowerCase()}` : '#')
-            : item.href;
-
+          let finalHref = item.href;
+          if (item.href === '/profile') {
+              finalHref = userProfile ? `/profile/${userProfile.username.toLowerCase()}` : '#';
+          }
+          
           return (
             <Link 
               key={item.href} 

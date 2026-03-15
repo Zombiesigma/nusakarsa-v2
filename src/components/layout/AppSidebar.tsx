@@ -162,10 +162,9 @@ export function AppSidebar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link 
-                  href="/upload"
+                  href={isAuthor ? "/upload" : "/join-author"}
                   className={cn(
-                    "h-14 w-14 rounded-[1.75rem] bg-white dark:bg-zinc-900 border border-border shadow-xl flex items-center justify-center transition-all group active:scale-90",
-                    isAuthor ? "text-primary/60 hover:text-primary" : "text-muted-foreground/30 pointer-events-none opacity-50"
+                    "h-14 w-14 rounded-[1.75rem] bg-white dark:bg-zinc-900 border border-border shadow-xl flex items-center justify-center transition-all group active:scale-90 text-primary/60 hover:text-primary"
                   )}
               >
                   <Plus className="h-7 w-7 group-hover:rotate-90 transition-transform duration-500" strokeWidth={3} />
@@ -176,7 +175,7 @@ export function AppSidebar() {
               sideOffset={20}
               className="bg-primary text-white border-none rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest shadow-2xl"
             >
-              Karya Baru
+              {isAuthor ? 'Karya Baru' : 'Jadi Penulis'}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
