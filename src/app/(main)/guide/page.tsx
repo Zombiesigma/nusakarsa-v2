@@ -1,4 +1,3 @@
-
 'use client';
 
 import { 
@@ -39,7 +38,7 @@ export default function GuidePage() {
         },
         { 
           q: "Apa itu 'Mode Baca' dan bagaimana cara mengaturnya?", 
-          a: "Saat membaca sebuah karya, klik ikon gerigi (Pengaturan) di pojok kanan atas. Anda bisa mengubah tema (terang, gelap, sepia), jenis font, dan ukuran huruf untuk pengalaman membaca yang paling nyaman." 
+          a: "Saat membaca sebuah karya, klik ikon gerigi (Pengaturan) di pojok kanan atas. Anda bisa mengubah tema (terang, gelap, sepia, bahkan tekstur kertas), jenis font, dan ukuran huruf untuk pengalaman membaca yang paling nyaman." 
         },
         { 
           q: "Bagaimana cara menyimpan karya favorit saya?", 
@@ -47,7 +46,7 @@ export default function GuidePage() {
         },
         { 
           q: "Apa fungsi dari fitur 'Soundtrack'?", 
-          a: "Beberapa penulis menyertakan daftar putar musik untuk menemani Anda saat membaca. Klik ikon headphone di halaman baca untuk memutar, mengontrol volume, atau bahkan mencari musik lain untuk membangun suasana." 
+          a: "Beberapa penulis menyertakan daftar putar musik untuk menemani Anda saat membaca. Klik ikon headphone di halaman baca untuk memutar, mengontrol volume, atau bahkan mencari musik lain dari YouTube untuk membangun suasana yang sempurna." 
         }
       ]
     },
@@ -65,7 +64,7 @@ export default function GuidePage() {
         },
         { 
           q: "Apa itu Studio Penulis?", 
-          a: "Studio adalah ruang kerja digital Anda. Di sini Anda bisa mengelola semua draf, menambahkan bab baru, mengatur identitas karya (sampul, sinopsis), dan menyematkan playlist musik." 
+          a: "Studio adalah ruang kerja digital Anda. Di sini Anda bisa mengelola semua draf, menambahkan bab baru, mengatur identitas karya (sampul, sinopsis), dan menyematkan playlist musik untuk pembaca." 
         },
         { 
           q: "Bagaimana proses publikasi karya?", 
@@ -73,7 +72,7 @@ export default function GuidePage() {
         },
         {
           q: "Apakah saya bisa mengimpor naskah yang sudah ada?",
-          a: "Tentu! Saat membuat karya baru, pilih metode 'Impor Berkas'. Nusakarsa mendukung format .docx, .txt, dan .pdf. Sistem akan secara otomatis mengekstrak teksnya menjadi draf bab pertama Anda."
+          a: "Tentu! Saat membuat karya baru, pilih metode 'Impor Berkas'. Nusakarsa mendukung format .docx, .txt, dan .pdf. Sistem akan secara otomatis mengekstrak teksnya menjadi draf bab pertama Anda, menghemat waktu penulisan ulang."
         }
       ]
     },
@@ -87,15 +86,15 @@ export default function GuidePage() {
       content: [
         { 
           q: "Bagaimana cara berinteraksi yang baik?", 
-          a: "Tinggalkan ulasan yang konstruktif dan apresiatif. Hargai karya setiap penulis. Hindari komentar yang mengandung ujaran kebencian, spam, atau promosi tidak relevan." 
+          a: "Tinggalkan ulasan yang konstruktif dan apresiatif. Hargai karya setiap penulis. Hindari komentar yang mengandung ujaran kebencian, spam, atau promosi tidak relevan. Setiap interaksi adalah cerminan dari komunitas kita." 
         },
         { 
           q: "Apa itu plagiarisme dan bagaimana Nusakarsa menanganinya?", 
-          a: "Plagiarisme adalah mengambil karya orang lain dan mengklaimnya sebagai milik sendiri. Nusakarsa memiliki kebijakan nol toleransi terhadap plagiarisme. Akun yang terbukti melakukan plagiarisme akan ditangguhkan secara permanen." 
+          a: "Plagiarisme adalah mengambil karya orang lain dan mengklaimnya sebagai milik sendiri. Nusakarsa memiliki kebijakan nol toleransi terhadap plagiarisme. Akun yang terbukti melakukan plagiarisme akan ditangguhkan secara permanen untuk melindungi integritas karya." 
         },
         {
           q: "Bagaimana cara mengikuti penulis lain?",
-          a: "Kunjungi halaman profil seorang penulis, lalu klik tombol 'Mulai Ikuti'. Anda akan mendapatkan notifikasi setiap kali mereka menerbitkan karya baru."
+          a: "Kunjungi halaman profil seorang penulis, lalu klik tombol 'Mulai Ikuti'. Anda akan mendapatkan notifikasi setiap kali mereka menerbitkan karya baru, membantu Anda tetap terhubung dengan penulis favorit Anda."
         }
       ]
     }
@@ -131,15 +130,23 @@ export default function GuidePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 px-4">
         {features.map((item, i) => (
-            <Card key={i} className="border-none shadow-xl bg-card/50 backdrop-blur-sm rounded-[1.5rem] p-4 md:p-6 flex flex-col items-center gap-3 group">
-                <div className={cn("p-3 rounded-xl md:rounded-2xl", item.bg, item.color)}>
-                    <item.icon className="h-5 w-5 md:h-6 md:w-6" />
-                </div>
-                <div className="text-center">
-                    <p className="text-[10px] font-black uppercase tracking-widest group-hover:text-primary transition-colors">{item.label}</p>
-                    <p className="text-[10px] text-muted-foreground font-medium mt-1">{item.desc}</p>
-                </div>
-            </Card>
+            <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+            >
+                <Card className="border-none shadow-xl bg-card/50 backdrop-blur-sm rounded-[1.5rem] p-4 md:p-6 flex flex-col items-center gap-3 group h-full">
+                    <div className={cn("p-3 rounded-xl md:rounded-2xl", item.bg, item.color)}>
+                        <item.icon className="h-5 w-5 md:h-6 md:w-6" />
+                    </div>
+                    <div className="text-center">
+                        <p className="text-[10px] font-black uppercase tracking-widest group-hover:text-primary transition-colors">{item.label}</p>
+                        <p className="text-[10px] text-muted-foreground font-medium mt-1">{item.desc}</p>
+                    </div>
+                </Card>
+            </motion.div>
         ))}
       </div>
 
