@@ -104,8 +104,18 @@ export default function WelcomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-x-hidden flex flex-col">
-      <div className="absolute top-0 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 pointer-events-none animate-pulse" />
-      <div className="absolute bottom-0 -right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
+      <div className="absolute inset-0 -z-20">
+        <Image
+          src="https://files.catbox.moe/tvbr0s.png"
+          alt="Latar belakang panggung sastra"
+          fill
+          sizes="100vw"
+          className="object-cover"
+          data-ai-hint="stage theater"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+      </div>
 
       <main className="flex-1">
         <motion.section 
@@ -114,10 +124,7 @@ export default function WelcomePage() {
           className="relative z-10 w-full flex flex-col items-center justify-center py-20 md:py-32 px-6"
         >
           <div className="relative max-w-4xl w-full flex flex-col items-center text-center space-y-12">
-            <div className="absolute inset-0 flex items-center justify-center -z-10 opacity-5 pointer-events-none">
-                <Logo className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] -translate-y-10" />
-            </div>
-
+            
             <motion.div
               variants={sectionVariants}
               custom={0}
