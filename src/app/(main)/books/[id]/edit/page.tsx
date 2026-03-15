@@ -366,7 +366,7 @@ export default function EditBookPage() {
   );
 
   return (
-    <div className={cn("flex h-[calc(100vh-theme(spacing.14))] -m-6 overflow-hidden bg-muted/30", isZenMode && "h-screen m-0 z-[300] fixed inset-0")}>
+    <div className={cn("flex h-full overflow-hidden bg-muted/30", isZenMode && "h-screen m-0 z-[300] fixed inset-0")}>
       {!isZenMode && (
         <aside className="hidden md:flex flex-col w-72 lg:w-80 border-r shrink-0 shadow-sm relative z-[150]">
             <SidebarContentBody />
