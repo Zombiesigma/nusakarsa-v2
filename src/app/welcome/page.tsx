@@ -14,7 +14,6 @@ import {
   Twitter, 
   Github, 
   Globe, 
-  Cpu,
   Users,
   Layers,
   Quote
@@ -140,13 +139,6 @@ export default function WelcomePage() {
             </motion.div>
 
             <div className="space-y-6">
-              <motion.div
-                variants={sectionVariants}
-                custom={2}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-primary/20"
-              >
-                <Cpu className="h-4 w-4 animate-pulse" /> Gerbang Imajinasi Digital
-              </motion.div>
               
               <motion.h1 
                 variants={sectionVariants}
