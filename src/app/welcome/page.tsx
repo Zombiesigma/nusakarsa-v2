@@ -105,25 +105,26 @@ export default function WelcomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-x-hidden flex flex-col">
-      <div className="absolute inset-0 -z-20">
-        <Image
-          src={welcomeBg}
-          alt="Latar belakang panggung sastra"
-          fill
-          sizes="100vw"
-          className="object-cover"
-          data-ai-hint="stage theater"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-      </div>
-
       <main className="flex-1">
         <motion.section 
           initial="hidden"
           animate="visible"
           className="relative z-10 w-full flex flex-col items-center justify-center py-20 md:py-32 px-6"
         >
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+              <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={welcomeBg}
+              >
+                  <source src="/bg-video/bg.mp4" type="video/mp4" />
+              </video>
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+          </div>
+
           <div className="relative max-w-4xl w-full flex flex-col items-center text-center space-y-12">
             
             <motion.div
@@ -131,6 +132,7 @@ export default function WelcomePage() {
               custom={0}
               className="relative"
             >
+              <div className="absolute -inset-8 bg-background/30 blur-3xl rounded-full animate-pulse" />
               <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse" />
               <div className="relative p-1 rounded-[2.5rem] bg-gradient-to-tr from-primary via-accent to-primary/80 shadow-2xl shadow-primary/20">
                 <Logo className="w-24 h-24 md:w-32 md:h-32 rounded-[2.3rem] ring-4 ring-background" />
