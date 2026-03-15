@@ -126,18 +126,6 @@ export default function WelcomePage() {
 
           <div className="relative max-w-4xl w-full flex flex-col items-center text-center space-y-12">
             
-            <motion.div
-              variants={sectionVariants}
-              custom={0}
-              className="relative"
-            >
-              <div className="absolute -inset-8 bg-background/30 blur-3xl rounded-full animate-pulse" />
-              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-150 animate-pulse" />
-              <div className="relative p-1 rounded-[2.5rem] bg-gradient-to-tr from-primary via-accent to-primary/80 shadow-2xl shadow-primary/20">
-                <Logo className="w-24 h-24 md:w-32 md:h-32 rounded-[2.3rem] ring-4 ring-background" />
-              </div>
-            </motion.div>
-
             <div className="space-y-6">
               
               <motion.h1 
