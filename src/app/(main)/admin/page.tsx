@@ -26,7 +26,7 @@ import {
   Loader2, 
   Users, 
   ShieldCheck, 
-  BookCopy, 
+  BookOpen, 
   Megaphone, 
   CheckCircle2, 
   Trash2, 
@@ -313,7 +313,17 @@ export default function AdminPage() {
                                     </TableCell>
                                     <TableCell className="font-bold text-[10px]">{book.authorName}</TableCell>
                                     <TableCell className="text-right px-6">
-                                        <Button size="sm" onClick={() => handleApproveBook(book.id, book.title)} disabled={!!processingId} className="rounded-full text-[10px]">Terbitkan</Button>
+                                        <div className="flex items-center justify-end gap-2">
+                                            <Button asChild size="sm" variant="outline" className="rounded-full text-[10px]">
+                                                <Link href={`/books/${book.id}/read`} target="_blank">
+                                                    <BookOpen className="mr-1 h-3 w-3" />
+                                                    Review
+                                                </Link>
+                                            </Button>
+                                            <Button size="sm" onClick={() => handleApproveBook(book.id, book.title)} disabled={!!processingId} className="rounded-full text-[10px]">
+                                                Terbitkan
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
