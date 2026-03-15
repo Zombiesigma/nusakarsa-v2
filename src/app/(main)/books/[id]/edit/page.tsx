@@ -93,6 +93,7 @@ export default function EditBookPage() {
   
   const novelTextareaRef = useRef<HTMLTextAreaElement | null>(null);
   const prevChapterIdRef = useRef<string | null>(null);
+  const selectionRef = useRef({ start: 0, end: 0 });
 
   const bookRef = useMemo(() => (firestore ? doc(firestore, 'books', params.id) : null), [firestore, params.id]);
   const { data: book, isLoading: isBookLoading } = useDoc<Book>(bookRef);
@@ -275,29 +276,33 @@ export default function EditBookPage() {
     }
   };
 
-  const insertMarkdown = (prefix: string, suffix: string = '') => {
+  const insertMarkdown = useCallback((prefix: string, suffix: string = '') => {
     const textarea = novelTextareaRef.current;
     if (!textarea) return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    const { start, end } = selectionRef.current;
     const text = textarea.value;
+
     const selection = text.substring(start, end);
     const before = text.substring(0, start);
     const after = text.substring(end);
-
-    const newContent = `${before}${prefix}${selection}${suffix}${after}`;
-    chapterForm.setValue('content', newContent, { shouldDirty: true });
     
+    const newContent = `${before}${prefix}${selection}${suffix}${after}`;
+
+    chapterForm.setValue('content', newContent, { shouldDirty: true });
+
     setTimeout(() => {
         textarea.focus();
         if (selection.length > 0) {
-            textarea.setSelectionRange(start + prefix.length, start + prefix.length + selection.length);
+            const newStart = start + prefix.length;
+            const newEnd = newStart + selection.length;
+            textarea.setSelectionRange(newStart, newEnd);
         } else {
-            textarea.setSelectionRange(start + prefix.length, start + prefix.length);
+            const newPos = start + prefix.length;
+            textarea.setSelectionRange(newPos, newPos);
         }
     }, 0);
-  };
+  }, [chapterForm]);
 
   const novelStats = useMemo(() => {
     const content = chapterForm.watch('content') || "";
@@ -477,10 +482,10 @@ export default function EditBookPage() {
                     <motion.div key={activeChapterId} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={cn("min-h-full py-12 px-4 md:px-12 flex flex-col items-center")}>
                         {!isZenMode && (
                             <div className="w-full max-w-[850px] flex items-center justify-start md:justify-center gap-1 mb-10 p-2 px-4 bg-background/80 backdrop-blur-xl border border-primary/10 rounded-[2.5rem] shadow-[0_15px_40px_-15px_rgba(59,130,246,0.2)] sticky top-4 z-[120] overflow-x-auto no-scrollbar ring-1 ring-white/20">
-                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
-                                <Button variant="ghost" onMouseDown={(e) => e.preventDefault()} onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('**', '**')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Bold className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('*', '*')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Italic className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('> ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Quote className="h-4 w-4"/></Button>
+                                <Button variant="ghost" onClick={() => insertMarkdown('### ')} className="h-10 w-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary"><Heading1 className="h-4 w-4"/></Button>
                                 <div className="w-px h-10 bg-primary/10 mx-2 shrink-0" />
                                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/40 px-2">{isPoem ? 'Industrial Poetry Mode' : 'Industrial Novel Mode'}</p>
                             </div>
@@ -507,6 +512,10 @@ export default function EditBookPage() {
                                             <FormControl>
                                                 <Textarea
                                                     {...field}
+                                                    onSelect={(e) => {
+                                                        const target = e.currentTarget;
+                                                        selectionRef.current = { start: target.selectionStart, end: target.selectionEnd };
+                                                    }}
                                                     ref={(e) => {
                                                         field.ref(e);
                                                         novelTextareaRef.current = e;
