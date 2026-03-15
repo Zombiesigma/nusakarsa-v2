@@ -47,6 +47,7 @@ export default function WelcomePage() {
   const testimonial1Img = PlaceHolderImages.find(img => img.id === 'testimonial-1')?.imageUrl || 'https://picsum.photos/seed/test1/100/100';
   const testimonial2Img = PlaceHolderImages.find(img => img.id === 'testimonial-2')?.imageUrl || 'https://picsum.photos/seed/test2/100/100';
   const testimonial3Img = PlaceHolderImages.find(img => img.id === 'testimonial-3')?.imageUrl || 'https://picsum.photos/seed/test3/100/100';
+  const welcomeBgImg = PlaceHolderImages.find(img => img.id === 'welcome-background')?.imageUrl || 'https://files.catbox.moe/tvbr0s.png';
 
   const features = [
       {
@@ -106,7 +107,7 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-background text-foreground relative overflow-x-hidden flex flex-col">
       <div className="absolute inset-0 -z-20">
         <Image
-          src="https://files.catbox.moe/tvbr0s.png"
+          src={welcomeBgImg}
           alt="Latar belakang panggung sastra"
           fill
           sizes="100vw"
