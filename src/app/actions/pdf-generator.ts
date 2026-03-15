@@ -13,6 +13,12 @@ const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89; 
 const MARGIN = 72; 
 
+// Define brand colors
+const nusakarsaPrimary = rgb(0.45, 0.56, 0.22); // hsl(66, 50%, 45%) - Accent Green
+const nusakarsaBackground = rgb(0.97, 0.98, 0.96); // A very light, elegant green
+const textDark = rgb(0.1, 0.1, 0.1);
+const textMuted = rgb(0.4, 0.4, 0.4);
+
 /**
  * Menambahkan watermark ke halaman PDF.
  */
@@ -69,84 +75,115 @@ export async function generateBookPdf(bookId: string): Promise<string> {
   const fontSerifRegular = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const fontSerifItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
 
+  // --- COVER PAGE ---
   let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   const { width, height } = page.getSize();
   
-  // Tambahkan watermark ke halaman sampul
-  addWatermarkToPage(page, watermarkImage);
-
-  // Draw Industry Border
+  // Background color
   page.drawRectangle({
-    x: 36, y: 36, width: width - 72, height: height - 72,
-    borderColor: rgb(0.23, 0.51, 0.96), borderWidth: 1.5,
+    x: 0, y: 0, width, height,
+    color: nusakarsaBackground,
   });
 
-  const titleFontSize = 36;
-  const titleText = book.title.toUpperCase();
-  const titleWidth = fontBold.widthOfTextAtSize(titleText, titleFontSize);
+  // Add watermark
+  addWatermarkToPage(page, watermarkImage);
+  
+  // Top decorative bar
+  page.drawRectangle({
+    x: 0, y: height - 20, width, height: 20,
+    color: nusakarsaPrimary
+  });
+
+  // Main Title
+  const titleFontSize = 40;
+  const titleText = book.title;
   
   page.drawText(titleText, {
-    x: (width - Math.min(titleWidth, width - 120)) / 2,
-    y: height - 280,
+    x: MARGIN,
+    y: height - 200,
     size: titleFontSize,
     font: fontBold,
-    color: rgb(0.1, 0.1, 0.1),
-    maxWidth: width - 120,
-    lineHeight: 42,
+    color: textDark,
+    maxWidth: width - (MARGIN * 2),
+    lineHeight: 48,
   });
-
-  const authorIntro = 'Ditulis Oleh:';
-  const authorIntroWidth = fontItalic.widthOfTextAtSize(authorIntro, 14);
-  page.drawText(authorIntro, {
-    x: (width - authorIntroWidth) / 2,
-    y: height - 380,
-    size: 14,
-    font: fontItalic,
-    color: rgb(0.4, 0.4, 0.4),
-  });
-
-  const authorName = book.authorName;
-  const authorFontSize = 26;
-  const authorWidth = fontBold.widthOfTextAtSize(authorName, authorFontSize);
-  page.drawText(authorName, {
-    x: (width - authorWidth) / 2,
-    y: height - 415,
-    size: authorFontSize,
+  
+  // Genre Badge
+  page.drawText(book.genre.toUpperCase(), {
+    x: MARGIN,
+    y: height - 230,
+    size: 10,
     font: fontBold,
-    color: rgb(0.23, 0.51, 0.96),
+    color: nusakarsaPrimary,
+    characterSpacing: 2,
   });
 
-  // Industry Contact Info - Bottom Left kawan
+  // Author Section
+  page.drawText('Oleh:', {
+    x: MARGIN,
+    y: height - 300,
+    size: 12,
+    font: fontItalic,
+    color: textMuted,
+  });
+  
+  const authorName = book.authorName;
+  const authorFontSize = 24;
+  page.drawText(authorName, {
+    x: MARGIN,
+    y: height - 325,
+    size: authorFontSize,
+    font: fontSerifBold,
+    color: textDark,
+  });
+
+  // Synopsis
+  const synopsisYStart = height - 400;
+  page.drawText("Sinopsis", {
+      x: MARGIN,
+      y: synopsisYStart,
+      size: 12,
+      font: fontBold,
+      color: textDark
+  });
+  
+  const synopsisLines = wrapText(book.synopsis, width - (MARGIN * 2), fontSerifRegular, 11);
+  let currentY = synopsisYStart - 20;
+  for (const line of synopsisLines) {
+      if (currentY < 150) break; // Don't let synopsis overlap footer
+      page.drawText(line, { x: MARGIN, y: currentY, size: 11, font: fontSerifItalic, color: textMuted, lineHeight: 15 });
+      currentY -= 15;
+  }
+  
+
+  // Footer section
+  const footerY = 80;
+  page.drawLine({
+      start: { x: MARGIN, y: footerY + 20 },
+      end: { x: width - MARGIN, y: footerY + 20 },
+      thickness: 0.5,
+      color: nusakarsaPrimary,
+      opacity: 0.5
+  });
+
   if (authorProfile) {
-    let contactY = 120;
-    const contactFontSize = 10;
-    const contactColor = rgb(0.3, 0.3, 0.3);
-
-    const contactLines = [
-      authorProfile.email,
-      authorProfile.phoneNumber || '',
-      authorProfile.domicile || ''
-    ].filter(Boolean);
-
-    contactLines.forEach(line => {
-      page.drawText(line, {
+    const contactText = [authorProfile.email, authorProfile.domicile].filter(Boolean).join(' • ');
+    page.drawText(contactText, {
         x: MARGIN,
-        y: contactY,
-        size: contactFontSize,
+        y: footerY,
+        size: 9,
         font: fontRegular,
-        color: contactColor,
-      });
-      contactY -= 14;
+        color: textMuted,
     });
   }
-
-  const footerText = `Diterbitkan secara digital melalui Nusakarsa • ${new Date().getFullYear()}`;
+  
+  const footerText = `Diterbitkan melalui Nusakarsa © ${new Date().getFullYear()}`;
   page.drawText(footerText, {
-    x: (width - fontRegular.widthOfTextAtSize(footerText, 9)) / 2,
-    y: 60,
+    x: width - MARGIN - fontRegular.widthOfTextAtSize(footerText, 9),
+    y: footerY,
     size: 9,
     font: fontRegular,
-    color: rgb(0.6, 0.6, 0.6),
+    color: textMuted,
   });
 
   let pageCount = 1;
