@@ -15,7 +15,6 @@ import { signUpWithEmail, signInWithGoogle } from '@/firebase/auth/service';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2, Upload, User as UserIcon, Mail, Lock, Chrome, PenTool, Eye, EyeOff, ChevronLeft } from 'lucide-react';
-import { useAuthRedirect } from '@/hooks/use-auth-redirect';
 import { uploadProfilePhoto } from '@/lib/uploader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { motion } from 'framer-motion';
@@ -27,7 +26,6 @@ const formSchema = z.object({
 });
 
 export default function RegisterPage() {
-  useAuthRedirect();
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -118,11 +116,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="w-full max-w-[400px] flex flex-col items-center justify-center min-h-[100dvh] py-12 relative">
+    <div className="w-full max-w-[400px] relative">
       <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -z-10 pointer-events-none" />
 
-      <div className="absolute top-6 left-0 px-4 md:px-0">
+      <div className="absolute -top-24 left-0 px-4 md:px-0 lg:hidden">
         <Button variant="ghost" size="sm" asChild className="rounded-full text-muted-foreground hover:text-primary hover:bg-primary/5">
           <Link href="/login"><ChevronLeft className="mr-1 h-4 w-4" /> Masuk</Link>
         </Button>
@@ -132,10 +130,10 @@ export default function RegisterPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full px-4"
+        className="w-full"
       >
         <div className="flex flex-col items-center text-center space-y-4 mb-8">
-          <div className="p-4 rounded-[2rem] bg-background shadow-2xl shadow-primary/10 ring-1 ring-border/50">
+          <div className="p-4 rounded-[2rem] bg-background shadow-2xl shadow-primary/10 ring-1 ring-border/50 lg:hidden">
             <Logo className="h-10 w-10 sm:h-12 sm:w-12" />
           </div>
           <div className="space-y-1">
@@ -253,7 +251,7 @@ export default function RegisterPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                <span className="bg-background px-4 text-muted-foreground/60">Atau Gabung Dengan</span>
+                <span className="bg-card px-4 text-muted-foreground/60">Atau Gabung Dengan</span>
               </div>
             </div>
 
