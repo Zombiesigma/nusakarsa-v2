@@ -41,6 +41,7 @@ const sectionVariants = {
 export default function WelcomePage() {
   useAuthRedirect();
 
+  const welcomeBg = PlaceHolderImages.find(img => img.id === 'welcome-background')?.imageUrl || 'https://files.catbox.moe/tvbr0s.png';
   const featureStudioImg = PlaceHolderImages.find(img => img.id === 'feature-studio')?.imageUrl || 'https://picsum.photos/seed/studio/800/600';
   const featureExploreImg = PlaceHolderImages.find(img => img.id === 'feature-explore')?.imageUrl || 'https://picsum.photos/seed/explore/800/600';
   const featureCommunityImg = PlaceHolderImages.find(img => img.id === 'feature-community')?.imageUrl || 'https://picsum.photos/seed/community/800/600';
@@ -106,7 +107,7 @@ export default function WelcomePage() {
     <div className="min-h-screen bg-background text-foreground relative overflow-x-hidden flex flex-col">
       <div className="absolute inset-0 -z-20">
         <Image
-          src="/logo/bg.png"
+          src={welcomeBg}
           alt="Latar belakang panggung sastra"
           fill
           sizes="100vw"
