@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -9,6 +10,7 @@ import { Globe, PenTool, Cpu, Zap, ShieldCheck, Instagram, Twitter, Github, Chev
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const technologies = [
     { title: "TypeScript", desc: "Bahasa pemrograman dengan sistem tipe yang kuat untuk kode yang lebih aman, cepat, dan terstruktur.", icon: "https://svgl.app/library/typescript.svg" },
@@ -17,39 +19,46 @@ const technologies = [
 ];
 
 export default function AboutPage() {
+  const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://picsum.photos/seed/khalid/400/400';
+  const gunturAvatar = PlaceHolderImages.find(img => img.id === 'team-guntur')?.imageUrl || 'https://picsum.photos/seed/guntur/400/400';
+  const syifaAvatar = PlaceHolderImages.find(img => img.id === 'team-syifa')?.imageUrl || 'https://picsum.photos/seed/syifa/400/400';
+
   const initialArchitects = [
     {
         name: "Khalid Ar-Rahman",
         role: "Systems Architect",
         handle: "khalid_ar",
-        avatar: "/tim/cek.png",
+        avatar: khalidAvatar,
+        avatarHint: "man portrait",
         quote: "Membangun fondasi digital yang kokoh untuk masa depan literasi.",
     },
     {
         name: "Guntur Padilah",
         role: "Lead Full-stack Developer",
         handle: "gunturpadilah",
-        avatar: "/tim/cek.png",
+        avatar: gunturAvatar,
+        avatarHint: "male developer",
         quote: "Setiap baris kode adalah sebuah puisi yang menunggu untuk dibaca.",
     },
     {
         name: "Nursyifa Aeni",
         role: "Creative Director",
         handle: "syifa_aeni",
-        avatar: "/tim/cek.png",
+        avatar: syifaAvatar,
+        avatarHint: "woman creative",
         quote: "Desain adalah jembatan sunyi antara imajinasi dan realitas.",
     }
   ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-4 pt-6">
+    <div className="max-w-6xl mx-auto space-y-24 md:space-y-32 pb-32 relative overflow-x-hidden w-full px-4">
       <div className="absolute top-0 right-[-10%] w-64 md:w-96 h-64 md:h-96 bg-primary/10 rounded-full blur-[80px] md:blur-[120px] -z-10 pointer-events-none animate-pulse" />
       
       <motion.section 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center space-y-8 py-12 md:py-20"
+        className="text-center space-y-8 pt-12 md:pt-20 pb-12"
       >
         <div className="flex justify-center mb-8">
             <div className="relative p-4 md:p-6 rounded-[2.5rem] bg-white dark:bg-zinc-900 shadow-2xl shadow-primary/10 group overflow-hidden border border-border/50 ring-1 ring-primary/5">
@@ -119,9 +128,10 @@ export default function AboutPage() {
                                 <Image 
                                     src={dev.avatar} 
                                     alt={dev.name} 
+                                    data-ai-hint={dev.avatarHint}
                                     fill
                                     sizes="144px"
-                                    className="object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
+                                    className="object-cover rounded-full group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
                                 />
                             </div>
                         </div>
@@ -130,7 +140,7 @@ export default function AboutPage() {
                             <h3 className="font-headline text-3xl font-black tracking-tight text-foreground transition-colors group-hover:text-primary">
                                 {dev.name}
                             </h3>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 self-center">
                                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot"></span>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-primary">{dev.role}</span>
                             </div>

@@ -1,4 +1,4 @@
-# Nusakarsa App
+# Nusakarsa
 
 Aplikasi web modern yang dibangun dengan Next.js, React js, dan TypeScript.
 
