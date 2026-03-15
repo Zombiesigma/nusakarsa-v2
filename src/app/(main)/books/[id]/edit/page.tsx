@@ -55,6 +55,7 @@ import Link from 'next/link';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { MusicSidebar } from '@/components/MusicSidebar';
 import { v4 as uuidv4 } from 'uuid';
+import { republishBook } from '@/app/actions/book-actions';
 
 const chapterSchema = z.object({
   title: z.string().min(1, "Judul diperlukan."),
@@ -79,7 +80,7 @@ export default function EditBookPage() {
 
   const [activeTab, setActiveTab] = useState<EditorTab>('editor');
   const [isSavingSettings, setIsSavingSettings] = useState(false);
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
@@ -191,15 +192,34 @@ export default function EditBookPage() {
     } catch (error: any) { toast({ variant: "destructive", title: "Gagal Menyimpan" }); } finally { setIsSavingSettings(false); }
   };
 
-  const handleSubmitForReview = async () => {
-    if (!firestore || !bookRef || !isAuthor) return;
-    setIsSubmittingReview(true);
+  const handlePublish = async () => {
+    if (!firestore || !bookRef || !isAuthor || !book) return;
+    setIsPublishing(true);
+    
     try {
-      if (activeTab === 'editor' && chapterForm.formState.isDirty) await saveCurrentChapter();
-      await updateDoc(bookRef, { status: 'pending_review' });
-      toast({ variant: "success", title: "Karya Terkirim untuk Moderasi" });
+      if (activeTab === 'editor' && chapterForm.formState.isDirty) {
+        await saveCurrentChapter();
+      }
+
+      if (book.status === 'published') {
+        toast({ title: "Menerbitkan Ulang...", description: "Sedang membuat versi PDF baru, mohon tunggu." });
+        const result = await republishBook(book.id);
+        if (result.success) {
+            toast({ variant: "success", title: "Karya Berhasil Diperbarui", description: "Naskah PDF terbaru telah dibuat." });
+        } else {
+            throw new Error(result.error);
+        }
+      } else {
+        await updateDoc(bookRef, { status: 'pending_review' });
+        toast({ variant: "success", title: "Karya Terkirim untuk Moderasi" });
+      }
+
       setIsReviewDialogOpen(false);
-    } catch (error) { toast({ variant: "destructive", title: "Gagal Mengirim" }); } finally { setIsSubmittingReview(false); }
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Gagal Menerbitkan", description: error.message || "Terjadi kesalahan." });
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const handleMarkAsCompleted = async () => {
@@ -423,7 +443,7 @@ export default function EditBookPage() {
                             <Button 
                                 size="sm" 
                                 className="rounded-full px-6 font-black text-[10px] uppercase tracking-widest h-9 shadow-lg shadow-primary/20 transition-all hover:scale-105 active:scale-95" 
-                                disabled={isSubmittingReview} 
+                                disabled={isPublishing} 
                                 onClick={() => setIsReviewDialogOpen(true)}
                             >
                                 <BookUp className="mr-2 h-3.5 w-3.5" /> Terbitkan
@@ -542,12 +562,21 @@ export default function EditBookPage() {
         <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
             <AlertDialogHeader>
                 <div className="mx-auto bg-primary/10 p-4 rounded-2xl w-fit mb-4"><BookUp className="h-8 w-8 text-primary" /></div>
-                <AlertDialogTitle className="font-headline text-2xl font-black text-center">Terbitkan Karya?</AlertDialogTitle>
-                <AlertDialogDescription className="text-center font-medium">Karya Anda akan dikirim ke tim kurasi Nusakarsa sebelum tampil secara resmi di hadapan seluruh pembaca.</AlertDialogDescription>
+                <AlertDialogTitle className="font-headline text-2xl font-black text-center">
+                    {book?.status === 'published' ? 'Perbarui & Terbitkan Ulang?' : 'Terbitkan Karya?'}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center font-medium">
+                    {book?.status === 'published' 
+                        ? "Perubahan pada karya Anda akan langsung terbit dan versi PDF baru akan dibuat secara otomatis." 
+                        : "Karya Anda akan dikirim ke tim kurasi Nusakarsa sebelum tampil secara resmi di hadapan seluruh pembaca."
+                    }
+                </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-8 flex flex-col sm:flex-row gap-2">
                 <AlertDialogCancel className="rounded-full h-12 border-2 flex-1 font-bold">Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={handleSubmitForReview} className="rounded-full h-12 flex-1 font-black bg-primary shadow-xl shadow-primary/20">Kirim Sekarang</AlertDialogAction>
+                <AlertDialogAction onClick={handlePublish} className="rounded-full h-12 flex-1 font-black bg-primary shadow-xl shadow-primary/20">
+                    {book?.status === 'published' ? 'Ya, Terbitkan Ulang' : 'Kirim Sekarang'}
+                </AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

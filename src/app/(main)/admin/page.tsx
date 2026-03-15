@@ -128,7 +128,7 @@ export default function AdminPage() {
       const pdfUrl = await generateBookPdf(bookId);
 
       const batch = writeBatch(firestore);
-      batch.update(bookRef, { status: 'published', fileUrl: pdfUrl });
+      batch.update(bookRef, { status: 'published', fileUrl: pdfUrl, updatedAt: serverTimestamp() });
 
       const allUsersSnap = await getDocs(collection(firestore, 'users'));
       allUsersSnap.forEach((userDoc) => {

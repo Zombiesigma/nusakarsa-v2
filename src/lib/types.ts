@@ -52,6 +52,7 @@ export type Book = {
   visibility: 'public' | 'followers_only';
   playlist?: MusicTrack[];
   createdAt: Timestamp;
+  updatedAt?: Timestamp;
 };
 
 export type Chapter = {
