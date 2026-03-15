@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Loader2, 
@@ -38,20 +38,33 @@ import {
   FileText,
   Music2,
   Smartphone,
-  MapPin
+  MapPin,
+  XCircle
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { AuthorRequest, Book, User as AppUser } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { generateBookPdf } from "@/app/actions/pdf-generator";
+import { cn } from "@/lib/utils";
 
 export default function AdminPage() {
   const { user: currentUser } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [rejectionTarget, setRejectionTarget] = useState<{id: string, name: string, type: 'author' | 'book'} | null>(null);
 
   const { data: adminProfile, isLoading: isAdminChecking } = useDoc<AppUser>(
     (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null
@@ -103,6 +116,16 @@ export default function AdminPage() {
         domicile: request.domicile || '',
       });
       
+      const notifRef = doc(collection(firestore, `users/${request.userId}/notifications`));
+      batch.set(notifRef, {
+        type: 'author_request',
+        text: 'Permintaan penulis Anda telah disetujui. Selamat berkarya!',
+        link: '/studio',
+        actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+
       await batch.commit();
       toast({ 
         variant: 'success', 
@@ -113,6 +136,64 @@ export default function AdminPage() {
       toast({ variant: "destructive", title: "Gagal Menyetujui" });
     } finally {
       setProcessingId(null);
+    }
+  };
+  
+  const handleReject = async () => {
+    if (!firestore || !rejectionTarget) return;
+    setProcessingId(rejectionTarget.id);
+    
+    const { id, type, name } = rejectionTarget;
+
+    try {
+      const batch = writeBatch(firestore);
+
+      if (type === 'author') {
+        const requestRef = doc(firestore, 'authorRequests', id);
+        const requestSnap = await getDoc(requestRef);
+        if (!requestSnap.exists()) throw new Error("Permintaan tidak ditemukan.");
+        const requestData = requestSnap.data() as AuthorRequest;
+
+        batch.update(requestRef, { status: 'rejected' });
+
+        const notifRef = doc(collection(firestore, `users/${requestData.userId}/notifications`));
+        batch.set(notifRef, {
+            type: 'author_request',
+            text: `Permintaan penulis Anda ditolak. Silakan periksa kembali data Anda.`,
+            link: '/join-author',
+            actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+            read: false,
+            createdAt: serverTimestamp(),
+        });
+
+        toast({ variant: 'destructive', title: "Permintaan Ditolak" });
+
+      } else if (type === 'book') {
+        const bookRef = doc(firestore, 'books', id);
+        const bookSnap = await getDoc(bookRef);
+        if (!bookSnap.exists()) throw new Error("Karya tidak ditemukan.");
+        const bookData = bookSnap.data() as Book;
+
+        batch.update(bookRef, { status: 'draft' });
+
+        const notifRef = doc(collection(firestore, `users/${bookData.authorId}/notifications`));
+        batch.set(notifRef, {
+            type: 'broadcast',
+            text: `Karya Anda "${name}" membutuhkan revisi. Silakan periksa kembali di studio Anda.`,
+            link: `/books/${id}/edit`,
+            actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+            read: false,
+            createdAt: serverTimestamp(),
+        });
+        toast({ variant: 'destructive', title: "Karya Dikembalikan ke Draf" });
+      }
+      
+      await batch.commit();
+    } catch (error) {
+        toast({ variant: "destructive", title: "Gagal Menolak" });
+    } finally {
+        setProcessingId(null);
+        setRejectionTarget(null);
     }
   };
 
@@ -147,6 +228,16 @@ export default function AdminPage() {
                   createdAt: serverTimestamp(),
               });
           }
+      });
+      
+      const authorNotifRef = doc(collection(firestore, `users/${bookData.authorId}/notifications`));
+      batch.set(authorNotifRef, {
+          type: 'broadcast',
+          text: `Selamat! Karya Anda "${bookData.title}" telah berhasil diterbitkan.`,
+          link: `/books/${bookId}`,
+          actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+          read: false,
+          createdAt: serverTimestamp(),
       });
 
       await batch.commit();
@@ -276,7 +367,15 @@ export default function AdminPage() {
                                         <p className="flex items-center gap-1.5 font-medium"><Smartphone className="h-3 w-3" /> {request.phoneNumber}</p>
                                     </TableCell>
                                     <TableCell className="text-right px-6">
-                                        <Button size="sm" onClick={() => handleApproveAuthor(request)} disabled={!!processingId} className="rounded-full text-[10px]">Setuju</Button>
+                                        <div className="flex items-center justify-end gap-1">
+                                            <Button variant="ghost" size="sm" onClick={() => setRejectionTarget({ id: request.id, name: request.name, type: 'author' })} disabled={!!processingId} className="rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive text-[10px]">
+                                              <XCircle className="mr-1 h-3 w-3" />
+                                            </Button>
+                                            <Button size="sm" onClick={() => handleApproveAuthor(request)} disabled={!!processingId} className="rounded-full text-[10px]">
+                                              <CheckCircle2 className="mr-1 h-3 w-3" />
+                                              Setuju
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -313,14 +412,18 @@ export default function AdminPage() {
                                     </TableCell>
                                     <TableCell className="font-bold text-[10px]">{book.authorName}</TableCell>
                                     <TableCell className="text-right px-6">
-                                        <div className="flex items-center justify-end gap-2">
+                                        <div className="flex items-center justify-end gap-1">
+                                            <Button variant="ghost" size="sm" onClick={() => setRejectionTarget({ id: book.id, name: book.title, type: 'book' })} disabled={!!processingId} className="rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive text-[10px]">
+                                              <XCircle className="mr-1 h-3 w-3" />
+                                            </Button>
                                             <Button asChild size="sm" variant="outline" className="rounded-full text-[10px]">
-                                                <Link href={`/admin/review/${book.id}`}>
+                                                <Link href={`/admin/review/${book.id}`} target="_blank">
                                                     <BookOpen className="mr-1 h-3 w-3" />
                                                     Review
                                                 </Link>
                                             </Button>
                                             <Button size="sm" onClick={() => handleApproveBook(book.id, book.title)} disabled={!!processingId} className="rounded-full text-[10px]">
+                                                <CheckCircle2 className="mr-1 h-3 w-3" />
                                                 Terbitkan
                                             </Button>
                                         </div>
@@ -333,6 +436,25 @@ export default function AdminPage() {
             </Card>
         </TabsContent>
       </Tabs>
+      
+      <AlertDialog open={!!rejectionTarget} onOpenChange={() => setRejectionTarget(null)}>
+        <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
+            <AlertDialogHeader>
+                <div className="mx-auto bg-destructive/10 p-4 rounded-2xl w-fit mb-4"><XCircle className="h-8 w-8 text-destructive" /></div>
+                <AlertDialogTitle className="font-headline text-2xl font-black text-center">Konfirmasi Penolakan</AlertDialogTitle>
+                <AlertDialogDescription className="text-center font-medium leading-relaxed">
+                  Apakah Anda yakin ingin menolak {rejectionTarget?.type === 'author' ? 'permintaan penulis' : 'karya'} <strong className="text-foreground">"{rejectionTarget?.name}"</strong>?
+                  {rejectionTarget?.type === 'book' && " Karya akan dikembalikan ke status draf agar dapat direvisi oleh penulis."}
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="mt-8 flex gap-3">
+                <AlertDialogCancel className="rounded-full h-12 flex-1 border-2 font-bold">Batal</AlertDialogCancel>
+                <AlertDialogAction onClick={handleReject} className={cn(buttonVariants({ variant: 'destructive' }), "rounded-full h-12 flex-1 font-black shadow-lg shadow-destructive/20")}>
+                    {processingId ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Tolak"}
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
