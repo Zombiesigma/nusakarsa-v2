@@ -145,7 +145,7 @@ export function BookCommentItem({ bookId, comment, currentUserProfile }: BookCom
                             size="sm" 
                             className={cn(
                                 "h-8 px-3 rounded-full text-xs font-bold transition-all",
-                                isLiked ? "text-red-500 bg-red-500/5 hover:bg-red-500/10" : "text-muted-foreground hover:text-primary"
+                                isLiked ? "text-red-500 bg-red-500/10 hover:bg-red-500/10" : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                             )} 
                             onClick={handleToggleLike} 
                             disabled={isLiking}

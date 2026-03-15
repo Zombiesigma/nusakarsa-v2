@@ -38,7 +38,7 @@ export function HeaderActions() {
     return (
       <nav className="flex items-center gap-2">
         <Link href="/notifications" className="relative group">
-          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/5 hover:text-primary transition-all">
+          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-primary/10 hover:text-primary transition-all">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifikasi</span>
           </Button>
@@ -57,7 +57,7 @@ export function HeaderActions() {
   return (
     <nav className="flex items-center gap-3">
       <Link href="/login">
-        <Button variant="ghost" className="rounded-full px-6 font-bold hover:bg-primary/5 hover:text-primary">Masuk</Button>
+        <Button variant="ghost" className="rounded-full px-6 font-bold hover:bg-primary/10 hover:text-primary">Masuk</Button>
       </Link>
       <Link href="/register">
         <Button className="rounded-full px-6 font-bold shadow-lg shadow-primary/20">Daftar</Button>

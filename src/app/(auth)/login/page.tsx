@@ -128,7 +128,7 @@ export default function LoginPage() {
 
       {/* Back Button for Mobile Convenience */}
       <div className="absolute top-6 left-0 px-4 md:px-0">
-        <Button variant="ghost" size="sm" asChild className="rounded-full text-muted-foreground hover:text-primary">
+        <Button variant="ghost" size="sm" asChild className="rounded-full text-muted-foreground hover:text-primary hover:bg-primary/5">
           <Link href="/"><ChevronLeft className="mr-1 h-4 w-4" /> Beranda</Link>
         </Button>
       </div>
@@ -229,7 +229,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full h-12 rounded-xl font-bold border-2 hover:bg-primary/5 hover:border-primary/20 transition-all active:scale-95 text-xs" onClick={handleGoogleSignIn} loading={isLoading}>
+            <Button variant="outline" className="w-full h-12 rounded-xl font-bold border-2 hover:bg-primary/10 hover:border-primary/20 transition-all active:scale-95 text-xs" onClick={handleGoogleSignIn} loading={isLoading}>
               <Chrome className="mr-2 h-4 w-4 text-primary" /> Lanjutkan dengan Google
             </Button>
 

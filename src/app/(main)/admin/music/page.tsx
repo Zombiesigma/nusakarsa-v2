@@ -213,7 +213,7 @@ export default function AdminMusicPage() {
                                             <Button 
                                                 variant="ghost" 
                                                 size="icon" 
-                                                className="h-10 w-10 rounded-full"
+                                                className="h-10 w-10 rounded-full hover:bg-primary/10"
                                                 onClick={() => setPlayingId(playingId === music.id ? null : music.id)}
                                             >
                                                 {playingId === music.id ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}

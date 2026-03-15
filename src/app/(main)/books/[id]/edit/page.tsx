@@ -304,8 +304,8 @@ export default function EditBookPage() {
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide">
             <div className="grid grid-cols-2 gap-2">
-                <Button variant={activeTab === 'settings' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2" onClick={() => handleTabSwitch('settings')}><Settings className="h-4 w-4" /><span className="text-xs font-bold">Identitas</span></Button>
-                <Button variant={activeTab === 'music' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2" onClick={() => handleTabSwitch('music')}><Headset className="h-4 w-4" /><span className="text-xs font-bold">Musik</span></Button>
+                <Button variant={activeTab === 'settings' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2 hover:bg-primary/5" onClick={() => handleTabSwitch('settings')}><Settings className="h-4 w-4" /><span className="text-xs font-bold">Identitas</span></Button>
+                <Button variant={activeTab === 'music' ? "secondary" : "ghost"} className="w-full justify-start h-11 px-3 rounded-xl gap-2 hover:bg-primary/5" onClick={() => handleTabSwitch('music')}><Headset className="h-4 w-4" /><span className="text-xs font-bold">Musik</span></Button>
             </div>
             
             {activeTab === 'editor' && (
@@ -319,7 +319,7 @@ export default function EditBookPage() {
                             <Button 
                                 variant={activeChapterId === chapter.id ? "secondary" : "ghost"} 
                                 className={cn(
-                                    "w-full justify-start h-11 px-4 rounded-xl group transition-all",
+                                    "w-full justify-start h-11 px-4 rounded-xl group transition-all hover:bg-primary/5",
                                     activeChapterId === chapter.id ? "pr-10" : "hover:pr-10"
                                 )} 
                                 onClick={() => handleChapterSelection(chapter.id)}

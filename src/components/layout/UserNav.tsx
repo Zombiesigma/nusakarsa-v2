@@ -102,7 +102,7 @@ export function UserNav() {
         <Link 
             href={href} 
             className={cn(
-                "flex items-center justify-between p-4 rounded-[1.25rem] transition-all duration-300 group hover:bg-primary/5 active:scale-[0.98]",
+                "flex items-center justify-between p-4 rounded-[1.25rem] transition-all duration-300 group hover:bg-primary/10 active:scale-[0.98]",
                 className
             )}
         >
@@ -221,7 +221,7 @@ export function UserNav() {
                 <NavLink href="/settings" icon={Settings} label="Edit Profil" description="Identitas dan privasi" />
                 <div
                     onClick={toggleTheme}
-                    className="flex items-center justify-between p-4 rounded-[1.25rem] transition-all duration-300 group hover:bg-primary/5 cursor-pointer active:scale-[0.98]"
+                    className="flex items-center justify-between p-4 rounded-[1.25rem] transition-all duration-300 group hover:bg-primary/10 cursor-pointer active:scale-[0.98]"
                 >
                     <div className="flex items-center gap-4">
                         <div className="p-2.5 rounded-xl bg-muted group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
@@ -246,7 +246,7 @@ export function UserNav() {
             <div className="p-6 mt-4">
               <Button 
                 variant="ghost" 
-                className="w-full justify-start gap-4 h-14 rounded-2xl text-destructive hover:text-destructive hover:bg-destructive/5 font-black border border-transparent hover:border-destructive/10 transition-all duration-300"
+                className="w-full justify-start gap-4 h-14 rounded-2xl text-destructive hover:text-destructive hover:bg-destructive/10 font-black border border-transparent hover:border-destructive/10 transition-all duration-300"
                 onClick={() => setIsLogoutAlertOpen(true)}
               >
                 <div className="p-2.5 rounded-xl bg-destructive/10">

@@ -141,7 +141,7 @@ export function FollowsSheet({ userId, type, open, onOpenChange }: FollowsSheetP
                             onOpenChange(false);
                             document.body.style.pointerEvents = '';
                         }}
-                        className="flex items-center gap-4 px-6 py-4 transition-all hover:bg-muted/50 group relative"
+                        className="flex items-center gap-4 px-6 py-4 transition-all hover:bg-primary/5 group relative"
                     >
                         <div className="relative">
                             <Avatar className="h-14 w-14 border-2 border-background shadow-md transition-transform group-hover:scale-105 group-active:scale-95">

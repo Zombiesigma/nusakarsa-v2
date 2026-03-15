@@ -110,7 +110,7 @@ export function AppSidebar() {
                             "relative h-14 w-14 rounded-[1.75rem] flex items-center justify-center transition-all duration-500 z-10",
                             active 
                               ? "text-primary-foreground scale-110" 
-                              : "text-muted-foreground/60 hover:text-primary hover:bg-primary/5"
+                              : "text-muted-foreground/60 hover:text-primary hover:bg-primary/10"
                           )}>
                             <item.icon className={cn(
                               "h-6 w-6 transition-transform duration-500",
