@@ -1,3 +1,4 @@
+
 'use client';
 
 import { initializeFirebase } from '@/firebase';
@@ -43,6 +44,11 @@ async function createUserProfile(user: User, customPhotoURL?: string) {
       following: 0,
       status: 'online',
       lastSeen: serverTimestamp(),
+      notificationPreferences: {
+        onNewFollower: true,
+        onBookComment: true,
+        onBookFavorite: true,
+      },
     });
   } else {
      await updateDoc(userDocRef, {
