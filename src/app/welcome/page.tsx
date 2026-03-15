@@ -180,11 +180,7 @@ export default function WelcomePage() {
 
         <section className="max-w-6xl mx-auto py-20 md:py-32 px-6 space-y-24">
           <div className="text-center space-y-4">
-            <motion.div variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs md:text-sm font-black uppercase tracking-[0.3em] border border-primary/20">
-                <Layers className="h-4 w-4" /> Pilar Utama
-              </div>
-            </motion.div>
+            
             <motion.h2 variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }} className="text-4xl md:text-6xl font-headline font-black tracking-tight leading-tight">
               Dibangun untuk <span className="text-primary italic">Penulis.</span>
             </motion.h2>
