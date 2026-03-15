@@ -1,7 +1,10 @@
 
 'use server';
 
-import { PDFDocument as PDFLib, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument as PDFLib, StandardFonts, rgb, degrees } from 'pdf-lib';
+import type { PDFImage, PDFPage } from 'pdf-lib';
+import { promises as fs } from 'fs';
+import path from 'path';
 import { initializeFirebase } from '@/firebase';
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 import type { Book, Chapter, User } from '@/lib/types';
@@ -9,6 +12,24 @@ import type { Book, Chapter, User } from '@/lib/types';
 const PAGE_WIDTH = 595.28; 
 const PAGE_HEIGHT = 841.89; 
 const MARGIN = 72; 
+
+/**
+ * Menambahkan watermark ke halaman PDF.
+ */
+function addWatermarkToPage(page: PDFPage, watermarkImage: PDFImage) {
+    const { width, height } = page.getSize();
+    // Skala watermark agar memenuhi sebagian besar halaman
+    const watermarkDims = watermarkImage.scale(0.8); 
+
+    page.drawImage(watermarkImage, {
+        x: width / 2 - watermarkDims.width / 2,
+        y: height / 2 - watermarkDims.height / 2,
+        width: watermarkDims.width,
+        height: watermarkDims.height,
+        opacity: 0.05, // Opasitas sangat rendah agar tidak mengganggu
+        rotate: degrees(-45),
+    });
+}
 
 /**
  * Membersihkan string untuk digunakan sebagai nama folder kawan.
@@ -37,6 +58,10 @@ export async function generateBookPdf(bookId: string): Promise<string> {
 
   const pdfDoc = await PDFLib.create();
   
+  // Muat dan sematkan gambar watermark
+  const watermarkBytes = await fs.readFile(path.join(process.cwd(), 'public/logo/copyright.png'));
+  const watermarkImage = await pdfDoc.embedPng(watermarkBytes);
+
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontItalic = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
@@ -46,6 +71,9 @@ export async function generateBookPdf(bookId: string): Promise<string> {
 
   let page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
   const { width, height } = page.getSize();
+  
+  // Tambahkan watermark ke halaman sampul
+  addWatermarkToPage(page, watermarkImage);
 
   // Draw Industry Border
   page.drawRectangle({
@@ -126,6 +154,7 @@ export async function generateBookPdf(bookId: string): Promise<string> {
   for (const chapter of chapters) {
     page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
     pageCount++;
+    addWatermarkToPage(page, watermarkImage);
 
     const isPoem = book.type === 'poem';
 
@@ -159,6 +188,7 @@ export async function generateBookPdf(bookId: string): Promise<string> {
             page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
             pageCount++;
             addFooter(page, pageCount, fontRegular, width);
+            addWatermarkToPage(page, watermarkImage);
             currentY = height - 60;
           }
           const lineX = (width - font.widthOfTextAtSize(line, size)) / 2;
@@ -175,6 +205,7 @@ export async function generateBookPdf(bookId: string): Promise<string> {
             page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
             pageCount++;
             addFooter(page, pageCount, fontRegular, width);
+            addWatermarkToPage(page, watermarkImage);
             currentY = height - 60;
           }
           page.drawText(line, { x: MARGIN, y: currentY, size: 12, font: fontSerifRegular });
