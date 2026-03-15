@@ -63,7 +63,7 @@ const TableOfContents = ({ chapters, isPoem, onChapterClick }) => {
                     </div>
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 pb-32 no-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 py-4 pb-32">
                  <div className="grid gap-3">
                     {chapters?.map((c, idx) => (
                         <button 
@@ -466,7 +466,7 @@ export default function ReadPage() {
         <div 
           ref={scrollContainerRef} 
           onScroll={handleScroll} 
-          className="flex-1 overflow-y-auto scroll-smooth no-scrollbar relative z-10"
+          className="flex-1 overflow-y-auto scroll-smooth relative z-10"
         >
           <div className={cn("w-full mx-auto max-w-4xl px-6 py-12")}>
             <header className="text-center space-y-6 mb-20">

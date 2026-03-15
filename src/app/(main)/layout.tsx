@@ -123,7 +123,7 @@ export default function MainAppLayout({
           {!isImmersiveRoute && <Header />}
           
           <main className={cn(
-            "flex-1 overflow-y-auto no-scrollbar relative",
+            "flex-1 overflow-y-auto relative",
             !isImmersiveRoute && "pb-24 md:pb-0"
           )}>
             <div className={cn(
