@@ -34,37 +34,77 @@ export default function GuidePage() {
       bg: "bg-blue-500/5",
       content: [
         { 
-          q: "Bagaimana cara menemukan karya yang tepat?", 
-          a: "Gunakan fitur 'Eksplorasi' di Beranda untuk melihat tren mingguan, atau gunakan bilah pencarian cerdas di bagian atas. Anda bisa mencari berdasarkan judul, genre, atau langsung mencari nama pujangga favorit Anda." 
+          q: "Bagaimana cara menemukan mahakarya baru?", 
+          a: "Gunakan bilah pencarian di bagian atas untuk mencari judul, penulis, atau genre spesifik. Halaman utama juga menampilkan karya-karya terbaru dan terpopuler untuk inspirasi Anda." 
         },
         { 
-          q: "Personalisasi pengalaman membaca", 
-          a: "Saat berada di dalam halaman baca, klik ikon 'Settings' di header. Anda dapat menyesuaikan ukuran huruf agar nyaman di mata dan beralih antara Mode Terang atau Mode Gelap." 
+          q: "Apa itu 'Mode Baca' dan bagaimana cara mengaturnya?", 
+          a: "Saat membaca sebuah karya, klik ikon gerigi (Pengaturan) di pojok kanan atas. Anda bisa mengubah tema (terang, gelap, sepia), jenis font, dan ukuran huruf untuk pengalaman membaca yang paling nyaman." 
         },
         { 
-          q: "Sistem Favorit & Koleksi", 
-          a: "Menekan ikon 'Hati' pada detail buku akan menyimpan karya tersebut ke dalam tab 'Favorit' di profil Anda." 
+          q: "Bagaimana cara menyimpan karya favorit saya?", 
+          a: "Pada halaman detail buku, klik ikon hati untuk menambahkan karya ke 'Pustaka Saya'. Semua karya favorit Anda akan tersimpan rapi di sana untuk diakses kembali kapan saja." 
+        },
+        { 
+          q: "Apa fungsi dari fitur 'Soundtrack'?", 
+          a: "Beberapa penulis menyertakan daftar putar musik untuk menemani Anda saat membaca. Klik ikon headphone di halaman baca untuk memutar, mengontrol volume, atau bahkan mencari musik lain untuk membangun suasana." 
         }
       ]
     },
     {
       id: "author",
       icon: PenTool,
-      title: "Karir Sebagai Penulis",
+      title: "Panduan Karir Penulis",
       description: "Dari draf pertama hingga menjadi pujangga ternama.",
       color: "text-emerald-500",
       bg: "bg-emerald-500/5",
       content: [
         { 
-          q: "Manajemen Draf & Auto-save", 
-          a: "Setiap bab yang Anda tulis akan disimpan secara otomatis setiap 15 detik ke Cloud." 
+          q: "Bagaimana cara mulai menulis di Nusakarsa?", 
+          a: "Pertama, Anda harus menjadi penulis terverifikasi. Kunjungi halaman 'Jadi Penulis' dan isi formulir pengajuan. Setelah disetujui, Anda dapat mulai membuat karya baru melalui menu 'Studio'." 
         },
         { 
-          q: "Export ke PDF Profesional", 
-          a: "Setelah karya Anda disetujui untuk terbit, sistem Nusakarsa akan menghasilkan file PDF dengan format premium yang siap dibagikan." 
+          q: "Apa itu Studio Penulis?", 
+          a: "Studio adalah ruang kerja digital Anda. Di sini Anda bisa mengelola semua draf, menambahkan bab baru, mengatur identitas karya (sampul, sinopsis), dan menyematkan playlist musik." 
+        },
+        { 
+          q: "Bagaimana proses publikasi karya?", 
+          a: "Setelah naskah Anda selesai, klik tombol 'Terbitkan' di dalam editor. Karya Anda akan masuk ke antrean moderasi. Tim kurasi kami akan meninjaunya untuk memastikan kualitas sebelum resmi diterbitkan ke seluruh pembaca." 
+        },
+        {
+          q: "Apakah saya bisa mengimpor naskah yang sudah ada?",
+          a: "Tentu! Saat membuat karya baru, pilih metode 'Impor Berkas'. Nusakarsa mendukung format .docx, .txt, dan .pdf. Sistem akan secara otomatis mengekstrak teksnya menjadi draf bab pertama Anda."
+        }
+      ]
+    },
+    {
+      id: "community",
+      icon: Users,
+      title: "Etiket Komunitas",
+      description: "Menjaga ekosistem sastra yang sehat dan suportif.",
+      color: "text-purple-500",
+      bg: "bg-purple-500/5",
+      content: [
+        { 
+          q: "Bagaimana cara berinteraksi yang baik?", 
+          a: "Tinggalkan ulasan yang konstruktif dan apresiatif. Hargai karya setiap penulis. Hindari komentar yang mengandung ujaran kebencian, spam, atau promosi tidak relevan." 
+        },
+        { 
+          q: "Apa itu plagiarisme dan bagaimana Nusakarsa menanganinya?", 
+          a: "Plagiarisme adalah mengambil karya orang lain dan mengklaimnya sebagai milik sendiri. Nusakarsa memiliki kebijakan nol toleransi terhadap plagiarisme. Akun yang terbukti melakukan plagiarisme akan ditangguhkan secara permanen." 
+        },
+        {
+          q: "Bagaimana cara mengikuti penulis lain?",
+          a: "Kunjungi halaman profil seorang penulis, lalu klik tombol 'Mulai Ikuti'. Anda akan mendapatkan notifikasi setiap kali mereka menerbitkan karya baru."
         }
       ]
     }
+  ];
+
+  const features = [
+      { icon: Maximize2, label: "Studio Fokus", desc: "Editor bebas distraksi untuk aliran kreativitas maksimal.", color: "text-indigo-500", bg: "bg-indigo-500/5" },
+      { icon: ShieldCheck, label: "Hak Cipta Terlindungi", desc: "Anda memegang penuh hak atas karya yang Anda terbitkan.", color: "text-emerald-500", bg: "bg-emerald-500/5" },
+      { icon: Share2, label: "Ekspor PDF Profesional", desc: "Bagikan naskah Anda dalam format PDF yang elegan.", color: "text-blue-500", bg: "bg-blue-500/5" },
   ];
 
   return (
@@ -89,23 +129,23 @@ export default function GuidePage() {
         </div>
       </motion.section>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 px-4">
-        {[
-            { icon: Maximize2, label: "Zen Mode", color: "text-indigo-500", bg: "bg-indigo-500/5" },
-            { icon: ShieldCheck, label: "Eksport PDF", color: "text-emerald-500", bg: "bg-emerald-500/5" }
-        ].map((item, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 px-4">
+        {features.map((item, i) => (
             <Card key={i} className="border-none shadow-xl bg-card/50 backdrop-blur-sm rounded-[1.5rem] p-4 md:p-6 flex flex-col items-center gap-3 group">
                 <div className={cn("p-3 rounded-xl md:rounded-2xl", item.bg, item.color)}>
                     <item.icon className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
-                <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-60 text-center">{item.label}</p>
+                <div className="text-center">
+                    <p className="text-[10px] font-black uppercase tracking-widest group-hover:text-primary transition-colors">{item.label}</p>
+                    <p className="text-[10px] text-muted-foreground font-medium mt-1">{item.desc}</p>
+                </div>
             </Card>
         ))}
       </div>
 
       <section className="space-y-8 md:space-y-10">
         <div className="flex items-center gap-4 px-6">
-            <h2 className="text-lg md:text-2xl font-headline font-black tracking-tight whitespace-nowrap">Kategori <span className="text-primary">Eksplorasi</span></h2>
+            <h2 className="text-lg md:text-2xl font-headline font-black tracking-tight whitespace-nowrap">Tanya <span className="text-primary">Jawab</span></h2>
             <div className="h-px bg-border flex-1" />
         </div>
 
