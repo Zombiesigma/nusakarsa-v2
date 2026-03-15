@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
@@ -363,26 +362,40 @@ export default function SettingsPage() {
                                         <CardTitle className="font-headline text-2xl font-black">Pusat Kabar</CardTitle>
                                         <CardDescription>Atur pemberitahuan mana yang ingin Anda terima.</CardDescription>
                                     </CardHeader>
-                                    <CardContent className="p-8 space-y-6">
+                                    <CardContent className="p-8 space-y-2">
                                         {[
                                             { name: 'onNewFollower', label: 'Pengikut Baru', description: 'Saat pujangga lain mulai mengikuti Anda.', icon: UserIcon },
                                             { name: 'onBookComment', label: 'Ulasan Karya', description: 'Saat ada ulasan baru pada karya Anda.', icon: Pencil },
                                             { name: 'onBookFavorite', label: 'Koleksi Favorit', description: 'Saat karya Anda ditambahkan ke favorit.', icon: Heart }
                                         ].map((item) => (
-                                            <FormField key={item.name} control={notificationForm.control} name={item.name as any} render={({ field }) => (
-                                                <div className="flex items-center justify-between p-5 rounded-[2rem] hover:bg-muted/30 transition-all border border-transparent hover:border-border">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className={cn("p-2.5 rounded-xl bg-primary/5 text-primary", field.value && "bg-primary text-white")}>
-                                                            <item.icon className="h-5 w-5" />
-                                                        </div>
-                                                        <div>
-                                                            <Label className="font-black text-sm uppercase tracking-wider">{item.label}</Label>
-                                                            <p className="text-[10px] text-muted-foreground font-medium">{item.description}</p>
-                                                        </div>
+                                            <FormField
+                                              key={item.name}
+                                              control={notificationForm.control}
+                                              name={item.name as 'onNewFollower' | 'onBookComment' | 'onBookFavorite'}
+                                              render={({ field }) => (
+                                                <FormItem className="flex flex-row items-center justify-between p-5 rounded-[2rem] hover:bg-muted/30 transition-all border border-transparent hover:border-border/50">
+                                                  <div className="flex items-center gap-4">
+                                                    <div className={cn("p-2.5 rounded-xl bg-primary/5 text-primary", field.value && "bg-primary text-white")}>
+                                                        <item.icon className="h-5 w-5" />
                                                     </div>
-                                                    <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                                                </div>
-                                            )} />
+                                                    <div className="space-y-0.5">
+                                                      <FormLabel className="font-black text-sm uppercase tracking-wider">
+                                                        {item.label}
+                                                      </FormLabel>
+                                                      <FormDescription className="text-[10px] text-muted-foreground font-medium">
+                                                        {item.description}
+                                                      </FormDescription>
+                                                    </div>
+                                                  </div>
+                                                  <FormControl>
+                                                    <Switch
+                                                      checked={field.value}
+                                                      onCheckedChange={field.onChange}
+                                                    />
+                                                  </FormControl>
+                                                </FormItem>
+                                              )}
+                                            />
                                         ))}
                                     </CardContent>
                                     <CardFooter className="p-8 flex justify-end">
