@@ -115,7 +115,11 @@ export default function WelcomePage() {
           animate="visible"
           className="relative z-10 w-full flex flex-col items-center justify-center py-20 md:py-32 px-6"
         >
-          <div className="max-w-4xl w-full flex flex-col items-center text-center space-y-12">
+          <div className="relative max-w-4xl w-full flex flex-col items-center text-center space-y-12">
+            <div className="absolute inset-0 flex items-center justify-center -z-10 opacity-5 pointer-events-none">
+                <Logo className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] -translate-y-10" />
+            </div>
+
             <motion.div
               variants={sectionVariants}
               custom={0}
