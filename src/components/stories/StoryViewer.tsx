@@ -247,10 +247,10 @@ export function StoryViewer({ stories, initialAuthorId, isOpen, onClose }: Story
         <div className="relative w-full h-full flex items-center justify-center">
             {/* Desktop Navigation Hints */}
             <div className="absolute inset-0 hidden md:flex items-center justify-between px-10 pointer-events-none z-[270]">
-                <button onClick={prevStory} className="h-14 w-14 rounded-full bg-white/10 text-white pointer-events-auto backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+                <button onClick={prevStory} className="h-14 w-14 rounded-full bg-white/10 text-white pointer-events-auto backdrop-blur-md flex items-center justify-center hover:bg-white/25 transition-all">
                     <ChevronLeft className="h-8 w-8" />
                 </button>
-                <button onClick={nextStory} className="h-14 w-14 rounded-full bg-white/10 text-white pointer-events-auto backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all">
+                <button onClick={nextStory} className="h-14 w-14 rounded-full bg-white/10 text-white pointer-events-auto backdrop-blur-md flex items-center justify-center hover:bg-white/25 transition-all">
                     <ChevronRight className="h-8 w-8" />
                 </button>
             </div>
