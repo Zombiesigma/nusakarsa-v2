@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Header } from '@/components/layout/Header';
+import { Header } from '../../components/layout/Header';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { ProtectedLayout } from '@/components/auth/ProtectedLayout';
