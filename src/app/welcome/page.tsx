@@ -195,7 +195,7 @@ export default function WelcomePage() {
                     <feature.icon className="h-7 w-7" />
                   </div>
                   <h3 className="text-3xl font-headline font-black tracking-tight">{feature.title}</h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed">{feature.description}</p>
+                  <p className="text-lg text-muted-foreground leading-relaxed">{feature.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -330,7 +330,7 @@ export default function WelcomePage() {
               </div>
 
               <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
-                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa.</p>
+                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa. All Rights Reserved.</p>
               </div>
             </div>
         </div>
