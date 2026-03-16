@@ -33,9 +33,9 @@ const sectionVariants = {
 };
 
 export default function AboutPage() {
-  const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
-  const gunturAvatar = PlaceHolderImages.find(img => img.id === 'team-guntur')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
-  const syifaAvatar = PlaceHolderImages.find(img => img.id === 'team-syifa')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
+  const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://picsum.photos/seed/khalid/400/400';
+  const gunturAvatar = PlaceHolderImages.find(img => img.id === 'team-guntur')?.imageUrl || 'https://picsum.photos/seed/guntur/400/400';
+  const syifaAvatar = PlaceHolderImages.find(img => img.id === 'team-syifa')?.imageUrl || 'https://picsum.photos/seed/syifa/400/400';
 
   const initialArchitects = [
     {
@@ -75,7 +75,7 @@ export default function AboutPage() {
         className="text-center space-y-8 pb-12"
       >
         <div className="flex justify-center mb-8">
-            <div className="relative p-4 md:p-6 rounded-[2.5rem] bg-white dark:bg-zinc-900 shadow-2xl shadow-primary/10 group overflow-hidden border border-border/50 ring-1 ring-primary/5">
+            <div className="relative p-4 md:p-6 rounded-[2.5rem] bg-white shadow-2xl shadow-primary/10 group overflow-hidden border border-border/50 ring-1 ring-primary/5">
                 <Logo className="w-16 h-16 md:w-24 md:h-20 transition-transform duration-700 group-hover:scale-110" />
             </div>
         </div>
@@ -261,7 +261,7 @@ export default function AboutPage() {
               </div>
 
               <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
-                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa.</p>
+                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa. All Rights Reserved.</p>
               </div>
             </div>
         </div>
