@@ -415,7 +415,7 @@ export default function AdminPage() {
                                               <XCircle className="mr-1 h-3 w-3" />
                                             </Button>
                                             <Button asChild size="sm" variant="outline" className="rounded-full text-[10px]">
-                                                <Link href={`/admin/review/${book.id}`} target="_blank">
+                                                <Link href={`/admin/review/${book.id}`}>
                                                     <BookOpen className="mr-1 h-3 w-3" />
                                                     Review
                                                 </Link>
