@@ -77,7 +77,7 @@ export function AppSidebar() {
   return (
     <aside className="fixed left-0 top-0 bottom-0 w-24 flex flex-col items-center py-8 z-[150] hidden md:flex">
       {/* Background Rail Premium with Glassmorphism */}
-      <div className="absolute inset-y-4 left-4 right-4 bg-white/40 dark:bg-zinc-950/40 backdrop-blur-2xl border border-white/20 dark:border-white/5 rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] ring-1 ring-black/5 -z-10" />
+      <div className="absolute inset-y-4 left-4 right-4 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-[3.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] ring-1 ring-black/5 -z-10" />
 
       {/* Top Section: Logo with Stage */}
       <div className="mb-6 relative shrink-0">
@@ -164,7 +164,7 @@ export function AppSidebar() {
               <Link 
                   href={isAuthor ? "/upload" : "/join-author"}
                   className={cn(
-                    "h-14 w-14 rounded-[1.75rem] bg-white dark:bg-zinc-900 border border-border shadow-xl flex items-center justify-center transition-all group active:scale-90 text-primary/60 hover:text-primary"
+                    "h-14 w-14 rounded-[1.75rem] bg-white border border-border shadow-xl flex items-center justify-center transition-all group active:scale-90 text-primary/60 hover:text-primary"
                   )}
               >
                   <Plus className="h-7 w-7 group-hover:rotate-90 transition-transform duration-500" strokeWidth={3} />
