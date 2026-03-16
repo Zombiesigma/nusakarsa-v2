@@ -16,6 +16,8 @@ export type User = {
   domicile?: string;    
   status?: 'online' | 'offline';
   lastSeen?: Timestamp;
+  createdAt?: Timestamp;
+  deviceInfo?: string;
   notificationPreferences?: {
     onNewFollower?: boolean;
     onBookComment?: boolean;

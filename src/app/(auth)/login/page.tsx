@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -79,7 +80,8 @@ export default function LoginPage() {
 
   async function handleGoogleSignIn() {
     setIsLoading(true);
-    const { error } = await signInWithGoogle();
+    const userAgent = navigator.userAgent;
+    const { error } = await signInWithGoogle(userAgent);
     if (error) {
       toast({
         variant: 'destructive',

@@ -23,7 +23,7 @@ import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firest
 const getFirebaseAuth = () => initializeFirebase().auth;
 const getFirebaseDb = () => initializeFirebase().firestore;
 
-async function createUserProfile(user: User, customPhotoURL?: string) {
+async function createUserProfile(user: User, customPhotoURL?: string, userAgent?: string) {
   const db = getFirebaseDb();
   const userDocRef = doc(db, 'users', user.uid);
   const userDoc = await getDoc(userDocRef);
@@ -44,6 +44,8 @@ async function createUserProfile(user: User, customPhotoURL?: string) {
       following: 0,
       status: 'online',
       lastSeen: serverTimestamp(),
+      createdAt: serverTimestamp(),
+      deviceInfo: userAgent || 'Unknown',
       notificationPreferences: {
         onNewFollower: true,
         onBookComment: true,
@@ -58,7 +60,7 @@ async function createUserProfile(user: User, customPhotoURL?: string) {
   }
 }
 
-export async function signUpWithEmail(email: string, password: string, displayName: string, photoURL?: string) {
+export async function signUpWithEmail(email: string, password: string, displayName: string, photoURL?: string, userAgent?: string) {
   try {
     const auth = getFirebaseAuth();
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -75,7 +77,7 @@ export async function signUpWithEmail(email: string, password: string, displayNa
       photoURL: finalPhotoURL
     };
 
-    await createUserProfile(userWithProfile, finalPhotoURL);
+    await createUserProfile(userWithProfile, finalPhotoURL, userAgent);
     return { user: userWithProfile };
   } catch (error) {
     console.error("[Auth Service] Sign Up Error:", error);
@@ -118,14 +120,14 @@ export async function resendVerificationEmail() {
     return { error: new Error("Tidak ada sesi aktif.") };
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(userAgent?: string) {
   try {
     const auth = getFirebaseAuth();
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    await createUserProfile(user);
+    await createUserProfile(user, undefined, userAgent);
     return { user };
   } catch (error) {
     console.error("[Auth Service] Google Auth Error:", error);

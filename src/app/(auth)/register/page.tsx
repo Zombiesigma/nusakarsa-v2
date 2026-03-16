@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -61,6 +62,7 @@ export default function RegisterPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     let photoURL = '';
+    const userAgent = navigator.userAgent;
 
     try {
       if (selectedFile) {
@@ -68,7 +70,7 @@ export default function RegisterPage() {
         photoURL = await uploadProfilePhoto(selectedFile, values.fullName);
       }
 
-      const { error } = await signUpWithEmail(values.email, values.password, values.fullName, photoURL);
+      const { error } = await signUpWithEmail(values.email, values.password, values.fullName, photoURL, userAgent);
       
       if (error) {
         toast({
@@ -97,7 +99,8 @@ export default function RegisterPage() {
 
   async function handleGoogleSignIn() {
     setIsLoading(true);
-    const { error } = await signInWithGoogle();
+    const userAgent = navigator.userAgent;
+    const { error } = await signInWithGoogle(userAgent);
     if (error) {
       toast({
         variant: 'destructive',

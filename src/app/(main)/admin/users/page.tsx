@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useMemo, useState, Suspense } from 'react';
@@ -35,11 +36,15 @@ import {
   UserCircle,
   ExternalLink,
   Zap,
-  ChevronRight
+  ChevronRight,
+  Monitor,
+  Smartphone
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 
 function UserListPageContent() {
     const firestore = useFirestore();
@@ -70,7 +75,7 @@ function UserListPageContent() {
                 u.email.toLowerCase().includes(term)
             );
         }
-        return [...result].sort((a, b) => a.displayName.localeCompare(b.displayName));
+        return [...result].sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
     }, [allUsers, searchTerm]);
 
     const stats = useMemo(() => {
@@ -82,6 +87,14 @@ function UserListPageContent() {
             pembaca: allUsers.filter(u => u.role === 'pembaca').length,
         };
     }, [allUsers]);
+
+    const getDeviceIcon = (userAgent: string | undefined) => {
+        if (!userAgent) return <Monitor className="h-3.5 w-3.5 shrink-0" />;
+        if (/android|iphone|ipad|ipod/i.test(userAgent)) {
+            return <Smartphone className="h-3.5 w-3.5 shrink-0" />;
+        }
+        return <Monitor className="h-3.5 w-3.5 shrink-0" />;
+    };
 
     return (
         <div className="max-w-6xl mx-auto space-y-8 md:space-y-10 pb-20 px-1 overflow-x-hidden">
@@ -154,6 +167,8 @@ function UserListPageContent() {
                                     <TableHead className="px-6 h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 whitespace-nowrap">Identitas Publik</TableHead>
                                     <TableHead className="h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 whitespace-nowrap">Email</TableHead>
                                     <TableHead className="h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 whitespace-nowrap">Status</TableHead>
+                                    <TableHead className="h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 whitespace-nowrap">Tanggal Bergabung</TableHead>
+                                    <TableHead className="h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 whitespace-nowrap">Perangkat</TableHead>
                                     <TableHead className="h-12 md:h-14 font-black uppercase text-[9px] tracking-widest text-muted-foreground/70 text-right px-6 whitespace-nowrap">Kontrol</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -172,12 +187,14 @@ function UserListPageContent() {
                                             </TableCell>
                                             <TableCell><Skeleton className="h-3 w-32 rounded-full" /></TableCell>
                                             <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                                            <TableCell><Skeleton className="h-3 w-20 rounded-full" /></TableCell>
+                                            <TableCell><Skeleton className="h-3 w-24 rounded-full" /></TableCell>
                                             <TableCell className="text-right px-6"><Skeleton className="h-8 w-20 rounded-full ml-auto" /></TableCell>
                                         </TableRow>
                                     ))
                                 ) : filteredUsers.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={4} className="h-64 text-center">
+                                        <TableCell colSpan={6} className="h-64 text-center">
                                             <div className="opacity-20 flex flex-col items-center gap-3">
                                                 <Users className="h-12 w-12" />
                                                 <p className="font-headline text-xl font-bold">Data Kosong</p>
@@ -228,6 +245,24 @@ function UserListPageContent() {
                                                     >
                                                         {user.role}
                                                     </Badge>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {user.createdAt ? (
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-bold whitespace-nowrap">{format(user.createdAt.toDate(), 'd MMM yyyy', { locale: id })}</span>
+                                                            <span className="text-[9px] text-muted-foreground">{format(user.createdAt.toDate(), 'HH:mm')}</span>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-[10px] text-muted-foreground italic">N/A</span>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex items-center gap-2 text-muted-foreground/70" title={user.deviceInfo}>
+                                                        {getDeviceIcon(user.deviceInfo)}
+                                                        <p className="text-[10px] font-mono truncate max-w-[100px]">
+                                                            {user.deviceInfo ? (user.deviceInfo.length > 20 ? `${user.deviceInfo.substring(0, 20)}...` : user.deviceInfo) : 'Unknown'}
+                                                        </p>
+                                                    </div>
                                                 </TableCell>
                                                 <TableCell className="text-right px-6">
                                                     <Button variant="outline" size="sm" className="rounded-full font-black text-[9px] h-8 px-3 border-2 hover:bg-primary hover:text-white transition-all whitespace-nowrap" asChild>
