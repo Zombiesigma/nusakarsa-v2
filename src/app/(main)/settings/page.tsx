@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -62,7 +61,7 @@ const notificationFormSchema = z.object({
   onBookFavorite: z.boolean().default(true),
 });
 
-type SettingsTab = 'profile' | 'appearance' | 'notifications';
+type SettingsTab = 'profile' | 'notifications';
 
 export default function SettingsPage() {
   const { user: currentUser, isLoading: isUserLoading } = useUser();
@@ -73,7 +72,6 @@ export default function SettingsPage() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isSavingNotifications, setIsSavingNotifications] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [theme, setTheme] = useState('system');
 
   const userProfileRef = (firestore && currentUser) ? doc(firestore, 'users', currentUser.uid) : null;
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<User>(userProfileRef);
@@ -91,25 +89,6 @@ export default function SettingsPage() {
   const notificationForm = useForm<z.infer<typeof notificationFormSchema>>({
     resolver: zodResolver(notificationFormSchema),
   });
-
-  useEffect(() => {
-    const localTheme = localStorage.getItem('theme') || 'system';
-    setTheme(localTheme);
-  }, []);
-  
-  const handleThemeChange = (value: string) => {
-    setTheme(value);
-    localStorage.setItem('theme', value);
-    if (value === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else if (value === 'light') {
-      document.documentElement.classList.remove('dark');
-    } else {
-      const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', systemIsDark);
-    }
-    toast({ title: "Tema Diubah" });
-  };
 
   useEffect(() => {
     if (userProfile) {
@@ -230,7 +209,6 @@ export default function SettingsPage() {
         <aside className="lg:col-span-4 space-y-6">
             <div className="bg-card/50 backdrop-blur-md border rounded-[2.5rem] p-3 space-y-2 shadow-xl border-white/10">
                 <NavItem tab="profile" icon={UserIcon} label="Profil" />
-                <NavItem tab="appearance" icon={Palette} label="Tampilan" />
                 <NavItem tab="notifications" icon={Bell} label="Notifikasi" />
             </div>
         </aside>
@@ -311,44 +289,6 @@ export default function SettingsPage() {
                                     </CardFooter>
                                 </form>
                             </Form>
-                        </Card>
-                    </motion.div>
-                )}
-
-                {activeTab === 'appearance' && (
-                    <motion.div key="appearance" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-                        <Card className="border-none shadow-xl bg-card rounded-[3rem] p-8 md:p-12">
-                            <CardHeader className="px-2">
-                                <CardTitle className="font-headline text-2xl font-black">Estetika Tampilan</CardTitle>
-                                <CardDescription>Pilih suasana visual yang paling menginspirasi Anda.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
-                                {[
-                                    { id: 'light', label: 'Cahaya', icon: Sun, bg: 'bg-white', text: 'text-zinc-800' },
-                                    { id: 'dark', label: 'Senja', icon: Moon, bg: 'bg-zinc-900', text: 'text-white' },
-                                    { id: 'system', label: 'Otomatis', icon: Monitor, bg: 'bg-gradient-to-br from-white to-zinc-900', text: 'text-zinc-800' }
-                                ].map((mode) => (
-                                    <button 
-                                      key={mode.id} 
-                                      onClick={() => handleThemeChange(mode.id)} 
-                                      className={cn(
-                                          "p-6 rounded-[2rem] border-2 transition-all space-y-4 shadow-lg active:scale-95", 
-                                          theme === mode.id ? "border-primary ring-4 ring-primary/10" : "border-muted/30 hover:border-primary/30"
-                                      )}
-                                    >
-                                        <div className={cn("h-24 rounded-xl flex flex-col p-4 justify-between", mode.bg)}>
-                                            <div className="flex justify-end"><div className="h-2 w-10 bg-primary rounded-full"></div></div>
-                                            <div className={cn("flex items-center gap-2", mode.id === 'system' && "mix-blend-difference")}>
-                                                <div className={cn("h-6 w-6 flex items-center justify-center rounded-full", theme === mode.id ? "bg-primary" : "bg-muted")}>
-                                                    <mode.icon className={cn("h-4 w-4", theme === mode.id ? "text-white" : "text-muted-foreground")} />
-                                                </div>
-                                                <div className={cn("h-3 w-20 rounded-full", theme === mode.id ? "bg-primary/50" : "bg-muted")} />
-                                            </div>
-                                        </div>
-                                        <p className="font-black text-sm uppercase tracking-widest">{mode.label}</p>
-                                    </button>
-                                ))}
-                            </CardContent>
                         </Card>
                     </motion.div>
                 )}
