@@ -265,9 +265,6 @@ export default function AdminPage() {
     <div className="space-y-8 md:space-y-10 pb-20 w-full overflow-x-hidden px-1">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest mb-3">
-            <ShieldCheck className="h-3 w-3" /> Dashboard Otoritas Nusakarsa
-          </div>
           <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-none">
             Pusat <span className="text-primary italic">Kendali</span>
           </h1>
