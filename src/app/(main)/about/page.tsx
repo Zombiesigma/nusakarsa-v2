@@ -33,9 +33,9 @@ const sectionVariants = {
 };
 
 export default function AboutPage() {
-  const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://picsum.photos/seed/khalid/400/400';
-  const gunturAvatar = PlaceHolderImages.find(img => img.id === 'team-guntur')?.imageUrl || 'https://picsum.photos/seed/guntur/400/400';
-  const syifaAvatar = PlaceHolderImages.find(img => img.id === 'team-syifa')?.imageUrl || 'https://picsum.photos/seed/syifa/400/400';
+  const khalidAvatar = PlaceHolderImages.find(img => img.id === 'team-khalid')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
+  const gunturAvatar = PlaceHolderImages.find(img => img.id === 'team-guntur')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
+  const syifaAvatar = PlaceHolderImages.find(img => img.id === 'team-syifa')?.imageUrl || 'https://files.catbox.moe/4dlj9c.png';
 
   const initialArchitects = [
     {
