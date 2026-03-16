@@ -64,8 +64,9 @@ export async function generateBookPdf(bookId: string): Promise<string> {
 
   const pdfDoc = await PDFLib.create();
   
-  // Muat dan sematkan gambar watermark
-  const watermarkBytes = await fs.readFile(path.join(process.cwd(), 'public/logo/copyright.png'));
+  // Muat dan sematkan gambar watermark dari URL
+  const watermarkUrl = 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-v2/main/public/logo/copyright.png';
+  const watermarkBytes = await fetch(watermarkUrl).then(res => res.arrayBuffer());
   const watermarkImage = await pdfDoc.embedPng(watermarkBytes);
 
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
