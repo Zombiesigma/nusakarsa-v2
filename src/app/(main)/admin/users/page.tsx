@@ -104,10 +104,6 @@ function UserListPageContent() {
                         <Button variant="outline" size="icon" className="rounded-full h-10 w-10 border-2 shadow-sm shrink-0" asChild>
                             <Link href="/admin"><ArrowLeft className="h-4 w-4" /></Link>
                         </Button>
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-                            <Zap className="h-3 w-3 fill-current" />
-                            <span className="text-[9px] font-black uppercase tracking-widest">Otoritas</span>
-                        </div>
                     </div>
                     <h1 className="text-3xl md:text-5xl font-headline font-black tracking-tight leading-none">
                         Daftar <span className="text-primary italic">Pujangga</span>
