@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -25,11 +25,13 @@ import {
   Layers,
   Loader2,
   Feather,
-  AlertCircle
+  AlertCircle,
+  XCircle,
+  CheckCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { useFirestore, useUser, useDoc, useCollection } from '@/firebase';
-import { doc, collection, query, orderBy } from 'firebase/firestore';
+import { doc, collection, query, orderBy, writeBatch, serverTimestamp, getDocs, updateDoc } from 'firebase/firestore';
 import type { Book, Chapter, Music, MusicTrack } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
@@ -39,8 +41,18 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { searchYouTube, getPreviewAudioUrl } from '@/app/actions/music';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { generateBookPdf } from '@/app/actions/pdf-generator';
 
 type ReadingTheme = 'light' | 'dark' | 'sepia' | 'paper';
 type FontFamily = 'font-serif' | 'font-sans' | 'font-mono';
@@ -107,6 +119,8 @@ export default function AdminReviewPage() {
   const firestore = useFirestore();
   const { user: currentUser } = useUser();
   const { toast } = useToast();
+  const router = useRouter();
+  
   const [isMounted, setIsMounted] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isTocOpen, setIsTocOpen] = useState(true);
@@ -128,6 +142,9 @@ export default function AdminReviewPage() {
   const [musicSearchQuery, setMusicSearchQuery] = useState("");
   const [ytResults, setYtResults] = useState<MusicTrack[]>([]);
   const [isSearchingYt, setIsSearchingYt] = useState(false);
+  
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -226,6 +243,85 @@ export default function AdminReviewPage() {
     }
   };
 
+  const handleApproveBook = async () => {
+    if (!firestore || !bookRef || !book) return;
+    setIsProcessing(true);
+    toast({ title: "Menerbitkan Karya...", description: "Mohon tunggu, proses ini butuh beberapa saat." });
+    try {
+      const pdfUrl = await generateBookPdf(book.id);
+
+      const batch = writeBatch(firestore);
+      batch.update(bookRef, { status: 'published', fileUrl: pdfUrl, updatedAt: serverTimestamp() });
+
+      const allUsersSnap = await getDocs(collection(firestore, 'users'));
+      allUsersSnap.forEach((userDoc) => {
+          if (userDoc.id !== book.authorId) {
+              const notificationRef = doc(collection(firestore, `users/${userDoc.id}/notifications`));
+              batch.set(notificationRef, {
+                  type: 'broadcast',
+                  text: `Mahakarya baru telah terbit: "${book.title}" oleh ${book.authorName}`,
+                  link: `/books/${book.id}`,
+                  actor: {
+                      uid: book.authorId,
+                      displayName: book.authorName,
+                      photoURL: book.authorAvatarUrl,
+                  },
+                  read: false,
+                  createdAt: serverTimestamp(),
+              });
+          }
+      });
+      
+      const authorNotifRef = doc(collection(firestore, `users/${book.authorId}/notifications`));
+      batch.set(authorNotifRef, {
+          type: 'broadcast',
+          text: `Selamat! Karya Anda "${book.title}" telah berhasil diterbitkan.`,
+          link: `/books/${book.id}`,
+          actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+          read: false,
+          createdAt: serverTimestamp(),
+      });
+
+      await batch.commit();
+      toast({ variant: 'success', title: "Karya Resmi Terbit", description: `"${book.title}" kini dapat dinikmati semua pembaca.` });
+      router.push('/admin');
+    } catch (error) {
+      console.error("Error approving book:", error);
+      toast({ variant: "destructive", title: "Gagal Menyetujui" });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleRejectBook = async () => {
+    if (!firestore || !bookRef || !book) return;
+    setIsProcessing(true);
+    try {
+      const batch = writeBatch(firestore);
+      batch.update(bookRef, { status: 'rejected' });
+
+      const authorNotifRef = doc(collection(firestore, `users/${book.authorId}/notifications`));
+      batch.set(authorNotifRef, {
+        type: 'broadcast',
+        text: `Karya Anda "${book.title}" membutuhkan revisi. Silakan periksa kembali di studio Anda.`,
+        link: `/books/${book.id}/edit`,
+        actor: { uid: 'system', displayName: 'Sistem Nusakarsa', photoURL: 'https://raw.githubusercontent.com/Zombiesigma/nusakarsa-assets/main/uploads/1770617037724-WhatsApp_Image_2026-02-07_at_13.45.35.jpeg' },
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+      await batch.commit();
+      toast({ variant: 'destructive', title: "Karya Ditolak", description: `Notifikasi revisi telah dikirim ke penulis.` });
+      router.push('/admin');
+    } catch (error) {
+      console.error("Error rejecting book:", error);
+      toast({ variant: "destructive", title: "Gagal Menolak" });
+    } finally {
+      setIsProcessing(false);
+      setIsRejectDialogOpen(false);
+    }
+  };
+
+
   if (isBookLoading || !isMounted) return <AdminReviewPageSkeleton />;
   if (!book) return notFound();
 
@@ -297,6 +393,25 @@ export default function AdminReviewPage() {
           </div>
 
           <div className="flex items-center gap-0.5 md:gap-1 shrink-0">
+             <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full h-9 w-9 md:h-10 md:w-10 text-destructive hover:text-destructive hover:bg-destructive/10" 
+                onClick={() => setIsRejectDialogOpen(true)} 
+                disabled={isProcessing}
+            >
+                <XCircle className="h-5 w-5" />
+            </Button>
+            <Button 
+                className="rounded-full h-9 px-4 md:h-10 md:px-6 font-black text-xs gap-2" 
+                onClick={handleApproveBook} 
+                disabled={isProcessing}
+            >
+                {isProcessing ? <Loader2 className="h-4 w-4 animate-spin"/> : <CheckCircle className="h-4 w-4" />}
+                Setujui
+            </Button>
+            
+            <div className="h-6 w-px bg-border/50 mx-1 md:mx-2" />
             <AnimatePresence>
                 {activeTrack && (
                     <motion.button 
@@ -423,7 +538,7 @@ export default function AdminReviewPage() {
                           { id: 'dark', label: 'Dark', icon: null },
                           { id: 'sepia', label: 'Sepia', icon: null },
                           { id: 'paper', label: 'Paper', icon: <ScrollText className="h-3 w-3" /> }
-                        ].map((t: any) => (
+                        ].map(t => (
                             <Button 
                                 key={t.id} 
                                 variant={readingTheme === t.id ? 'default' : 'outline'} 
@@ -513,6 +628,25 @@ export default function AdminReviewPage() {
             </Button>
         )}
       </div>
+
+      <AlertDialog open={isRejectDialogOpen} onOpenChange={setIsRejectDialogOpen}>
+        <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
+            <AlertDialogHeader>
+                <div className="mx-auto bg-destructive/10 p-4 rounded-2xl w-fit mb-4"><XCircle className="h-8 w-8 text-destructive" /></div>
+                <AlertDialogTitle className="font-headline text-2xl font-black text-center">Tolak Karya Ini?</AlertDialogTitle>
+                <AlertDialogDescription className="text-center font-medium leading-relaxed">
+                    Karya akan dikembalikan ke status draf agar dapat direvisi oleh penulis.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="mt-8 flex gap-3">
+                <AlertDialogCancel className="rounded-full h-12 flex-1 border-2 font-bold">Batal</AlertDialogCancel>
+                <AlertDialogAction onClick={handleRejectBook} className={cn(buttonVariants({ variant: 'destructive' }), "rounded-full h-12 flex-1 font-black shadow-lg shadow-destructive/20")}>
+                    {isProcessing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ya, Tolak"}
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <style jsx global>{`
         .prose p { margin-bottom: 1.5em; text-indent: 1.5em; } 
         .prose p:first-of-type { text-indent: 0; }
