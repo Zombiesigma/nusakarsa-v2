@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const technologies = [
+    { title: "Next.js", desc: "Kerangka kerja React yang memberikan fondasi kuat untuk aplikasi web modern dengan rendering sisi server.", icon: "https://svgl.app/library/nextjs.svg" },
+    { title: "React", desc: "Pustaka JavaScript untuk membangun antarmuka pengguna yang interaktif dengan arsitektur berbasis komponen.", icon: "https://svgl.app/library/react.svg" },
     { title: "TypeScript", desc: "Bahasa pemrograman dengan sistem tipe yang kuat untuk kode yang lebih aman, cepat, dan terstruktur.", icon: "https://svgl.app/library/typescript.svg" },
     { title: "Firebase", desc: "Infrastruktur Cloud Google yang menjamin keamanan data dan sinkronisasi real-time mahakarya.", icon: "https://svgl.app/library/firebase.svg" },
     { title: "Tailwind CSS", desc: "Sistem desain modern untuk antarmuka yang presisi, elegan, dan sepenuhnya responsif.", icon: "https://svgl.app/library/tailwindcss.svg" }
@@ -173,7 +175,7 @@ export default function AboutPage() {
                 Nusakarsa dibangun dengan tumpukan teknologi modern untuk memastikan setiap detik pengalaman sastra Anda terasa magis, cepat, dan aman.
             </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {technologies.map((tech, i) => (
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}>
                     <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm rounded-[2rem] p-8 text-center border border-white/5 group h-full">
