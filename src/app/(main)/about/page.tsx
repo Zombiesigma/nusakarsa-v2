@@ -261,7 +261,7 @@ export default function AboutPage() {
               </div>
 
               <div className="mt-20 pt-10 border-t border-border/50 flex flex-col md:flex-row items-center justify-center gap-8 opacity-40 grayscale select-none text-center">
-                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa. All Rights Reserved.</p>
+                  <p className="text-xs font-black uppercase tracking-[0.3em]">&copy; {new Date().getFullYear()} Nusakarsa.</p>
               </div>
             </div>
         </div>
