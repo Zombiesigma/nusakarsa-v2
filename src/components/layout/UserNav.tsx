@@ -73,11 +73,6 @@ export function UserNav() {
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
   const isAuthor = userProfile?.role === 'penulis' || isAdmin;
 
-  const toggleTheme = () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  };
-
   const handleSignOut = async () => {
     setIsLogoutAlertOpen(false);
     setIsSheetOpen(false);
@@ -221,21 +216,6 @@ export function UserNav() {
               <div className="space-y-1 mb-6">
                 <p className="px-4 py-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/60">Pengaturan</p>
                 <NavLink href="/settings" icon={Settings} label="Edit Profil" description="Identitas dan privasi" />
-                <div
-                    onClick={toggleTheme}
-                    className="flex items-center justify-between p-4 rounded-[1.25rem] transition-all duration-300 group hover:bg-primary/10 cursor-pointer active:scale-[0.98]"
-                >
-                    <div className="flex items-center gap-4">
-                        <div className="p-2.5 rounded-xl bg-muted group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                            <Sun className="h-4.5 w-4.5 dark:hidden" />
-                            <Moon className="h-4.5 w-4.5 hidden dark:block" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold text-sm group-hover:text-primary transition-colors">Tema Aplikasi</span>
-                            <span className="text-[10px] text-muted-foreground font-medium">Terang / Gelap</span>
-                        </div>
-                    </div>
-                </div>
               </div>
 
               <div className="space-y-1">
