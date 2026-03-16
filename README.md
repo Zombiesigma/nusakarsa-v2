@@ -1,106 +1,129 @@
+<p align="center">
+  <img src="public/logo/logo.png" alt="Nusakarsa Logo" width="120"/>
+</p>
 
-# Nusakarsa
+<h1 align="center" style="color: #4A90E2;">Nusakarsa</h1>
+<p align="center">
+  <b>Ekosistem Sastra Digital untuk Penulis dan Pembaca</b>
+</p>
 
-Aplikasi web modern yang dibangun dengan Next.js, React, dan TypeScript. Nusakarsa adalah ekosistem sastra digital yang dirancang untuk menjadi rumah bagi imajinasi para penulis, dan sastrawan lokal.
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-5.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+  <img src="https://img.shields.io/badge/Prisma-5.0-2D3748?style=for-the-badge&logo=prisma&logoColor=white" />
+  <br/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge" />
+</div>
 
-## Deskripsi
+---
 
-Nusakarsa adalah platform serbaguna yang menghubungkan penulis dengan pembaca dalam sebuah ekosistem yang dinamis. Dibangun dengan teknologi web terbaru, aplikasi ini memberikan pengalaman pengguna yang cepat, responsif, dan imersif, baik untuk membaca maupun berkarya.
+## 📖 Tentang Nusakarsa
 
-## Fitur Utama
+> *“Nusakarsa adalah rumah bagi imajinasi para penulis dan sastrawan lokal.”*
 
-### 📖 Untuk Pembaca
+Nusakarsa adalah platform serbaguna yang menghubungkan penulis dengan pembaca dalam ekosistem digital yang modern dan imersif. Dibangun dengan teknologi terkini untuk memberikan pengalaman terbaik dalam membaca dan berkarya.
 
-*   **Eksplorasi Karya:** Jelajahi ribuan novel, dan puisi dengan sistem pencarian dan filter yang canggih.
-*   **Pengalaman Membaca Imersif:** Nikmati setiap karya dengan antarmuka bebas gangguan. Atur tema (terang, gelap, sepia, kertas), ukuran font, dan jenis huruf sesuai selera.
-*   **Soundtrack Playlist:** Rasakan suasana cerita lebih dalam dengan musik latar yang telah dipilih secara khusus oleh penulis.
-*   **Pustaka Pribadi:** Simpan karya favorit Anda untuk diakses kembali kapan saja, membangun koleksi bacaan digital Anda sendiri.
-*   **Interaksi Komunitas:** Berikan apresiasi melalui suka, tinggalkan ulasan yang membangun, dan berdiskusi langsung dengan penulis serta pembaca lain.
+---
 
-### Untuk Penulis
+## ✨ Fitur Utama
 
-*   **Studio Penulis Modern:** Ruang kerja terpusat dengan editor canggih yang mendukung *Markdown*, manajemen bab yang intuitif, dan fitur *auto-save* untuk menjaga setiap ide Anda tetap aman.
-*   **Impor Naskah Cerdas:** Unggah draf dari format `.docx`, `.pdf`, atau `.txt`. Sistem kami akan secara otomatis mengekstrak teksnya menjadi draf bab pertama Anda.
-*   **Kustomisasi Karya Lengkap:** Unggah sampul buku yang memikat, tulis sinopsis, tentukan genre, dan atur visibilitas karya (publik atau khusus pengikut).
-*   **Alur Publikasi Profesional:** Kendalikan status karya Anda, mulai dari draf, kirim untuk moderasi oleh tim kurasi, hingga terbit secara resmi di platform.
-*   **Ekspor ke PDF Otomatis:** Setiap karya yang diterbitkan akan secara otomatis dibuatkan versi PDF profesional yang dapat diunduh oleh pembaca.
+### 📚 Untuk Pembaca
+| Fitur | Deskripsi |
+|-------|-----------|
+| 🔍 **Eksplorasi Karya** | Jelajahi ribuan novel dan puisi dengan filter canggih |
+| 🌓 **Mode Membaca** | Tema terang, gelap, sepia, dan kertas |
+| 🎵 **Soundtrack** | Nikmati musik latar pilihan penulis |
+| 💾 **Pustaka Pribadi** | Simpan dan kelola koleksi bacaan |
+| 💬 **Komunitas** | Beri suka, ulasan, dan diskusi langsung |
 
-### Komunitas & Profil
+### ✍️ Untuk Penulis
+- 🖋️ **Studio Modern** – Editor Markdown dengan manajemen bab dan auto-save
+- 📤 **Impor Naskah** – Upload `.docx`, `.pdf`, `.txt` langsung jadi draf
+- 🎨 **Kustomisasi Karya** – Sampul, sinopsis, genre, visibilitas
+- 📄 **Ekspor PDF Otomatis** – Setiap terbitan langsung siap unduh
+- 🛡️ **Perlindungan Konten** – Anti copy-paste dan unduh gambar
 
-*   **Profil Pujangga Profesional:** Bangun identitas digital Anda dengan halaman profil yang menampilkan bio, semua karya yang telah diterbitkan, dan statistik interaksi.
-*   **Sistem Ikuti & Notifikasi:** Tetap terhubung dengan penulis favorit dan dapatkan kabar terbaru setiap kali ada karya baru atau interaksi penting.
-*   **Perlindungan Konten:** Aplikasi dilengkapi sistem proteksi untuk mencegah penyalinan teks dan pengunduhan gambar secara tidak sah, melindungi hak cipta Anda.
+---
 
-## Memulai
+## 🚀 Teknologi yang Digunakan
 
-Untuk menjalankan aplikasi ini di lingkungan pengembangan lokal Anda, ikuti langkah-langkah di bawah ini.
+| Teknologi | Warna Badge |
+|-----------|-------------|
+| Next.js 15 | ![Next.js](https://img.shields.io/badge/-black?style=flat-square&logo=next.js) |
+| TypeScript | ![TS](https://img.shields.io/badge/-3178C6?style=flat-square&logo=typescript&logoColor=white) |
+| Tailwind CSS | ![Tailwind](https://img.shields.io/badge/-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) |
+| Prisma | ![Prisma](https://img.shields.io/badge/-2D3748?style=flat-square&logo=prisma) |
+
+---
+
+## 🖼️ Tampilan Aplikasi
+
+<p align="center">
+  <img src="https://via.placeholder.com/600x300?text=Screenshot+Halaman+Utama" alt="Halaman Utama" width="80%" />
+  <br/>
+  <em>Halaman eksplorasi karya dengan filter</em>
+</p>
+
+---
+
+## 🧪 Memulai di Lokal
 
 ### Prasyarat
-
-Pastikan Anda telah menginstal perangkat lunak berikut di mesin Anda:
-
-*   [Node.js](https://nodejs.org/) (Versi 18.x atau lebih baru)
-*   [npm](https://www.npmjs.com/) (Biasanya sudah termasuk dalam instalasi Node.js)
+- Node.js 18+
+- npm atau yarn
 
 ### Instalasi
-
-1.  **Kloning repositori:**
-    ```bash
-    git clone <https://github.com/zombiesigma/nusakarsa-v2.git>
-    cd nusakarsa
-    ```
-
-2.  **Instal dependensi:**
-    ```bash
-    npm install
-    ```
-
-### Menjalankan Aplikasi
-
-Setelah instalasi selesai, Anda dapat menjalankan server pengembangan:
-
 ```bash
+git clone https://github.com/zombiesigma/nusakarsa-v2.git
+cd nusakarsa
+npm install
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat aplikasi berjalan.
+Buka http://localhost:3000
 
-## Skrip yang Tersedia
+---
 
-Dalam proyek ini, Anda dapat menjalankan beberapa skrip:
+📄 Kebijakan Privasi (Ringkasan)
 
-*   `npm run dev`: Menjalankan aplikasi dalam mode pengembangan.
-*   `npm run build`: Membuat aplikasi untuk produksi.
-*   `npm run start`: Menjalankan aplikasi yang telah di-build untuk produksi.
-*   `npm run lint`: Menjalankan linter untuk memeriksa masalah dalam kode.
-*   `npm run typecheck`: Menjalankan pemeriksaan tipe dengan TypeScript.
+🔐 Informasi yang dikumpulkan: nama, email, data penggunaan, perangkat.
+📢 Penggunaan: untuk menyediakan dan meningkatkan layanan.
+🤝 Tidak dibagikan ke pihak ketiga tanpa persetujuan, kecuali diwajibkan hukum.
 
-## Kebijakan Privasi
+---
 
-Kebijakan Privasi ini menjelaskan bagaimana informasi Anda dikumpulkan, digunakan, dan dibagikan saat Anda menggunakan aplikasi Nusakarsa ("Aplikasi").
+🤝 Kontribusi
 
-**Informasi yang Kami Kumpulkan**
+Kami sangat terbuka terhadap kontribusi! Silakan buat pull request atau laporkan issue.
 
-*   **Informasi Akun:** Saat Anda mendaftar, kami mengumpulkan informasi seperti nama, email, dan kata sandi Anda.
-*   **Data Penggunaan:** Kami mengumpulkan informasi tentang bagaimana Anda menggunakan Aplikasi, seperti fitur yang Anda akses dan konten yang Anda lihat.
-*   **Informasi Perangkat:** Kami dapat mengumpulkan informasi tentang perangkat yang Anda gunakan untuk mengakses Aplikasi.
+1. Fork repositori
+2. Buat branch: git checkout -b fitur-keren
+3. Commit: git commit -m 'Menambahkan fitur X'
+4. Push: git push origin fitur-keren
+5. Buka Pull Request
 
-**Bagaimana Kami Menggunakan Informasi Anda**
+---
 
-Kami menggunakan informasi yang kami kumpulkan untuk:
+📬 Kontak
 
-*   Menyediakan dan memelihara Aplikasi.
-*   Memperbaiki dan mempersonalisasi Aplikasi.
-*   Berkomunikasi dengan Anda tentang pembaruan dan penawaran.
+· Email: tim@nusakarsa.id
+· Twitter: @nusakarsa
+· GitHub: zombiesigma/nusakarsa-v2
 
-**Berbagi Informasi**
+---
 
-Kami tidak akan membagikan informasi pribadi Anda kepada pihak ketiga tanpa persetujuan Anda, kecuali diwajibkan oleh hukum.
+📝 Lisensi
 
-**Keamanan**
+Distribusi di bawah lisensi MIT. Lihat LICENSE untuk detail.
 
-Kami mengambil langkah-langkah yang wajar untuk melindungi informasi Anda dari akses atau pengungkapan yang tidak sah.
+---
 
-**Perubahan pada Kebijakan Ini**
+<p align="center">
+  <b>Dibuat dengan ❤️ untuk para penulis dan pembaca di Nusantara</b>
+</p>
+```
 
-Kami dapat memperbarui kebijakan privasi ini dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting kebijakan baru di halaman ini.
+---
