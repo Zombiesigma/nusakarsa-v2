@@ -17,7 +17,7 @@ Nusakarsa adalah platform serbaguna yang menghubungkan penulis dengan pembaca da
 *   **Pustaka Pribadi:** Simpan karya favorit Anda untuk diakses kembali kapan saja, membangun koleksi bacaan digital Anda sendiri.
 *   **Interaksi Komunitas:** Berikan apresiasi melalui suka, tinggalkan ulasan yang membangun, dan berdiskusi langsung dengan penulis serta pembaca lain.
 
-### ✍️ Untuk Penulis
+### Untuk Penulis
 
 *   **Studio Penulis Modern:** Ruang kerja terpusat dengan editor canggih yang mendukung *Markdown*, manajemen bab yang intuitif, dan fitur *auto-save* untuk menjaga setiap ide Anda tetap aman.
 *   **Impor Naskah Cerdas:** Unggah draf dari format `.docx`, `.pdf`, atau `.txt`. Sistem kami akan secara otomatis mengekstrak teksnya menjadi draf bab pertama Anda.
@@ -25,7 +25,7 @@ Nusakarsa adalah platform serbaguna yang menghubungkan penulis dengan pembaca da
 *   **Alur Publikasi Profesional:** Kendalikan status karya Anda, mulai dari draf, kirim untuk moderasi oleh tim kurasi, hingga terbit secara resmi di platform.
 *   **Ekspor ke PDF Otomatis:** Setiap karya yang diterbitkan akan secara otomatis dibuatkan versi PDF profesional yang dapat diunduh oleh pembaca.
 
-### 🌐 Komunitas & Profil
+### Komunitas & Profil
 
 *   **Profil Pujangga Profesional:** Bangun identitas digital Anda dengan halaman profil yang menampilkan bio, semua karya yang telah diterbitkan, dan statistik interaksi.
 *   **Sistem Ikuti & Notifikasi:** Tetap terhubung dengan penulis favorit dan dapatkan kabar terbaru setiap kali ada karya baru atau interaksi penting.
@@ -46,7 +46,7 @@ Pastikan Anda telah menginstal perangkat lunak berikut di mesin Anda:
 
 1.  **Kloning repositori:**
     ```bash
-    git clone <https://github.com/zombiesigma/nusakarsa.git>
+    git clone <https://github.com/zombiesigma/nusakarsa-v2.git>
     cd nusakarsa
     ```
 
