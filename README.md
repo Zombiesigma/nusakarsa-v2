@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/logo/logo.png" alt="Nusakarsa Logo" width="120"/>
+  <img src="public/logo/WhatsApp Image 2026-03-07 at 00.58.50.jpeg" alt="Nusakarsa Logo" width="120"/>
 </p>
 
 <h1 align="center" style="color: #4A90E2;">Nusakarsa</h1>
